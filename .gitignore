@@ -10,3 +10,7 @@
 # Diversos
 *.log
 .DS_Store
+
+# Pacote temporário de deploy (gerado por ./deploy.sh)
+/deploy_pacote/
+/deploy_pacote.zip
