@@ -1,0 +1,346 @@
+# Controle de Tarefas — Sistema de Gestão Patrimonial
+
+> Atualizar este arquivo a cada sessão. Marcar tarefas concluídas com ✅ e registrar a data.  
+> Ler sempre **antes** de começar a codar.
+
+---
+
+## Status Geral
+
+| Fase | Status | Progresso |
+|------|--------|-----------|
+| F1 — MVP | 🟡 Em andamento | 90% (blocos A–J concluídos · falta K: testes com César) |
+| F2 — Cadastro completo | 🟡 Iniciada | Matrícula+site cartório, características físicas, co-propriedade já adiantados no módulo Imóveis |
+| F3 — Family Office | ⏳ Aguardando F2 | — |
+
+> **Visão expandida (26/06/2026):** o sistema deixou de ser "cadastros separados" e passou a ser
+> uma **Arquitetura de Dados de ERP Patrimonial / Family Office** com 15 módulos relacionáveis entre si.
+> Ver seção **"Arquitetura ERP"** abaixo. Acompanhamento visual em **`tarefas.html`**
+> (`http://127.0.0.1/cezar/tarefas.html`).
+
+---
+
+## FASE 1 — MVP (substituir o Excel)
+
+### Bloco A — Infraestrutura e banco de dados
+
+- [x] **A1** — Criar `sql/schema.sql` com todas as tabelas da F1:
+  - `usuarios` (César + clientes com nível de acesso)
+  - `clientes` (PF/PJ — centro do sistema)
+  - `imoveis` (blocos 1, 2, 3-parcial, 4, 6)
+  - `reformas`
+  - `contratos_locacao`
+  - `lancamentos_financeiros`
+  - `documentos` (polimórfico: `tipo_referencia` + `referencia_id`)
+  - `condominios`
+  - `iptu` (registro anual por imóvel)
+  - `condominio_faturas` (competência mensal + boleto)
+
+- [x] **A2** — Criar `sql/seed.sql` com dados de teste:
+  - Usuário: César (admin)
+  - Cliente-piloto: Marcos Borges (CPF)
+  - 1 imóvel de exemplo: "4D Complex – unid. 321"
+  - 1 registro de IPTU
+  - 1 fatura de condomínio
+  - 1 reforma de exemplo
+
+- [x] **A3** — Criar `includes/db.php` (conexão PDO)
+- [x] **A4** — Criar `includes/auth.php` (sessão, login, logout, verificação de permissão)
+- [x] **A5** — Criar `includes/functions.php` (helpers: formata moeda, formata data, gera código IM-XXXX)
+- [x] **A6** — Criar `includes/header.php` e `includes/footer.php` (layout base + menu + seletor de cliente)
+- [x] **A7** — Criar `assets/css/style.css` (layout limpo, responsivo, sem Bootstrap)
+- [x] **A8** — Criar `assets/js/main.js` (funções utilitárias JS: máscara CPF/CNPJ, CEP autopreenchimento)
+
+---
+
+### Bloco B — Autenticação
+
+- [x] **B1** — `index.php` — tela de login (email + senha)
+- [x] **B2** — `logout.php` — encerrar sessão
+- [x] **B3** — Validação de sessão em todas as páginas protegidas
+
+---
+
+### Bloco C — Gestão de Clientes
+
+- [x] **C1** — `clientes/lista.php` — lista de clientes do César (cards ou tabela)
+- [x] **C2** — `clientes/novo.php` — cadastro de cliente (nome, CPF/CNPJ, e-mail, telefone)
+- [x] **C3** — `clientes/editar.php` — edição de cliente
+- [x] **C4** — Seletor de cliente no `header.php` (select com todos os clientes do César)
+
+---
+
+### Bloco D — Módulo de Imóveis (F1)
+
+- [x] **D1** — `imoveis/lista.php` — lista de imóveis do cliente selecionado
+  - Cards com: nome referência, tipo, cidade, valor de mercado, situação, custo mensal
+  - Botão "+ Cadastrar imóvel"
+  - Filtros por tipo / cidade / situação
+
+- [x] **D2** — `imoveis/novo.php` — formulário de cadastro de imóvel (campos F1)
+  - Seção 1: Identificação (código auto, nome referência, tipo, finalidade, situação)
+  - Seção 2: Localização (endereço, CEP com autopreenchimento, link Google Maps automático)
+  - Seção 3: Titularidade (proprietário/cliente, CPF/CNPJ, data aquisição, forma aquisição)
+  - Seção 4: Financeiro (valor compra, entrada, financiamento, banco, valor de mercado, custos mensais)
+  - Seção 5: Upload de documentos (escritura, matrícula, IPTU, fotos)
+
+- [x] **D3** — `imoveis/ficha.php` — ficha do imóvel com abas:
+  - Aba **Resumo**: dados principais + valor de mercado + custo mensal total
+  - Aba **Financeiro**: IPTU anual, faturas de condomínio por competência, outros lançamentos
+  - Aba **Reformas**: lista de reformas com custo previsto × realizado
+  - Aba **Aluguel**: contrato vigente, locatário, valor, vencimento
+  - Aba **Documentos**: galeria/lista de arquivos anexados
+
+- [x] **D4** — `imoveis/editar.php` — edição dos dados do imóvel
+
+---
+
+### Bloco E — Controle de IPTU
+
+- [x] **E1** — Formulário dentro da ficha (aba Financeiro) para registrar IPTU:
+  - Nº inscrição municipal, valor anual, data vencimento, opção parcelamento
+  - Upload do carnê/boleto
+
+- [x] **E2** — Listagem histórica de IPTU por imóvel (evolução anual)
+
+---
+
+### Bloco F — Controle de Condomínio
+
+- [x] **F1** — Registro mensal de condomínio (competência + valor + upload do boleto)
+- [x] **F2** — Listagem histórica com variação de valores mês a mês
+
+---
+
+### Bloco G — Reformas
+
+- [x] **G1** — `reformas/nova.php` — cadastro de reforma:
+  - Descrição, datas início/fim, status (planejado/em andamento/concluído), custo previsto, custo realizado, fornecedor
+  - Upload de NF, cupom fiscal, contrato
+
+- [x] **G2** — Listagem de reformas na aba da ficha do imóvel
+- [x] **G3** — Edição de reforma
+
+---
+
+### Bloco H — Locação (F1 básico)
+
+- [x] **H1** — `locacao/novo.php` — contrato de locação básico:
+  - Locatário (nome + CPF/CNPJ), início/fim do contrato, valor do aluguel
+  - Upload do contrato
+
+- [x] **H2** — Exibição do contrato vigente na aba Aluguel da ficha do imóvel
+
+---
+
+### Bloco I — Lançamentos Financeiros
+
+- [x] **I1** — Registro de lançamentos avulsos (gasto, receita) vinculados ao imóvel
+- [x] **I2** — Listagem de lançamentos na aba Financeiro
+
+---
+
+### Bloco J — Upload de Documentos
+
+- [x] **J1** — `api/upload.php` — endpoint para upload de arquivos (PDF/imagem)
+  - Salvar em `uploads/{cliente_id}/{tipo}/`
+  - Registrar na tabela `documentos` com tipo_referencia, referencia_id, data emissão, validade
+- [x] **J2** — Galeria/lista de documentos na aba Documentos da ficha do imóvel
+- [x] **J3** — Preview inline de imagens e link para abrir PDF
+
+---
+
+### Bloco K — Testes com dados reais
+
+- [ ] **K1** — Testar cadastro completo do imóvel "4D Complex – unid. 321" (Marcos Borges)
+- [ ] **K2** — Testar IPTU + condomínio com boleto
+- [ ] **K3** — Testar reforma
+- [ ] **K4** — Revisão com César (campo a campo) — aprovação para avançar à F2
+
+---
+
+## FASE 2 — Cadastro Patrimonial Completo
+*(inicia após aprovação da F1)*
+
+- [ ] Matrícula completa (cartório, comarca, livro, folha, data)
+- [ ] Características físicas (áreas em m², ambientes, estrutura)
+- [ ] Co-propriedade e percentual de participação
+- [ ] Regime de bens / holding / beneficiário final
+- [ ] Condomínio detalhado (CNPJ, síndico, administradora, estrutura)
+- [ ] Seguros (apólice, coberturas, valor segurado, vencimento)
+- [ ] Manutenção (histórico, equipamentos, garantias)
+- [ ] Checklist de documentação (matrícula atualizada, certidão negativa, habite-se…)
+- [ ] Locação completa (índice de reajuste, garantias, caução, seguro-fiança)
+
+---
+
+## FASE 3 — Family Office / Inteligência
+*(inicia após aprovação da F2)*
+
+- [ ] Indicadores: yield bruto/líquido, ROI, TIR, ganho de capital, vacância
+- [ ] Histórico de avaliações (gráfico de valorização)
+- [ ] Valorização automática por IA/API
+- [ ] Alertas de vencimento (IPTU, seguro, financiamento, renovação de aluguel)
+- [ ] Relacionamentos (corretor, construtora, advogado, contador)
+- [ ] Integração com Drive/OneDrive/Dropbox
+- [ ] PWA (manifest.json + service worker)
+- [ ] Área de visualização do cliente final
+
+---
+
+## Arquitetura ERP Patrimonial / Family Office (visão expandida)
+
+> Documento funcional de desenvolvimento. Todos os módulos devem ser **relacionáveis entre si**
+> (um imóvel tem N contratos/seguros/documentos; um investimento pertence a uma conta financeira;
+> uma conta pertence a uma pessoa/empresa/holding; um fornecedor atende vários imóveis/veículos/empresas).
+
+### Módulo 01 — Pessoas
+- [ ] Pessoa Física: nome, CPF, RG, data nasc., estado civil, tipo sanguíneo, telefones, e-mails, endereços, documentos, contatos de emergência
+- [ ] Dependentes / cônjuge / filhos
+- [ ] Observações
+- [ ] Relacionamentos: proprietário de imóveis/veículos, titular de investimentos, sócio de empresas, responsável por contratos
+
+### Módulo 02 — Colaboradores
+- [ ] Dados pessoais (cadastro completo)
+- [ ] RH: cargo, salário, departamento, gestor
+- [ ] Dependentes (cônjuge, filhos)
+- [ ] Escolaridade: formação, cursos, certificações
+- [ ] Saúde: tipo sanguíneo, convênios, alergias
+- [ ] Uniformes: camiseta, camisa, calça, calçado
+- [ ] Benefícios: vale alimentação, plano saúde, seguro vida
+- [ ] Histórico: salários, promoções, benefícios, advertências, avaliações
+- [ ] Controle: férias, histórico de férias, faltas, atestados, treinamentos
+
+### Módulo 03 — Empresas
+- [ ] Dados: razão social, nome fantasia, CNPJ, CNAEs, endereço, capital social
+- [ ] Estrutura: sócios, administradores, holdings
+- [ ] Documentos: contrato social, alterações, certidões
+- [ ] Relacionamentos: contabilidade, jurídico, bancos, imóveis, veículos, investimentos
+
+### Módulo 04 — Fornecedores e Parceiros
+- [ ] Cadastro: razão social, nome fantasia, CNPJ, endereço, contatos
+- [ ] Classificação: contabilidade, jurídico, seguros, marina, saúde, tecnologia, RH, imobiliária, outros
+- [ ] Contratos: vigência, valor, reajustes
+- [ ] Financeiro: banco, PIX, pagamentos
+- [ ] Avaliação: SLA, qualidade, prazo, custo-benefício
+- [ ] Arquivos: contratos, notas fiscais, certidões
+
+### Módulo 05 — Imóveis  🟢 *(base implementada na F1)*
+- [x] Identificação: código, tipo, finalidade
+- [x] Localização: endereço completo, CEP, coordenadas/links de mapa
+- [x] Documentação: matrícula, escritura, IPTU, habite-se *(matrícula + site do cartório ✅)*
+- [x] Propriedade: proprietário, participação % *(+ coproprietários quando < 100%)*
+- [x] Dados físicos: área privativa, área total, quartos, vagas
+- [x] Financeiro: valor aquisição, valor atual, valor de mercado, valor m² automático
+- [x] Custos: condomínio, IPTU, seguro
+- [x] Locação: contrato, locatário, reajustes *(básico)*
+- [x] Histórico: reformas, avaliações *(manutenções → F2)*
+- [x] Arquivos: matrícula, escritura, contratos, fotos
+- [x] Ficha em hub central (modais) com ícones (Bootstrap Icons)
+- [x] **Condomínio vinculado** (N:1): cadastro/edição com síndico, administradora, valores e comodidades — `condominios/*.php`
+- [x] **Manutenções (histórico completo)** — tabela `manutencoes`, 7º nó "Manutenções" no hub da ficha + modal, `ManutencoesController` + `manutencoes/nova|editar.php`; valor gera lançamento no caixa (categoria `manutencao`). ✅ testado HTTP+banco
+- [x] **Checklist documental completo** — painel na modal Documentos (matrícula, escritura, contrato compra, IPTU, habite-se, fotos) com ✓/✗ e contador; categoria `habite_se` adicionada ao enum + form de upload. ✅ testado
+
+### Módulo 06 — Veículos  🟢 *(cadastro implementado)*
+- [x] Tabela `veiculos` + lista/novo/editar (veiculos/*.php) + código VE-XXXX
+- [x] Identificação: marca, modelo, ano fab./modelo, cor, combustível, placa, Renavam, chassi
+- [x] Documentação: vencimento licenciamento, multas
+- [x] Seguro: seguradora, apólice, franquia, vencimento
+- [x] Financeiro: aquisição, FIPE, mercado
+- [x] Controle: KM atual, consumo médio, observações
+- [x] Upload de documentos (CRLV, apólice, NF serviços/peças, fotos)
+- [x] Alerta de campos vazios antes de salvar + modal de pendências + PDF + WhatsApp
+- [x] **Abastecimentos (sub-tabela)** — `abastecimentos`, `Abastecimento` model, `VeiculosController::abastecimento`, `veiculos/abastecimento.php`, seção no rodapé do `editar.php`. ✅ testado HTTP+banco
+- [x] **Manutenções: revisões, óleo, pneus, freios, bateria, peças (sub-tabela)** — `veiculo_manutencoes`, `VeiculoManutencao` model, `VeiculosController::manutencao`, `veiculos/manutencao.php`, seção no `editar.php` (garantia + próxima revisão data/km). ✅ testado
+- [x] **Histórico de sinistros e custos** — `sinistros`, `Sinistro` model, `VeiculosController::sinistro`, `veiculos/sinistro.php`, seção no `editar.php` (tipo, BO, acionou seguro, prejuízo, franquia, status). ✅ testado
+
+### Módulo 07 — Outros Bens (Embarcações / Joias / Obras de Arte)  🟢 *(cadastro implementado; unificado em `outros_bens`)*
+- [x] Cadastro unificado: embarcação (jet ski, lancha, barco), joia, obra de arte, outro
+- [x] Dados por tipo: embarcação (motor, horímetro, marina, vaga, mensalidade, registro), joia (material, quilates, certificado), obra (artista, técnica, dimensões)
+- [x] Seguro: seguradora, apólice, franquia, vencimento
+- [x] Upload de documentos (foto, laudo, apólice, outros)
+- [x] **Manutenções de embarcação (sub-tabela)** — `bem_manutencoes`, `BemManutencao` model, `OutrosController::manutencao`, `outros/manutencao.php`, seção no `editar.php` (só para tipo embarcação). ⚠️ código pronto e lintado — **falta teste HTTP+banco na retomada**
+- [x] **Avaliações periódicas / histórico de valor** — `avaliacoes_bem`, `AvaliacaoBem` model, `OutrosController::avaliacao`, `outros/avaliacao.php`, seção no `editar.php` com variação entre avaliações; a mais recente atualiza `valor_mercado` do bem. ⚠️ código pronto e lintado — **falta teste HTTP+banco na retomada**
+
+### Módulo 08 — Bancos e Instituições Financeiras
+- [ ] Cadastro: banco, corretora, family office, gestora
+- [ ] Dados: país, moeda
+- [ ] Contatos: gerente, banker, assessor
+- [ ] Arquivos: contratos, KYC, procurações
+
+### Módulo 09 — Contas Financeiras
+- [ ] Dados: banco, agência, conta
+- [ ] Internacional: SWIFT, IBAN, routing
+- [ ] Titularidade: pessoa, empresa, holding
+- [ ] Saldos: saldo atual, moeda
+
+### Módulo 10 — Investimentos
+- [ ] Cadastro: nome do investimento, instituição
+- [ ] Classificação: renda fixa, fundos, ações, previdência, offshore, cripto
+- [ ] Aplicação: data, valor aplicado, valor atual
+- [ ] Rentabilidade: mensal, anual, acumulada
+- [ ] Liquidez: D0, D1, D30, D90
+- [ ] Tributação: IR, IOF, come-cotas
+- [ ] Custos: taxa de administração, taxa de performance
+- [ ] Histórico: aplicações, resgates, rendimentos
+- [ ] Documentos: propostas, regulamentos, extratos
+
+### Módulo 11 — Seguros
+- [ ] Tipos: vida, saúde, veículos, imóveis, embarcações, empresarial
+- [ ] Dados: seguradora, corretora, apólice, vigência, franquia
+- [ ] Arquivos: contratos, apólices, boletos
+
+### Módulo 12 — Contratos
+- [ ] Cadastro: número, tipo
+- [ ] Relacionamentos: imóvel, veículo, fornecedor, colaborador, empresa
+- [ ] Controle: início, término, renovação, reajuste
+
+### Módulo 13 — Documentos (repositório central)  🟡 *(parcial)*
+- [x] Upload polimórfico (tipo_referencia + referencia_id) + categorias
+- [ ] Categorias completas: pessoais, imóveis, veículos, empresas, investimentos, contratos, seguros
+- [ ] Campos: arquivo, categoria, data emissão, data vencimento, observações
+
+### Módulo 14 — Agenda e Alertas
+- [ ] Pessoas: CNH/passaporte vencendo
+- [ ] Colaboradores: férias, cursos vencendo
+- [ ] Imóveis: IPTU, seguro
+- [ ] Veículos: IPVA, licenciamento, seguro, revisão
+- [ ] Investimentos: vencimento, carência
+- [ ] Contratos: renovação, reajuste
+
+### Módulo 15 — Dashboard Executivo  🟡 *(parcial)*
+- [x] Hub de módulos no dashboard (menu estilo apps)
+- [ ] Patrimônio: valor total de imóveis, veículos, embarcações, investimentos
+- [ ] Financeiro: caixa consolidado, bancos, aplicações
+- [ ] RH: nº de colaboradores, férias, treinamentos
+- [ ] Contratos: ativos, vencendo
+- [ ] Seguros: vigentes, vencendo
+
+---
+
+## Melhorias de UX/Plataforma (sessão 26/06/2026)
+- [x] Dashboard reformulado como hub de módulos (ícones estilo iPhone: Patrimônios, Caixa, Tarefas, Caixa Geral)
+- [x] Campo "Site do cartório" + inscrição municipal movida para o bloco Identificação
+- [x] Coproprietários condicionais (participação < 100%)
+- [x] Remoção de regime de bens / holding / beneficiário final (form + banco)
+- [x] Valor do m² automático (compra ÷ área total), calculado também no servidor
+- [x] Fluxo pós-cadastro: redirect para lista + modal de pendências (campos vazios)
+- [x] Relatório de pendências em PDF (impressão) + envio por WhatsApp (texto)
+- [x] Confirmação antes de salvar com nº de campos em aberto
+- [x] Cache-busting do CSS (filemtime) no header
+- [x] Lista de imóveis estilizada
+- [ ] Replicar modal de pendências no `editar.php`
+- [ ] Confirmação de campos em aberto no `editar.php`
+
+---
+
+## Histórico de Sessões
+
+| Data | O que foi feito |
+|------|----------------|
+| 23/06/2026 | Leitura do PDF · Exclusão do HTML anterior · CLAUDE.md e TAREFAS.md criados · Estrutura de pastas definida |
+| 23/06/2026 | Banco criado (gestao_patrimonial) · schema.sql + seed.sql executados · Blocos A e B completos: db.php, auth.php, functions.php, header/footer, style.css, main.js, index.php, logout.php, dashboard.php |
+| 26/06/2026 | Lista de imóveis estilizada · campos do imóvel reorganizados (site cartório, inscrição no bloco 1, coproprietários, remoção de regime/holding/beneficiário) · valor m² automático · dashboard como hub de apps · modal de pendências + PDF + WhatsApp · confirmação antes de salvar · cache-busting CSS · **Arquitetura ERP de 15 módulos** definida + `tarefas.html` criado |
+| 26/06/2026 | Página intermediária `patrimonio.php` (Imóveis/Carros/Embarcações/Joias) · **Módulo 06 — Veículos** completo: tabela `veiculos`, cadastro com upload de docs, edição, lista, alerta de campos vazios, modal de pendências + PDF + WhatsApp; ícone Carros ligado |
+| 26/06/2026 | Lista de imóveis estilo iOS · ficha redesenhada como **hub central** (modais Cadastro/Financeiro/Reformas/Aluguel/Documentos) com Bootstrap Icons · **Condomínio** vinculado ao imóvel: tabela estendida (síndico, administradora, valores, comodidades), `condominios/novo|editar|vincular.php`, modal na ficha com criar/vincular/desvincular |
+| 08/07/2026 | **Finalização dos Módulos 05/06/07** (sub-tabelas de histórico). Migração `sql/migration_modulos_567.sql`: `manutencoes`, `abastecimentos`, `veiculo_manutencoes`, `sinistros`, `bem_manutencoes`, `avaliacoes_bem` (schema.sql sincronizado; enums de `documentos` estendidos: tipo_referencia +manutencao/veiculo_manutencao/sinistro/bem_manutencao, categoria +habite_se). **M05:** Manutenções (7º nó no hub da ficha + modal + geração de caixa) e Checklist documental na modal Documentos — testados. **M06:** Abastecimentos, Manutenções e Sinistros como seções no `veiculos/editar.php` + telas dedicadas — testados HTTP+banco. **M07:** Manutenções de embarcação + Avaliações (histórico de valor, atualiza valor_mercado) no `outros/editar.php` — código pronto/lintado, **pendente teste HTTP+banco**. Rotas adicionadas em `routes/web.php`. ⏸️ Pausado antes de testar o M07 (inserir uma embarcação e validar os 2 formulários). |

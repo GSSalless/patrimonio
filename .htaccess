@@ -1,0 +1,45 @@
+# Raiz web = a própria pasta do projeto (sem subpasta /public).
+# index.php é o front controller. Assets e uploads (arquivos reais) são
+# servidos direto; o resto vira rota limpa encaminhada ao index.php.
+#
+# NÃO usa RewriteBase para ser portável entre ambientes (local /cezar/ e
+# produção /cesar/ ou raiz do domínio). Em .htaccess de subpasta o mod_rewrite
+# já trabalha relativo à própria pasta.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Arquivos/pastas reais (assets/, uploads/) servidos diretamente
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Demais URLs (rotas limpas) → front controller
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Segurança: bloquear acesso web direto a arquivos sensíveis.
+# (As pastas de código têm seu próprio .htaccess "Require all denied".)
+# ---------------------------------------------------------------------------
+
+# .env e variantes (.env.example, .env.producao, .env.local)
+<FilesMatch "^\.env">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Dumps SQL, documentação e metadados do projeto
+<FilesMatch "\.(sql|md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

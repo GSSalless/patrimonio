@@ -1,0 +1,12 @@
+# Segredos e ambiente (protege .env, .env.local, .env.producao, etc.)
+/.env
+/.env.*
+!/.env.example
+
+# Uploads de clientes (fora do versionamento)
+/uploads/*
+!/uploads/.gitkeep
+
+# Diversos
+*.log
+.DS_Store

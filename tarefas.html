@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarefas — Gestão Patrimonial & Family Office</title>
+<style>
+  :root{
+    --azul:#1a3a5c; --azul2:#2e7dd1; --cinza:#5a6a7e; --borda:#e3e8ef;
+    --verde:#1a7a45; --bg:#f4f6fa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#1e2530}
+  a{color:inherit}
+
+  .topo{
+    background:linear-gradient(135deg,#0f2540 0%,#1a3a5c 55%,#2e7dd1 100%);
+    color:#fff;padding:2rem 1.5rem 2.5rem;
+  }
+  .topo .wrap{max-width:1100px;margin:0 auto}
+  .topo h1{margin:0;font-size:1.5rem;font-weight:800}
+  .topo p{margin:.35rem 0 0;opacity:.85;font-size:.9rem}
+
+  .resumo{
+    max-width:1100px;margin:-1.6rem auto 0;padding:0 1.5rem;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;
+  }
+  .card-num{
+    background:#fff;border-radius:12px;padding:1.1rem 1.25rem;box-shadow:0 4px 14px rgba(0,0,0,.07);
+  }
+  .card-num .n{font-size:1.8rem;font-weight:800;color:var(--azul)}
+  .card-num .l{font-size:.8rem;color:var(--cinza);margin-top:.15rem}
+
+  .barra-geral{max-width:1100px;margin:1.25rem auto 0;padding:0 1.5rem}
+  .barra-geral .trilho{height:14px;background:#e3e8ef;border-radius:7px;overflow:hidden}
+  .barra-geral .fill{height:100%;background:linear-gradient(90deg,#2e7dd1,#1a7a45);width:0;transition:width .5s}
+  .barra-geral .txt{display:flex;justify-content:space-between;font-size:.82rem;color:var(--cinza);margin-bottom:.4rem}
+
+  .acoes{max-width:1100px;margin:1rem auto 0;padding:0 1.5rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+  .btn{border:1px solid var(--borda);background:#fff;color:var(--azul);padding:.45rem .9rem;border-radius:8px;
+    font-size:.82rem;cursor:pointer;font-weight:600;text-decoration:none;display:inline-block}
+  .btn:hover{background:#eef3fa}
+  .legenda{font-size:.78rem;color:var(--cinza);margin-left:auto}
+
+  .grid{max-width:1100px;margin:1.5rem auto 3rem;padding:0 1.5rem;
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.25rem}
+
+  .modulo{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.06);overflow:hidden;
+    display:flex;flex-direction:column;border-top:4px solid var(--azul2)}
+  .modulo-head{padding:1rem 1.1rem .75rem;display:flex;align-items:center;gap:.7rem}
+  .modulo-icone{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;color:#fff;flex-shrink:0}
+  .modulo-titulo{font-size:.98rem;font-weight:700;color:var(--azul);line-height:1.2}
+  .modulo-sub{font-size:.74rem;color:var(--cinza);margin-top:.1rem}
+
+  .mini-barra{height:7px;background:#eef1f5;border-radius:4px;margin:0 1.1rem;overflow:hidden}
+  .mini-barra .f{height:100%;background:var(--verde);width:0;transition:width .4s}
+  .mini-pct{font-size:.72rem;color:var(--cinza);text-align:right;margin:.3rem 1.1rem 0}
+
+  .itens{list-style:none;margin:.5rem 0 0;padding:.25rem .6rem 1rem}
+  .itens li{margin:0}
+  .item{display:flex;gap:.6rem;align-items:flex-start;padding:.4rem .5rem;border-radius:8px;cursor:pointer;
+    font-size:.85rem;line-height:1.35}
+  .item:hover{background:#f5f8fc}
+  .item input{margin-top:.18rem;width:16px;height:16px;accent-color:var(--verde);cursor:pointer;flex-shrink:0}
+  .item.feito span{color:#9aa6b4;text-decoration:line-through}
+
+  .selo{font-size:.66rem;font-weight:700;padding:.1rem .45rem;border-radius:20px;margin-left:auto;white-space:nowrap}
+  .selo.ok{background:#e6f4ec;color:var(--verde)}
+  .selo.andamento{background:#fff3e0;color:#b3700f}
+  .selo.todo{background:#eef1f5;color:var(--cinza)}
+
+  .rodape{text-align:center;font-size:.75rem;color:#9aa6b4;padding:0 1.5rem 2.5rem}
+  .nota-rel{max-width:1100px;margin:0 auto 1.5rem;padding:1rem 1.25rem;background:#eaf2fc;border-left:4px solid var(--azul2);
+    border-radius:8px;font-size:.83rem;color:#3a4656}
+  .nota-rel strong{color:var(--azul)}
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="wrap">
+    <h1>📋 Tarefas de Desenvolvimento — Gestão Patrimonial &amp; Family Office</h1>
+    <p>O que já construímos (páginas e tabelas) × os 15 módulos do ERP. Cada item é uma entrega de desenvolvimento.</p>
+  </div>
+</div>
+
+<div class="resumo">
+  <div class="card-num"><div class="n" id="r-total">0</div><div class="l">Tarefas no total</div></div>
+  <div class="card-num"><div class="n" id="r-feitas" style="color:var(--verde)">0</div><div class="l">Concluídas</div></div>
+  <div class="card-num"><div class="n" id="r-pendentes" style="color:#b3700f">0</div><div class="l">Pendentes</div></div>
+  <div class="card-num"><div class="n" id="r-modulos">0</div><div class="l">Módulos / blocos</div></div>
+</div>
+
+<div class="barra-geral">
+  <div class="txt"><span>Progresso geral</span><span id="g-pct">0%</span></div>
+  <div class="trilho"><div class="fill" id="g-fill"></div></div>
+</div>
+
+<div class="acoes">
+  <button class="btn" onclick="marcarTodos(true)">✓ Marcar tudo</button>
+  <button class="btn" onclick="marcarTodos(false)">▢ Desmarcar tudo</button>
+  <button class="btn" onclick="resetar()">↺ Restaurar padrão</button>
+  <span class="legenda">Suas marcações ficam salvas neste navegador.</span>
+</div>
+
+<div class="nota-rel">
+  💡 <strong>Como ler:</strong> cada cartão é um módulo do sistema. Os itens marcados em verde já estão
+  <strong>codificados no projeto</strong> (com o arquivo/tabela ao lado); os demais são o que falta desenvolver.
+  Hoje o sistema cobre principalmente o <strong>Módulo 05 — Imóveis</strong> e a base de Clientes.
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="rodape">Documento vivo — atualizado a cada sessão de desenvolvimento. Fonte: <code>TAREFAS.md</code></div>
+
+<script>
+const DADOS = [
+  { id:'base', nome:'Base do Sistema', icone:'🧱', cor:'#1a3a5c', sub:'Infra · login · clientes', itens:[
+    {t:'Banco gestao_patrimonial + schema.sql + seed.sql', done:true},
+    {t:'Conexão PDO (includes/db.php)', done:true},
+    {t:'Auth/sessão + permissões (includes/auth.php)', done:true},
+    {t:'Helpers (includes/functions.php) · header/footer · style.css · main.js', done:true},
+    {t:'Login (index.php) + logout (logout.php)', done:true},
+    {t:'Dashboard hub de módulos (dashboard.php)', done:true},
+    {t:'Clientes: lista · novo · editar (clientes/*.php)', done:true},
+    {t:'Seletor de cliente no topo (header.php)', done:true},
+  ]},
+  { id:'m01', nome:'Módulo 01 — Pessoas', icone:'👤', cor:'#2e7dd1', sub:'parcial (via clientes)', itens:[
+    {t:'Tabela `clientes` (PF/PJ) básica — feita', done:true},
+    {t:'Tabela `pessoas` ampla (RG, estado civil, tipo sanguíneo, nascimento)', done:false},
+    {t:'Cadastro PF completo: múltiplos telefones, e-mails, endereços', done:false},
+    {t:'Contatos de emergência', done:false},
+    {t:'Dependentes / cônjuge / filhos', done:false},
+    {t:'Relacionamentos: imóveis, veículos, investimentos, empresas, contratos', done:false},
+  ]},
+  { id:'m02', nome:'Módulo 02 — Colaboradores', icone:'🧑‍💼', cor:'#7d3ff0', sub:'não iniciado', itens:[
+    {t:'Tabela `colaboradores` + página de listagem', done:false},
+    {t:'Cadastro: dados pessoais + RH (cargo, salário, depto, gestor)', done:false},
+    {t:'Dependentes (cônjuge, filhos)', done:false},
+    {t:'Escolaridade: formação, cursos, certificações', done:false},
+    {t:'Saúde: tipo sanguíneo, convênios, alergias', done:false},
+    {t:'Uniformes: camiseta, camisa, calça, calçado', done:false},
+    {t:'Benefícios: VA, plano de saúde, seguro de vida', done:false},
+    {t:'Histórico: salários, promoções, advertências, avaliações', done:false},
+    {t:'Controle: férias, faltas, atestados, treinamentos', done:false},
+  ]},
+  { id:'m03', nome:'Módulo 03 — Empresas', icone:'🏢', cor:'#1f6fe0', sub:'parcial (PJ em clientes)', itens:[
+    {t:'PJ básica via `clientes` (razão social, CNPJ) — feita', done:true},
+    {t:'Tabela `empresas` dedicada (CNAEs, capital social, fantasia)', done:false},
+    {t:'Estrutura: sócios, administradores, holdings', done:false},
+    {t:'Documentos: contrato social, alterações, certidões', done:false},
+    {t:'Relacionamentos: contabilidade, jurídico, bancos, imóveis, veículos', done:false},
+  ]},
+  { id:'m04', nome:'Módulo 04 — Fornecedores e Parceiros', icone:'🤝', cor:'#0d9488', sub:'não iniciado', itens:[
+    {t:'Tabela `fornecedores` + página de listagem', done:false},
+    {t:'Cadastro: razão social, fantasia, CNPJ, endereço, contatos', done:false},
+    {t:'Classificação: contábil, jurídico, seguros, marina, saúde, TI, RH…', done:false},
+    {t:'Contratos: vigência, valor, reajustes', done:false},
+    {t:'Financeiro: banco, PIX, pagamentos', done:false},
+    {t:'Avaliação: SLA, qualidade, prazo, custo-benefício', done:false},
+    {t:'Arquivos: contratos, NFs, certidões', done:false},
+  ]},
+  { id:'m05', nome:'Módulo 05 — Imóveis', icone:'🏛️', cor:'#1a7a45', sub:'implementado (F1)', itens:[
+    {t:'Tabelas `imoveis` + `avaliacoes`', done:true},
+    {t:'Lista com filtros (imoveis/lista.php)', done:true},
+    {t:'Cadastro (imoveis/novo.php)', done:true},
+    {t:'Edição (imoveis/editar.php)', done:true},
+    {t:'Ficha com abas (imoveis/ficha.php)', done:true},
+    {t:'IPTU (financeiro/novo_iptu.php)', done:true},
+    {t:'Condomínio (financeiro/nova_fatura_cond.php)', done:true},
+    {t:'Reformas (reformas/nova.php + editar.php)', done:true},
+    {t:'Locação (locacao/novo.php)', done:true},
+    {t:'Lançamentos financeiros (financeiro/novo_lancamento.php)', done:true},
+    {t:'Relatório de pendências em PDF (imoveis/pendencias_pdf.php)', done:true},
+    {t:'Ficha em hub central (modais) + ícones', done:true},
+    {t:'Condomínio vinculado: cadastro, síndico, valores, comodidades (condominios/*.php)', done:true},
+    {t:'Manutenções do imóvel (manutencoes/* + nó no hub + gera caixa)', done:true},
+    {t:'Checklist documental completo (modal Documentos, ✓/✗)', done:true},
+  ]},
+  { id:'m06', nome:'Módulo 06 — Veículos', icone:'🚗', cor:'#dc2626', sub:'cadastro implementado', itens:[
+    {t:'Tabela `veiculos` + lista + cadastro + edição (veiculos/*.php)', done:true},
+    {t:'Identificação: placa, Renavam, chassi', done:true},
+    {t:'Dados: marca, modelo, ano, cor, combustível', done:true},
+    {t:'Financeiro: aquisição, FIPE, mercado', done:true},
+    {t:'Documentação: licenciamento, multas + upload do CRLV', done:true},
+    {t:'Seguro: seguradora, apólice, franquia, vencimento', done:true},
+    {t:'Upload de documentos (CRLV, apólice, NFs, fotos)', done:true},
+    {t:'Alerta de campos vazios + modal de pendências + PDF + WhatsApp', done:true},
+    {t:'Abastecimentos (sub-tabela + seção no editar.php)', done:true},
+    {t:'Manutenções: revisões, óleo, peças, pneus, freios, baterias', done:true},
+    {t:'Histórico: sinistros, custos, franquia, status', done:true},
+  ]},
+  { id:'m07', nome:'Módulo 07 — Outros Bens (Embarcações, Joias, Obras de Arte)', icone:'🛥️', cor:'#7c3aed', sub:'cadastro implementado', itens:[
+    {t:'Tabela `outros_bens` unificada (tipo: embarcacao/joia/obra_de_arte/outro)', done:true},
+    {t:'Botão "Outros" em patrimonio.php (unifica Embarcações + Joias + Arte)', done:true},
+    {t:'Lista em outros/lista.php com filtro por tipo + badge de contagem', done:true},
+    {t:'Seletor de tipo antes do formulário (outros/novo.php — etapa 1)', done:true},
+    {t:'Formulário de cadastro com blocos específicos por tipo (outros/novo.php — etapa 2)', done:true},
+    {t:'Edição completa em outros/editar.php', done:true},
+    {t:'Upload de documentos (foto, laudo, apólice, outros)', done:true},
+    {t:'Modal de pendências pós-cadastro + WhatsApp', done:true},
+    {t:'Embarcação: marina, vaga, mensalidade, horímetro, registro Capitania', done:true},
+    {t:'Joia: material, quilates, certificado GIA', done:true},
+    {t:'Obra de Arte: artista, técnica, dimensões, proveniência', done:true},
+    {t:'Manutenções de embarcação (bem_manutencoes + seção no editar.php) — falta teste HTTP', done:true},
+    {t:'Avaliações periódicas / histórico de valor (atualiza valor_mercado) — falta teste HTTP', done:true},
+  ]},
+  { id:'m08', nome:'Módulo 08 — Bancos e Instituições', icone:'🏦', cor:'#475569', sub:'não iniciado', itens:[
+    {t:'Tabela `instituicoes` + cadastro (banco, corretora, gestora)', done:false},
+    {t:'Dados: país, moeda', done:false},
+    {t:'Contatos: gerente, banker, assessor', done:false},
+    {t:'Arquivos: contratos, KYC, procurações', done:false},
+  ]},
+  { id:'m09', nome:'Módulo 09 — Contas Financeiras', icone:'💳', cor:'#0891b2', sub:'não iniciado', itens:[
+    {t:'Tabela `contas` + cadastro (banco, agência, conta)', done:false},
+    {t:'Internacional: SWIFT, IBAN, routing', done:false},
+    {t:'Titularidade: pessoa, empresa, holding', done:false},
+    {t:'Saldos: saldo atual, moeda', done:false},
+  ]},
+  { id:'m10', nome:'Módulo 10 — Investimentos', icone:'📈', cor:'#16a34a', sub:'não iniciado', itens:[
+    {t:'Tabela `investimentos` + listagem + cadastro', done:false},
+    {t:'Classificação: renda fixa, fundos, ações, previdência, offshore, cripto', done:false},
+    {t:'Aplicação: data, valor aplicado, valor atual', done:false},
+    {t:'Rentabilidade: mensal, anual, acumulada', done:false},
+    {t:'Liquidez (D0/D1/D30/D90) · Tributação (IR/IOF/come-cotas)', done:false},
+    {t:'Custos: taxa de administração e performance', done:false},
+    {t:'Histórico: aplicações, resgates, rendimentos · Documentos', done:false},
+  ]},
+  { id:'m11', nome:'Módulo 11 — Seguros', icone:'🛡️', cor:'#ca8a04', sub:'não iniciado', itens:[
+    {t:'Tabela `seguros` (relacionável a imóvel/veículo/embarcação/pessoa)', done:false},
+    {t:'Tipos: vida, saúde, veículos, imóveis, embarcações, empresarial', done:false},
+    {t:'Dados: seguradora, corretora, apólice, vigência, franquia', done:false},
+    {t:'Arquivos: contratos, apólices, boletos', done:false},
+  ]},
+  { id:'m12', nome:'Módulo 12 — Contratos', icone:'📜', cor:'#9333ea', sub:'parcial (só locação)', itens:[
+    {t:'Contrato de locação (contratos_locacao) — feito', done:true},
+    {t:'Tabela `contratos` central (número, tipo)', done:false},
+    {t:'Relacionamentos: imóvel, veículo, fornecedor, colaborador, empresa', done:false},
+    {t:'Controle: início, término, renovação, reajuste', done:false},
+  ]},
+  { id:'m13', nome:'Módulo 13 — Documentos', icone:'🗂️', cor:'#2563eb', sub:'parcial', itens:[
+    {t:'Tabela `documentos` polimórfica + upload (documentos/upload.php)', done:true},
+    {t:'Página repositório central com busca e filtros', done:false},
+    {t:'Categorias completas (pessoas, veículos, empresas, investimentos…)', done:false},
+    {t:'Campos: data de emissão, vencimento, observações', done:false},
+  ]},
+  { id:'m14', nome:'Módulo 14 — Agenda e Alertas', icone:'🔔', cor:'#ea580c', sub:'não iniciado', itens:[
+    {t:'Motor de alertas + página de agenda', done:false},
+    {t:'Pessoas: CNH / passaporte vencendo', done:false},
+    {t:'Colaboradores: férias, cursos vencendo', done:false},
+    {t:'Imóveis: IPTU, seguro · Veículos: IPVA, licenciamento, revisão', done:false},
+    {t:'Investimentos: vencimento, carência · Contratos: renovação, reajuste', done:false},
+  ]},
+  { id:'m15', nome:'Módulo 15 — Dashboard Executivo', icone:'📊', cor:'#b06bff', sub:'parcial', itens:[
+    {t:'Hub de módulos no dashboard (feito)', done:true},
+    {t:'Patrimônio: total de imóveis, veículos, embarcações, investimentos', done:false},
+    {t:'Financeiro: caixa consolidado, bancos, aplicações', done:false},
+    {t:'RH: nº de colaboradores, férias, treinamentos', done:false},
+    {t:'Contratos ativos/vencendo · Seguros vigentes/vencendo', done:false},
+  ]},
+  { id:'ux', nome:'Melhorias UX / Plataforma', icone:'✨', cor:'#0f766e', sub:'sessão 26/06/2026', itens:[
+    {t:'Dashboard como hub de apps (estilo iPhone)', done:true},
+    {t:'Site do cartório + inscrição no bloco Identificação', done:true},
+    {t:'Coproprietários condicionais (< 100%)', done:true},
+    {t:'Remoção de regime de bens / holding / beneficiário', done:true},
+    {t:'Valor do m² automático (front + servidor)', done:true},
+    {t:'Modal de pendências pós-cadastro + PDF + WhatsApp', done:true},
+    {t:'Confirmação antes de salvar (nº de campos em aberto)', done:true},
+    {t:'Cache-busting do CSS', done:true},
+    {t:'Replicar modal de pendências no editar.php', done:false},
+    {t:'Confirmação de campos em aberto no editar.php', done:false},
+  ]},
+];
+
+const STORAGE_KEY = 'tarefas_cezar_v2';
+let estado = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+function idItem(mod, i){ return mod + '_' + i; }
+function estaFeito(mod, i, padrao){
+  const k = idItem(mod, i);
+  return (k in estado) ? estado[k] : padrao;
+}
+
+function render(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  DADOS.forEach(mod => {
+    const total = mod.itens.length;
+    const feitos = mod.itens.filter((it,i)=>estaFeito(mod.id,i,it.done)).length;
+    const pct = total ? Math.round(feitos/total*100) : 0;
+    let selo = 'todo', seloTxt = 'A fazer';
+    if (pct === 100){ selo='ok'; seloTxt='Concluído'; }
+    else if (pct > 0){ selo='andamento'; seloTxt='Em andamento'; }
+
+    const card = document.createElement('div');
+    card.className = 'modulo';
+    card.style.borderTopColor = mod.cor;
+    card.innerHTML = `
+      <div class="modulo-head">
+        <div class="modulo-icone" style="background:${mod.cor}">${mod.icone}</div>
+        <div style="flex:1;min-width:0">
+          <div class="modulo-titulo">${mod.nome}</div>
+          <div class="modulo-sub">${mod.sub||''}</div>
+        </div>
+        <span class="selo ${selo}">${seloTxt}</span>
+      </div>
+      <div class="mini-barra"><div class="f" style="width:${pct}%;background:${mod.cor}"></div></div>
+      <div class="mini-pct">${feitos}/${total} · ${pct}%</div>
+      <ul class="itens">
+        ${mod.itens.map((it,i)=>{
+          const feito = estaFeito(mod.id,i,it.done);
+          return `<li><label class="item ${feito?'feito':''}">
+            <input type="checkbox" data-mod="${mod.id}" data-i="${i}" ${feito?'checked':''}>
+            <span>${it.t}</span>
+          </label></li>`;
+        }).join('')}
+      </ul>`;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', function(){
+      const mod = this.dataset.mod, i = +this.dataset.i;
+      estado[idItem(mod,i)] = this.checked;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+      render(); resumo();
+    });
+  });
+}
+
+function resumo(){
+  let total=0, feitos=0;
+  DADOS.forEach(mod=>mod.itens.forEach((it,i)=>{ total++; if(estaFeito(mod.id,i,it.done)) feitos++; }));
+  const pct = total ? Math.round(feitos/total*100) : 0;
+  document.getElementById('r-total').textContent = total;
+  document.getElementById('r-feitas').textContent = feitos;
+  document.getElementById('r-pendentes').textContent = total-feitos;
+  document.getElementById('r-modulos').textContent = DADOS.length;
+  document.getElementById('g-pct').textContent = pct+'%';
+  document.getElementById('g-fill').style.width = pct+'%';
+}
+
+function marcarTodos(v){
+  DADOS.forEach(mod=>mod.itens.forEach((it,i)=>{ estado[idItem(mod,i)] = v; }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+  render(); resumo();
+}
+function resetar(){
+  estado = {};
+  localStorage.removeItem(STORAGE_KEY);
+  render(); resumo();
+}
+
+render(); resumo();
+</script>
+</body>
+</html>
