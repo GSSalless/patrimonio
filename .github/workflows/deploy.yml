@@ -1,0 +1,36 @@
+name: Deploy para produção (FTP)
+
+# Roda automaticamente a cada push na branch main.
+# Também pode ser disparado manualmente pela aba "Actions" do GitHub.
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Publicar via FTP na Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:     ${{ secrets.FTP_SERVER }}
+          username:   ${{ secrets.FTP_USERNAME }}
+          password:   ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          protocol:   ftp
+          # Nunca enviar estes para o servidor:
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            .env
+            .env.local
+            .env.producao
+            uploads/**
+            deploy.sh
+            deploy_pacote/**
+            **/*.md

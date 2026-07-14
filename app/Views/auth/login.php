@@ -104,22 +104,6 @@
   }
   .btn-login:hover { filter: brightness(1.06); box-shadow: 0 6px 18px rgba(184,145,47,.45); }
 
-  .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
-  .divider hr { flex: 1; border: none; border-top: 1px solid #e7e0d0; }
-  .divider span { font-size: 12px; color: #7a7361; }
-
-  .demo-box {
-    background: #faf7ef; border: 1px solid #e7e0d0; border-radius: 8px;
-    padding: 14px 16px;
-  }
-  .demo-box p { font-size: 12px; color: #7a7361; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
-  .demo-cred {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 13px; margin-bottom: 4px;
-  }
-  .demo-cred span { color: #1c1a17; }
-  .demo-cred code { background: #fff; border: 1px solid #e7e0d0; padding: 2px 8px; border-radius: 4px; font-size: 12px; color: var(--dourado); }
-
   .error-msg {
     background: #f8e7e7; border: 1px solid #e6b8b8;
     border-radius: 7px; padding: 10px 14px; font-size: 13px; color: #b23b3b;
@@ -177,28 +161,6 @@
 
       <button type="submit" class="btn-login">Entrar →</button>
     </form>
-
-    <div class="divider"><hr><span>acesso de demonstração</span><hr></div>
-
-    <div class="demo-box">
-      <p>Credenciais de teste</p>
-      <div class="demo-cred">
-        <span>Admin (César):</span>
-        <code>cesar@gestaopatrimonial.com.br</code>
-      </div>
-      <div class="demo-cred">
-        <span>Senha:</span>
-        <code>cesar123</code>
-      </div>
-      <div class="demo-cred" style="margin-top:8px;">
-        <span>Cliente (Marcos):</span>
-        <code>marcos@road.com.br</code>
-      </div>
-      <div class="demo-cred">
-        <span>Senha:</span>
-        <code>marcos123</code>
-      </div>
-    </div>
   </div>
 </div>
 

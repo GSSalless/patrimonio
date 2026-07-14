@@ -25,8 +25,7 @@ class Router
         $handler = $this->routes[$method][$url] ?? null;
 
         if ($handler === null) {
-            http_response_code(404);
-            echo '404 — rota não encontrada: ' . htmlspecialchars($url);
+            ErrorHandler::renderNotFound($url);
             return;
         }
 

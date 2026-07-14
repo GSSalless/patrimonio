@@ -16,3 +16,4 @@ require_once APP_ROOT . '/includes/auth.php';
 // Configuração geral da aplicação
 $config = require APP_ROOT . '/config/app.php';
 define('BASE_URL', $config['base_url']);
+define('APP_ENV', $config['env']);   // local | producao — usado pelo ErrorHandler

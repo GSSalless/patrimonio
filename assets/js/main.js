@@ -71,4 +71,32 @@ function confirmar_exclusao(msg) {
   return confirm(msg || 'Confirma a exclusão?');
 }
 
+// Menu lateral esquerdo (drawer)
+function init_menu_lateral() {
+  const toggle  = document.getElementById('menu-toggle');
+  const menu    = document.getElementById('menu-lateral');
+  const overlay = document.getElementById('menu-overlay');
+  const fechar  = document.getElementById('menu-fechar');
+  if (!toggle || !menu) return;
+
+  const abrir = () => {
+    document.body.classList.add('menu-aberto');
+    menu.setAttribute('aria-hidden', 'false');
+    toggle.setAttribute('aria-expanded', 'true');
+    if (overlay) overlay.hidden = false;
+  };
+  const fecharMenu = () => {
+    document.body.classList.remove('menu-aberto');
+    menu.setAttribute('aria-hidden', 'true');
+    toggle.setAttribute('aria-expanded', 'false');
+    if (overlay) overlay.hidden = true;
+  };
+
+  toggle.addEventListener('click', abrir);
+  if (fechar)  fechar.addEventListener('click', fecharMenu);
+  if (overlay) overlay.addEventListener('click', fecharMenu);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharMenu(); });
+}
+
 document.addEventListener('DOMContentLoaded', init_abas);
+document.addEventListener('DOMContentLoaded', init_menu_lateral);

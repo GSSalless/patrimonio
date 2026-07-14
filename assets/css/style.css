@@ -100,29 +100,137 @@ h1, h2, h3 { font-family: var(--fonte-titulo); }
 
 .topo-seletor select option { background: var(--preto); color: #f4f1e8; }
 
-.topo-nav { display: flex; gap: .35rem; margin-left: auto; }
-
-.topo-nav a {
-  color: rgba(244,241,232,.72);
-  font-size: .9rem;
-  padding: .4rem .85rem;
-  border-radius: var(--raio-sm);
-  border: 1px solid transparent;
-  transition: background .15s, color .15s, border-color .15s;
-}
-
-.topo-nav a:hover {
-  background: rgba(212,175,55,.1);
-  border-color: rgba(212,175,55,.35);
+/* Botão hambúrguer (abre o menu lateral) */
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1.35rem;
   color: var(--dourado-claro);
-  text-decoration: none;
+  background: rgba(212,175,55,.08);
+  border: 1px solid rgba(212,175,55,.3);
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  flex-shrink: 0;
 }
+.menu-toggle:hover { background: rgba(212,175,55,.18); border-color: rgba(212,175,55,.55); }
+.menu-toggle:active { transform: translateY(1px); }
 
 .topo-usuario {
+  margin-left: auto;
   font-size: .85rem;
   color: rgba(244,241,232,.6);
   white-space: nowrap;
 }
+.topo-usuario a { color: rgba(244,241,232,.75); }
+.topo-usuario a:hover { color: var(--dourado-claro); }
+.topo-sep { margin: 0 .5rem; color: rgba(212,175,55,.4); }
+
+/* ── Menu lateral esquerdo (drawer) ──────────────────────── */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,8,10,.55);
+  backdrop-filter: blur(2px);
+  z-index: 190;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+body.menu-aberto .menu-overlay { opacity: 1; }
+
+.menu-lateral {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 268px;
+  max-width: 82vw;
+  height: 100%;
+  z-index: 200;
+  background: linear-gradient(180deg, #16161a 0%, var(--preto) 100%);
+  border-right: 1px solid rgba(212,175,55,.28);
+  box-shadow: 6px 0 32px rgba(0,0,0,.45);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .24s cubic-bezier(.4,0,.2,1);
+}
+body.menu-aberto .menu-lateral { transform: translateX(0); }
+
+.menu-lateral-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid rgba(212,175,55,.18);
+}
+.menu-lateral-marca {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #f4f1e8;
+}
+.menu-lateral-marca span { color: var(--dourado-claro); font-style: italic; }
+.menu-fechar {
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: rgba(244,241,232,.65);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+}
+.menu-fechar:hover { color: var(--dourado-claro); background: rgba(212,175,55,.1); }
+
+.menu-nav { flex: 1; padding: .9rem .75rem; overflow-y: auto; }
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .72rem .85rem;
+  margin-bottom: .2rem;
+  border-radius: var(--raio-sm);
+  color: rgba(244,241,232,.78);
+  font-size: .95rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.menu-item i { font-size: 1.1rem; color: rgba(212,175,55,.75); width: 1.3rem; text-align: center; }
+.menu-item:hover {
+  background: rgba(212,175,55,.1);
+  color: #f4f1e8;
+  text-decoration: none;
+}
+.menu-item.ativo {
+  background: rgba(212,175,55,.16);
+  border-color: rgba(212,175,55,.4);
+  color: var(--dourado-claro);
+}
+.menu-item.ativo i { color: var(--dourado-claro); }
+
+.menu-lateral-rodape {
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(212,175,55,.18);
+}
+.menu-user-nome { color: #f4f1e8; font-size: .9rem; font-weight: 600; }
+.menu-user-nivel { color: rgba(212,175,55,.7); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; margin-top: .1rem; }
+.menu-sair {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .9rem;
+  padding: .5rem .9rem;
+  font-size: .88rem;
+  color: rgba(244,241,232,.8);
+  border: 1px solid rgba(212,175,55,.3);
+  border-radius: var(--raio-sm);
+}
+.menu-sair:hover { background: rgba(212,175,55,.12); color: var(--dourado-claro); text-decoration: none; }
 
 /* ── Layout Principal ────────────────────────────────────── */
 .container {
@@ -785,12 +893,45 @@ h1, h2, h3 { font-family: var(--fonte-titulo); }
 .login-logo p  { font-size: .85rem; color: var(--cor-secundario); margin-top: .25rem; }
 
 /* ── Responsivo ──────────────────────────────────────────── */
+
+/* Tablet e abaixo */
+@media (max-width: 900px) {
+  .form-grid-3, .form-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 768px) {
+  .container { padding: 1.1rem 1rem; }
+
+  /* Topo compacto */
+  .topo { padding: .65rem 1rem; gap: .7rem; }
+  .topo-logo { font-size: 1.05rem; }
+  .topo-seletor { max-width: none; flex: 1; }
+
+  /* Formulários em coluna única */
   .form-grid-2, .form-grid-3, .form-grid-4 { grid-template-columns: 1fr; }
-  .topo-seletor { max-width: 180px; }
-  .topo-nav a span { display: none; }
+
+  /* Cabeçalho de card empilha quando não cabe */
+  .card { padding: 1.1rem 1rem; }
+  .card-header { flex-wrap: wrap; gap: .6rem; }
+
+  /* Tabelas: rolagem horizontal em vez de quebrar o layout */
+  .tabela { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+
+  /* Abas roláveis lateralmente */
+  .abas { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+  .abas a { white-space: nowrap; }
+
+  /* Listas de imóveis */
   .imoveis-grid { grid-template-columns: 1fr; }
   .imovel-item { flex-wrap: wrap; gap: .25rem .75rem; }
   .imovel-item-nome { flex: 1 1 100%; }
   .imovel-item-cidade { flex: 1 1 auto; }
+}
+
+/* Celular */
+@media (max-width: 560px) {
+  /* Nome do usuário fica só no rodapé do menu lateral; no topo economiza espaço */
+  .topo-usuario { display: none; }
+  .topo-logo span { display: inline; }
+  .menu-lateral { width: 82vw; }
 }

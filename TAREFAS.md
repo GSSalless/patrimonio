@@ -159,6 +159,19 @@
 
 ---
 
+### Bloco L — UX, Erros e Produção (14/07/2026)
+
+- [x] **L1** — Tratamento global de erro (`app/Core/ErrorHandler.php`): página amigável em
+  produção (500/404) + detalhes completos em `local`; loga sempre em `error_log`.
+  Substitui o "HTTP ERROR 500" genérico da hospedagem.
+  *(Diagnóstico: ficha do imóvel dava 500 em produção porque a tabela `manutencoes`
+  não existia lá — faltou rodar `sql/update_producao_modulos_567.sql` no banco de produção.)*
+- [x] **L2** — Menu lateral esquerdo (drawer suspenso com botão ☰) no lugar do menu no topo-direito.
+- [x] **L3** — Layout responsivo (celular): topo, tabelas com rolagem, grids de formulário
+  em coluna única, cards e abas adaptados via `@media`.
+
+---
+
 ## FASE 2 — Cadastro Patrimonial Completo
 *(inicia após aprovação da F1)*
 

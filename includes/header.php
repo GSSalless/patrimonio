@@ -38,11 +38,21 @@ if (isset($_GET['cliente_id']) && $usuario && $usuario['nivel'] === 'admin') {
 </head>
 <body>
 
-<?php if ($usuario): ?>
+<?php
+if ($usuario):
+  // Rota atual (para marcar o item ativo no menu). Vem do front controller.
+  $rota_atual = trim($_GET['url'] ?? '', '/');
+  $eh_admin   = $usuario['nivel'] === 'admin';
+?>
 <header class="topo">
+  <button type="button" class="menu-toggle" id="menu-toggle"
+          aria-label="Abrir menu" aria-controls="menu-lateral" aria-expanded="false">
+    <i class="bi bi-list"></i>
+  </button>
+
   <div class="topo-logo">Gestão <span>Patrimonial</span></div>
 
-  <?php if ($usuario['nivel'] === 'admin' && $clientes_lista): ?>
+  <?php if ($eh_admin && $clientes_lista): ?>
   <div class="topo-seletor">
     <form method="get" id="form-cliente">
       <select name="cliente_id" onchange="document.getElementById('form-cliente').submit()">
@@ -57,21 +67,53 @@ if (isset($_GET['cliente_id']) && $usuario && $usuario['nivel'] === 'admin') {
   </div>
   <?php endif; ?>
 
-  <nav class="topo-nav">
-    <?php if ($usuario['nivel'] === 'admin'): ?>
-      <a href="<?= base_url('dashboard') ?>">Dashboard</a>
-      <a href="<?= base_url('clientes') ?>">Clientes</a>
-      <?php if ($cliente_sel): ?>
-        <a href="<?= base_url('imoveis') ?>">Imóveis</a>
-      <?php endif; ?>
-    <?php else: ?>
-      <a href="<?= base_url('imoveis') ?>">Meus Imóveis</a>
-    <?php endif; ?>
-  </nav>
-
   <div class="topo-usuario">
-    <?= h($usuario['nome']) ?> &nbsp;|&nbsp;
-    <a href="<?= base_url('logout') ?>" style="color:rgba(255,255,255,.7)">Sair</a>
+    <?= h($usuario['nome']) ?>
+    <span class="topo-sep">|</span>
+    <a href="<?= base_url('logout') ?>">Sair</a>
   </div>
 </header>
+
+<!-- Menu lateral esquerdo (drawer) -->
+<div class="menu-overlay" id="menu-overlay" hidden></div>
+<aside class="menu-lateral" id="menu-lateral" aria-hidden="true">
+  <div class="menu-lateral-topo">
+    <span class="menu-lateral-marca">Gestão <span>Patrimonial</span></span>
+    <button type="button" class="menu-fechar" id="menu-fechar" aria-label="Fechar menu">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <nav class="menu-nav">
+    <?php
+    // [rota, rótulo, ícone, mostrar?]
+    $itens = $eh_admin
+      ? [
+          ['dashboard', 'Dashboard', 'bi-speedometer2', true],
+          ['clientes',  'Clientes',  'bi-people',       true],
+          ['imoveis',   'Imóveis',   'bi-buildings',    (bool) $cliente_sel],
+        ]
+      : [
+          ['imoveis',   'Meus Imóveis', 'bi-buildings', true],
+        ];
+    foreach ($itens as [$rota, $rotulo, $icone, $mostrar]):
+      if (!$mostrar) continue;
+      $ativo = ($rota_atual === $rota || str_starts_with($rota_atual, $rota . '/')) ? ' ativo' : '';
+    ?>
+      <a class="menu-item<?= $ativo ?>" href="<?= base_url($rota) ?>">
+        <i class="bi <?= $icone ?>"></i><span><?= h($rotulo) ?></span>
+      </a>
+    <?php endforeach; ?>
+  </nav>
+
+  <div class="menu-lateral-rodape">
+    <div class="menu-user">
+      <div class="menu-user-nome"><?= h($usuario['nome']) ?></div>
+      <div class="menu-user-nivel"><?= $eh_admin ? 'Administrador' : 'Cliente' ?></div>
+    </div>
+    <a class="menu-sair" href="<?= base_url('logout') ?>">
+      <i class="bi bi-box-arrow-right"></i> Sair
+    </a>
+  </div>
+</aside>
 <?php endif; ?>
