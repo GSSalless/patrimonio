@@ -49,6 +49,18 @@ class ErrorHandler
         if (!(error_reporting() & $tipo)) {
             return false; // erro suprimido com @ — deixa o PHP seguir
         }
+
+        // Warnings/notices não-fatais (ex.: "Undefined array key" por uma coluna
+        // ausente): em PRODUÇÃO apenas registra e deixa a página seguir — um
+        // detalhe não pode derrubar a tela inteira. Em LOCAL continua estrito
+        // (lança), pra o problema aparecer durante o desenvolvimento.
+        $naoFatais = E_WARNING | E_NOTICE | E_DEPRECATED
+                   | E_USER_WARNING | E_USER_NOTICE | E_USER_DEPRECATED;
+        if (($tipo & $naoFatais) && !self::isLocal()) {
+            error_log('[App-warn] ' . $msg . ' em ' . $arquivo . ':' . $linha);
+            return true; // tratado — o PHP continua a execução normalmente
+        }
+
         throw new ErrorException($msg, 0, $tipo, $arquivo, $linha);
     }
 
