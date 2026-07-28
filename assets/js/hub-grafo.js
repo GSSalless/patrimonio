@@ -35,7 +35,7 @@
 
   // ---- Dados ---------------------------------------------------------------
   const centro = Object.assign({ id: 'centro', tipo: 'centro' }, CENTRO);
-  centro.fx = W / 2; centro.fy = H / 2;                 // âncora no meio
+  centro.x = W / 2; centro.y = H / 2;                   // começa no meio, mas flutua junto
   const nodes = [centro].concat(NOS.map(n => Object.assign({ tipo: 'no' }, n)));
   const links = NOS.map(n => ({ source: 'centro', target: n.id }));
 
@@ -79,11 +79,13 @@
 
   // ---- Simulação de forças -------------------------------------------------
   const sim = d3.forceSimulation(nodes)
-    .force('link', d3.forceLink(links).id(d => d.id).distance(150).strength(0.5))
-    .force('charge', d3.forceManyBody().strength(-720))
-    .force('collide', d3.forceCollide(d => d.tipo === 'centro' ? 68 : 46))
-    .force('x', d3.forceX(W / 2).strength(0.05))
-    .force('y', d3.forceY(H / 2).strength(0.05))
+    .velocityDecay(0.35)                                  // um pouco mais "flutuante"
+    .force('link', d3.forceLink(links).id(d => d.id).distance(140).strength(0.5))
+    .force('charge', d3.forceManyBody().strength(-700))
+    .force('collide', d3.forceCollide(d => d.tipo === 'centro' ? 66 : 46))
+    // o centro flutua, mas com gravidade mais forte puxando pro meio (não vaza do quadro)
+    .force('x', d3.forceX(W / 2).strength(d => d.tipo === 'centro' ? 0.14 : 0.045))
+    .force('y', d3.forceY(H / 2).strength(d => d.tipo === 'centro' ? 0.14 : 0.045))
     .on('tick', ticked);
 
   function ticked() {
@@ -119,17 +121,17 @@
     .on('start', (e, d) => {
       arrastando = true; moveu = false; origem = [e.x, e.y];
       if (!e.active) sim.alphaTarget(0.3).restart();
-      if (d.tipo !== 'centro') { d.fx = d.x; d.fy = d.y; }
+      d.fx = d.x; d.fy = d.y;                                  // qualquer nó (inclusive o centro)
       realce(d.id);
     })
     .on('drag', (e, d) => {
       if (Math.hypot(e.x - origem[0], e.y - origem[1]) > 4) moveu = true;
-      if (d.tipo !== 'centro') { d.fx = e.x; d.fy = e.y; }
+      d.fx = e.x; d.fy = e.y;
     })
     .on('end', (e, d) => {
       arrastando = false;
       if (!e.active) sim.alphaTarget(0);
-      if (d.tipo !== 'centro') { d.fx = null; d.fy = null; }   // solta: volta a flutuar
+      d.fx = null; d.fy = null;                                // solta: volta a flutuar
       if (!moveu && d.modal && typeof abrirModal === 'function') abrirModal(d.modal);
       limpaRealce();
     });
