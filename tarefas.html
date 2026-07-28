@@ -80,6 +80,8 @@
     font-size:.86rem;display:flex;gap:.75rem;align-items:flex-start}
   .alerta-prod strong{color:#7a3d00}
   .alerta-prod code{background:#fce8c8;padding:.1rem .4rem;border-radius:4px;font-size:.92em}
+  .alerta-prod a{color:#9a5b00;font-weight:600;text-decoration:underline}
+  .alerta-prod a:hover code{background:#f7d9a8}
 </style>
 </head>
 <body>
@@ -117,11 +119,13 @@
     O deploy envia os arquivos mas <u>não executa SQL</u>. Enquanto estas duas migrations não forem
     rodadas em produção, as telas <strong>Contas</strong> (Mód. 09) e <strong>Pessoas</strong> (Mód. 01)
     retornam <strong>erro 500</strong> no ar:
-    <div style="margin-top:.45rem;line-height:1.7">
-      1. <code>sql/migration_modulo_09_contas.sql</code><br>
-      2. <code>sql/migration_modulo_01_pessoas.sql</code>
+    <div style="margin-top:.45rem;line-height:1.9">
+      1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_09_contas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_09_contas.sql</code></a> ↗<br>
+      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_01_pessoas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_01_pessoas.sql</code></a> ↗
     </div>
-    <div style="margin-top:.4rem;font-size:.92em;opacity:.85">Responsável: Gilson · rodar assim que possível.</div>
+    <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
+      Responsável: Gilson · rodar no phpMyAdmin da hospedagem assim que possível (local já está aplicado ✅).
+    </div>
   </div>
 </div>
 
