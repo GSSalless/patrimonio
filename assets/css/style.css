@@ -672,6 +672,8 @@ body.menu-aberto .menu-lateral { transform: translateX(0); }
 .hub-no:active .hub-no-tile { transform: scale(.94); }
 .hub-no-tile svg { width: 46%; height: 46%; fill: var(--dourado-claro); }
 .hub-no-tile i { font-size: clamp(1.3rem, 4vw, 1.9rem); color: var(--dourado-claro); line-height: 1; }
+/* Emoji realista (mesmo padrão do dashboard) dentro do tile grafite */
+.hub-no-emoji { font-size: clamp(1.7rem, 5.2vw, 2.8rem); line-height: 1; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
 .hub-no-lb { font-size: clamp(.62rem, 1.8vw, .76rem); font-weight: 700; color: var(--cor-primaria); text-align: center; line-height: 1.1; }
 
 /* grafite premium para todos os tiles do hub */

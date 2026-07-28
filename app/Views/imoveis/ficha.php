@@ -51,25 +51,25 @@ if (!function_exists('linha')) {
     </div>
 
     <button class="hub-no" style="left:50%;top:12%"    onclick="abrirModal('m-resumo')">
-      <span class="hub-no-tile hub-tile-azul"><i class="bi bi-clipboard-check-fill"></i></span><span class="hub-no-lb">Cadastro</span>
+      <span class="hub-no-tile hub-tile-azul"><span class="hub-no-emoji">📋</span></span><span class="hub-no-lb">Cadastro</span>
     </button>
     <button class="hub-no" style="left:79.7%;top:26.3%" onclick="abrirModal('m-financeiro')">
-      <span class="hub-no-tile hub-tile-verde"><i class="bi bi-cash-coin"></i></span><span class="hub-no-lb">Financeiro</span>
+      <span class="hub-no-tile hub-tile-verde"><span class="hub-no-emoji">💰</span></span><span class="hub-no-lb">Financeiro</span>
     </button>
     <button class="hub-no" style="left:87.0%;top:58.5%" onclick="abrirModal('m-reformas')">
-      <span class="hub-no-tile hub-tile-laranja"><i class="bi bi-hammer"></i></span><span class="hub-no-lb">Reformas</span>
+      <span class="hub-no-tile hub-tile-laranja"><span class="hub-no-emoji">🔨</span></span><span class="hub-no-lb">Reformas</span>
     </button>
     <button class="hub-no" style="left:66.5%;top:84.2%" onclick="abrirModal('m-manutencoes')">
-      <span class="hub-no-tile hub-tile-vermelho"><i class="bi bi-tools"></i></span><span class="hub-no-lb">Manutenções</span>
+      <span class="hub-no-tile hub-tile-vermelho"><span class="hub-no-emoji">🛠️</span></span><span class="hub-no-lb">Manutenções</span>
     </button>
     <button class="hub-no" style="left:33.5%;top:84.2%" onclick="abrirModal('m-condominio')">
-      <span class="hub-no-tile hub-tile-roxo"><i class="bi bi-building"></i></span><span class="hub-no-lb">Condomínio</span>
+      <span class="hub-no-tile hub-tile-roxo"><span class="hub-no-emoji">🏢</span></span><span class="hub-no-lb">Condomínio</span>
     </button>
     <button class="hub-no" style="left:13.0%;top:58.5%" onclick="abrirModal('m-aluguel')">
-      <span class="hub-no-tile hub-tile-roxo"><i class="bi bi-key-fill"></i></span><span class="hub-no-lb">Aluguel</span>
+      <span class="hub-no-tile hub-tile-roxo"><span class="hub-no-emoji">🔑</span></span><span class="hub-no-lb">Aluguel</span>
     </button>
     <button class="hub-no" style="left:20.3%;top:26.3%" onclick="abrirModal('m-documentos')">
-      <span class="hub-no-tile hub-tile-ciano"><i class="bi bi-folder-fill"></i></span><span class="hub-no-lb">Documentos</span>
+      <span class="hub-no-tile hub-tile-ciano"><span class="hub-no-emoji">📁</span></span><span class="hub-no-lb">Documentos</span>
     </button>
   </div>
 

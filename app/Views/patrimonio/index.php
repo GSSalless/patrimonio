@@ -21,7 +21,7 @@ require APP_ROOT . '/includes/header.php';
   <div class="app-grid">
     <a href="<?= base_url('imoveis') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
-        🏠
+        🏛️
         <?php if ($qtd_imoveis > 0): ?><span class="app-icon-badge"><?= $qtd_imoveis ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Imóveis</span>
