@@ -723,6 +723,41 @@ body.menu-aberto .menu-lateral { transform: translateX(0); }
 .hub-tile-vermelho,
 .hub-tile-ciano { background: linear-gradient(160deg, #26262b 0%, #131316 100%); }
 
+/* ── Hub como grafo interativo (d3-force, "segundo cérebro") ─────── */
+.hub-graph { width: min(560px, 92vw); aspect-ratio: 1; margin: 1rem auto .25rem; }
+.hub-dica { text-align: center; font-size: .74rem; color: var(--cor-secundario); margin: 0 auto 1.5rem; opacity: .8; }
+.hg-svg { width: 100%; height: 100%; overflow: visible; touch-action: none; user-select: none; }
+
+.hg-link { stroke: rgba(184,145,47,.4); stroke-width: 1.3; stroke-dasharray: 3 3; transition: stroke .18s, stroke-width .18s, opacity .18s; }
+.hg-link.on  { stroke: #b57bff; stroke-width: 2.2; stroke-dasharray: none; }
+.hg-link.dim { opacity: .18; }
+
+.hg-node { cursor: pointer; transition: opacity .18s; }
+.hg-node.dim { opacity: .32; }
+
+.hg-tile { fill: url(#hg-grafite); stroke: rgba(212,175,55,.32); stroke-width: 1;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.32)); transition: stroke .18s, stroke-width .18s, filter .18s; }
+.hg-node.on .hg-tile { stroke: #b57bff; stroke-width: 2.2; filter: drop-shadow(0 0 11px rgba(181,123,255,.65)); }
+.hg-node:hover .hg-tile { stroke: rgba(212,175,55,.7); }
+
+.hg-emoji { font-size: 30px; text-anchor: middle; dominant-baseline: central; }
+.hg-label { font-size: 12px; font-weight: 700; text-anchor: middle; fill: var(--cor-primaria); }
+
+.hg-centro-c { fill: url(#hg-centro); stroke: rgba(212,175,55,.6); stroke-width: 2;
+  filter: drop-shadow(0 10px 26px rgba(0,0,0,.5)); transition: stroke .18s; }
+.hg-node.on .hg-centro-c { stroke: #b57bff; }
+.hg-centro-cod   { text-anchor: middle; fill: var(--dourado-claro); font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+.hg-centro-nome  { text-anchor: middle; fill: #f4f1e8; font-size: 13px; font-weight: 700; font-family: var(--fonte-titulo); }
+.hg-centro-valor { text-anchor: middle; fill: var(--dourado-claro); font-size: 12px; font-weight: 700; font-family: var(--fonte-titulo); }
+
+/* Fallback sem D3: grade de botões */
+.hub-graph-fallback { aspect-ratio: auto; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; }
+.hub-fb { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .4rem; width: 84px; }
+.hub-fb-tile { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #26262b, #131316); border: 1px solid rgba(212,175,55,.3); box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+.hub-fb-emoji { font-size: 1.7rem; }
+.hub-fb-lb { font-size: .74rem; font-weight: 700; color: var(--cor-primaria); }
+
 .modal-box.modal-lg { max-width: 880px; }
 
 /* ── Lista estilo iOS (agrupada) ─────────────────────────── */

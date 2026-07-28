@@ -32,46 +32,29 @@ if (!function_exists('linha')) {
     <?php endif; ?>
   </div>
 
-  <!-- HUB CENTRAL -->
-  <div class="hub">
-    <svg class="hub-linhas" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <line x1="50" y1="50" x2="50"   y2="12"/>
-      <line x1="50" y1="50" x2="79.7" y2="26.3"/>
-      <line x1="50" y1="50" x2="87.0" y2="58.5"/>
-      <line x1="50" y1="50" x2="66.5" y2="84.2"/>
-      <line x1="50" y1="50" x2="33.5" y2="84.2"/>
-      <line x1="50" y1="50" x2="13.0" y2="58.5"/>
-      <line x1="50" y1="50" x2="20.3" y2="26.3"/>
-    </svg>
-
-    <div class="hub-centro">
-      <div class="hub-centro-cod"><?= h($im['codigo']) ?></div>
-      <div class="hub-centro-nome"><?= h($im['nome_referencia']) ?></div>
-      <div class="hub-centro-valor"><?= $im['valor_mercado'] ? moeda((float)$im['valor_mercado']) : '—' ?></div>
-    </div>
-
-    <button class="hub-no" style="left:50%;top:12%"    onclick="abrirModal('m-resumo')">
-      <span class="hub-no-tile hub-tile-azul"><span class="hub-no-emoji">📋</span></span><span class="hub-no-lb">Cadastro</span>
-    </button>
-    <button class="hub-no" style="left:79.7%;top:26.3%" onclick="abrirModal('m-financeiro')">
-      <span class="hub-no-tile hub-tile-verde"><span class="hub-no-emoji">💰</span></span><span class="hub-no-lb">Financeiro</span>
-    </button>
-    <button class="hub-no" style="left:87.0%;top:58.5%" onclick="abrirModal('m-reformas')">
-      <span class="hub-no-tile hub-tile-laranja"><span class="hub-no-emoji">🔨</span></span><span class="hub-no-lb">Reformas</span>
-    </button>
-    <button class="hub-no" style="left:66.5%;top:84.2%" onclick="abrirModal('m-manutencoes')">
-      <span class="hub-no-tile hub-tile-vermelho"><span class="hub-no-emoji">🛠️</span></span><span class="hub-no-lb">Manutenções</span>
-    </button>
-    <button class="hub-no" style="left:33.5%;top:84.2%" onclick="abrirModal('m-condominio')">
-      <span class="hub-no-tile hub-tile-roxo"><span class="hub-no-emoji">🏢</span></span><span class="hub-no-lb">Condomínio</span>
-    </button>
-    <button class="hub-no" style="left:13.0%;top:58.5%" onclick="abrirModal('m-aluguel')">
-      <span class="hub-no-tile hub-tile-roxo"><span class="hub-no-emoji">🔑</span></span><span class="hub-no-lb">Aluguel</span>
-    </button>
-    <button class="hub-no" style="left:20.3%;top:26.3%" onclick="abrirModal('m-documentos')">
-      <span class="hub-no-tile hub-tile-ciano"><span class="hub-no-emoji">📁</span></span><span class="hub-no-lb">Documentos</span>
-    </button>
-  </div>
+  <!-- HUB CENTRAL — grafo interativo (d3-force, estilo "segundo cérebro") -->
+  <div class="hub-graph" id="hub-graph" aria-label="Mapa do imóvel — arraste os nós; clique para abrir"></div>
+  <div class="hub-dica">Arraste os nós para explorar · clique para abrir</div>
+  <?php
+    $hub_centro = [
+      'cod'   => $im['codigo'],
+      'nome'  => $im['nome_referencia'],
+      'valor' => $im['valor_mercado'] ? moeda((float) $im['valor_mercado']) : '—',
+    ];
+    $hub_nos = [
+      ['id' => 'resumo',      'label' => 'Cadastro',    'emoji' => '📋', 'modal' => 'm-resumo'],
+      ['id' => 'financeiro',  'label' => 'Financeiro',  'emoji' => '💰', 'modal' => 'm-financeiro'],
+      ['id' => 'reformas',    'label' => 'Reformas',    'emoji' => '🔨', 'modal' => 'm-reformas'],
+      ['id' => 'manutencoes', 'label' => 'Manutenções', 'emoji' => '🛠️', 'modal' => 'm-manutencoes'],
+      ['id' => 'condominio',  'label' => 'Condomínio',  'emoji' => '🏢', 'modal' => 'm-condominio'],
+      ['id' => 'aluguel',     'label' => 'Aluguel',     'emoji' => '🔑', 'modal' => 'm-aluguel'],
+      ['id' => 'documentos',  'label' => 'Documentos',  'emoji' => '📁', 'modal' => 'm-documentos'],
+    ];
+  ?>
+  <script>
+    window.HUB_CENTRO = <?= json_encode($hub_centro, JSON_UNESCAPED_UNICODE) ?>;
+    window.HUB_NOS    = <?= json_encode($hub_nos, JSON_UNESCAPED_UNICODE) ?>;
+  </script>
 
   <!-- MODAL: RESUMO -->
   <div class="modal-overlay" id="m-resumo" style="display:none">
@@ -556,4 +539,8 @@ if (!function_exists('linha')) {
     if (alvo) abrirModal('m-' + alvo);
   })();
 </script>
+<!-- Grafo interativo do hub (d3-force) -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<?php $hg_ver = @filemtime(APP_ROOT . '/assets/js/hub-grafo.js') ?: time(); ?>
+<script src="<?= base_url('assets/js/hub-grafo.js') ?>?v=<?= $hg_ver ?>"></script>
 <?php require APP_ROOT . '/includes/footer.php'; ?>
