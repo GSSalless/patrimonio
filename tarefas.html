@@ -107,7 +107,9 @@
 <div class="nota-rel">
   💡 <strong>Como ler:</strong> cada cartão é um módulo do sistema. Os itens marcados em verde já estão
   <strong>codificados no projeto</strong> (com o arquivo/tabela ao lado); os demais são o que falta desenvolver.
-  Hoje o sistema cobre principalmente o <strong>Módulo 05 — Imóveis</strong> e a base de Clientes.
+  Módulos <strong>05 · 06 · 07 · 09</strong> implementados e testados. Os cartões <strong>"Reunião 21/07"</strong>
+  concentram o que saiu das 2 chamadas com o César (navegação, visual, IA/n8n e pendências de decisão) —
+  o Módulo <strong>01 — Pessoas</strong> virou prioridade.
 </div>
 
 <div class="grid" id="grid"></div>
@@ -126,12 +128,16 @@ const DADOS = [
     {t:'Clientes: lista · novo · editar (clientes/*.php)', done:true},
     {t:'Seletor de cliente no topo (header.php)', done:true},
   ]},
-  { id:'m01', nome:'Módulo 01 — Pessoas', icone:'👤', cor:'#2e7dd1', sub:'parcial (via clientes)', itens:[
+  { id:'m01', nome:'Módulo 01 — Pessoas', icone:'👤', cor:'#2e7dd1', sub:'🔴 PRIORIDADE — pedido do César (21/07)', itens:[
     {t:'Tabela `clientes` (PF/PJ) básica — feita', done:true},
+    {t:'Card do cliente: nome completo, telefone, e-mail + botão WhatsApp (wa.me)', done:false},
+    {t:'Clicar no card → abre o cadastro completo da pessoa', done:false},
+    {t:'Exibir nome completo (ex.: "Marcos Vinícius Machado Borges") + CPF + endereço', done:false},
     {t:'Tabela `pessoas` ampla (RG, estado civil, tipo sanguíneo, nascimento)', done:false},
-    {t:'Cadastro PF completo: múltiplos telefones, e-mails, endereços', done:false},
+    {t:'Cadastro PF completo: múltiplos telefones, e-mails, endereços ("pecar pelo excesso")', done:false},
+    {t:'Família / sucessão: pai, mãe, cônjuge, ex-cônjuge(s), filhos, herdeiros', done:false},
+    {t:'Testamento: existe? + upload + dados do documento', done:false},
     {t:'Contatos de emergência', done:false},
-    {t:'Dependentes / cônjuge / filhos', done:false},
     {t:'Relacionamentos: imóveis, veículos, investimentos, empresas, contratos', done:false},
   ]},
   { id:'m02', nome:'Módulo 02 — Colaboradores', icone:'🧑‍💼', cor:'#7d3ff0', sub:'não iniciado', itens:[
@@ -203,8 +209,8 @@ const DADOS = [
     {t:'Embarcação: marina, vaga, mensalidade, horímetro, registro Capitania', done:true},
     {t:'Joia: material, quilates, certificado GIA', done:true},
     {t:'Obra de Arte: artista, técnica, dimensões, proveniência', done:true},
-    {t:'Manutenções de embarcação (bem_manutencoes + seção no editar.php) — falta teste HTTP', done:true},
-    {t:'Avaliações periódicas / histórico de valor (atualiza valor_mercado) — falta teste HTTP', done:true},
+    {t:'Manutenções de embarcação (bem_manutencoes + seção no editar.php) — testado 21/07', done:true},
+    {t:'Avaliações periódicas / histórico de valor (atualiza valor_mercado) — testado 21/07', done:true},
   ]},
   { id:'m08', nome:'Módulo 08 — Bancos e Instituições', icone:'🏦', cor:'#475569', sub:'não iniciado', itens:[
     {t:'Tabela `instituicoes` + cadastro (banco, corretora, gestora)', done:false},
@@ -212,11 +218,17 @@ const DADOS = [
     {t:'Contatos: gerente, banker, assessor', done:false},
     {t:'Arquivos: contratos, KYC, procurações', done:false},
   ]},
-  { id:'m09', nome:'Módulo 09 — Contas Financeiras', icone:'💳', cor:'#0891b2', sub:'não iniciado', itens:[
-    {t:'Tabela `contas` + cadastro (banco, agência, conta)', done:false},
-    {t:'Internacional: SWIFT, IBAN, routing', done:false},
-    {t:'Titularidade: pessoa, empresa, holding', done:false},
-    {t:'Saldos: saldo atual, moeda', done:false},
+  { id:'m09', nome:'Módulo 09 — Contas Financeiras', icone:'🏦', cor:'#0891b2', sub:'implementado 21/07 · testado HTTP+banco', itens:[
+    {t:'Tabela `contas_financeiras` + lista/novo/editar (app/Views/contas/*) + código CF-XXXX', done:true},
+    {t:'Dados: instituição, código COMPE, agência, conta, tipo, PIX (tipo + chave)', done:true},
+    {t:'Internacional: SWIFT, IBAN, routing', done:true},
+    {t:'Titularidade alternativa (empresa/holding) + gerente/assessor', done:true},
+    {t:'Histórico de saldos (`conta_saldos`) — o mais recente espelha o saldo atual', done:true},
+    {t:'Saldo consolidado (BRL) na lista + aceita saldo negativo', done:true},
+    {t:'Upload de documentos (contrato de abertura, extrato)', done:true},
+    {t:'Preparação Asaas: integracao + account_id + wallet_id + api_key + origem "asaas"', done:true},
+    {t:'Ícone "Contas" 🏦 ativo no dashboard com badge', done:true},
+    {t:'Integração Asaas efetiva (saldo/extrato/cobranças/webhooks) — F3', done:false},
   ]},
   { id:'m10', nome:'Módulo 10 — Investimentos', icone:'📈', cor:'#16a34a', sub:'não iniciado', itens:[
     {t:'Tabela `investimentos` + listagem + cadastro', done:false},
@@ -271,9 +283,47 @@ const DADOS = [
     {t:'Replicar modal de pendências no editar.php', done:false},
     {t:'Confirmação de campos em aberto no editar.php', done:false},
   ]},
+  { id:'prod', nome:'UX, Erros e Produção', icone:'🚀', cor:'#334155', sub:'sessão 14/07/2026 · concluído', itens:[
+    {t:'Tratamento global de erro (ErrorHandler): página amigável + log', done:true},
+    {t:'Menu lateral esquerdo (drawer ☰) no lugar do menu do topo-direito', done:true},
+    {t:'Layout responsivo (celular): topo, tabelas, grids, cards, abas', done:true},
+    {t:'Deploy automático GitHub Actions → FTP', done:true},
+    {t:'uploads/ com permissão de escrita p/ Apache (causa dos 500 + duplicados)', done:true},
+  ]},
+  { id:'r1', nome:'Reunião 21/07 — Navegação e Estrutura', icone:'🧭', cor:'#b45309', sub:'usabilidade — após fechar os módulos', itens:[
+    {t:'Menu lateral como navegação principal (Gestão Geral → Clientes → módulos)', done:false},
+    {t:'Remover seletor de cliente do topo (duplicidade) — seleção via menu lateral', done:false},
+    {t:'Menu lateral fixo no desktop (se o topo sair)', done:false},
+    {t:'"Gestão Geral" (nome provisório): dashboard consolidado da CCR — patrimônio total de todos os clientes, caixa geral, tarefas multi-cliente', done:false},
+    {t:'Separação visão gestor × visão cliente', done:false},
+    {t:'Botão "Voltar" em todas as telas', done:false},
+    {t:'Dashboard do cliente com dados reais (César escolhe o que aparece)', done:false},
+    {t:'Testar hover/animação dos cards no celular', done:false},
+  ]},
+  { id:'r2', nome:'Reunião 21/07 — Identidade Visual', icone:'🎨', cor:'#be185d', sub:'aguardando referências do César', itens:[
+    {t:'Ícones realistas (estilo lápis do WhatsApp; não flat, não infantil) — César manda referências', done:false},
+    {t:'Trocar a fonte — César vai escolher', done:false},
+    {t:'Sons de interface (clique/transição) + botão para desligar o som', done:false},
+    {t:'Animação "segundo cérebro": linhas conectadas reagindo ao mouse (estilo graph)', done:false},
+  ]},
+  { id:'r3', nome:'Reunião 21/07 — Automação e IA', icone:'🤖', cor:'#6d28d9', sub:'após validação manual · redundância sempre', itens:[
+    {t:'Cadastro assistido por IA: colar texto/print/PDF → pré-preenche o formulário → conferência manual', done:false},
+    {t:'Módulo Contas a Pagar/Receber: vencimento, status, comprovante, origem (manual/e-mail/n8n)', done:false},
+    {t:'E-mail → n8n: identificar conta (ex.: luz) → criar pendência com vencimento + alerta', done:false},
+    {t:'Baixa automática: comprovante/extrato → IA identifica pagamento → dá baixa', done:false},
+    {t:'Integração Conta Azul e/ou Asaas: extrato/saldo sob demanda ou diário + baixa', done:false},
+    {t:'n8n vinculado a todos os módulos (só após finalizar os módulos)', done:false},
+  ]},
+  { id:'r4', nome:'Reunião 21/07 — Decisões e Follow-up', icone:'📌', cor:'#0f766e', sub:'pendências de definição', itens:[
+    {t:'⚠️ Trocar as senhas seed de PRODUÇÃO (cesar123/marcos123) por senhas fortes', done:false},
+    {t:'César: testar cadastros (veículo, imóvel, joia) e devolver ajustes campo a campo', done:false},
+    {t:'César: mandar referências de ícones + escolher fonte', done:false},
+    {t:'César: definir o nome do botão "Gestão Geral"', done:false},
+    {t:'Avaliar vínculo das tarefas do César com o Notion (sem decisão)', done:false},
+  ]},
 ];
 
-const STORAGE_KEY = 'tarefas_cezar_v2';
+const STORAGE_KEY = 'tarefas_cezar_v3'; // v3: itens remapeados em 21/07 (reunião César) — chave antiga descartada para não misturar índices
 let estado = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 
 function idItem(mod, i){ return mod + '_' + i; }

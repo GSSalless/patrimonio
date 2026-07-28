@@ -53,6 +53,14 @@ require APP_ROOT . '/includes/header.php';
       <span class="app-icon-label">Patrimônios</span>
     </a>
 
+    <a href="<?= base_url('contas') ?>" class="app-icon">
+      <span class="app-icon-tile app-tile-verde">
+        🏦
+        <?php if (($qtd_contas ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_contas ?></span><?php endif; ?>
+      </span>
+      <span class="app-icon-label">Contas</span>
+    </a>
+
     <span class="app-icon app-icon-off">
       <span class="app-icon-tile app-tile-verde">💰</span>
       <span class="app-icon-label">Caixa</span>

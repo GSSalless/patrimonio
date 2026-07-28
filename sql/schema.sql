@@ -479,3 +479,58 @@ CREATE TABLE IF NOT EXISTS avaliacoes_bem (
 -- Nota: ENUM tipo_referencia de `documentos` estendido com
 --   'manutencao','veiculo_manutencao','sinistro','bem_manutencao' (docs das sub-tabelas de histórico).
 -- Nota: ENUM categoria de `documentos` estendido com 'habite_se' (checklist documental do imóvel).
+
+-- ============================================================================
+-- Módulo 09 — Contas Financeiras (ver sql/migration_modulo_09_contas.sql)
+-- ============================================================================
+
+-- Contas bancárias/digitais do cliente. Campos asaas_* preparam o vínculo
+-- futuro com o Asaas (conta digital: saldo/extrato/cobranças via API).
+CREATE TABLE IF NOT EXISTS contas_financeiras (
+  id                INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id        INT NOT NULL,
+  codigo            VARCHAR(10) NOT NULL,                -- CF-0001
+  apelido           VARCHAR(120) NOT NULL,
+  tipo              ENUM('corrente','poupanca','pagamento','investimento','internacional','outro') NOT NULL DEFAULT 'corrente',
+  instituicao       VARCHAR(120) NULL,
+  banco_codigo      VARCHAR(10)  NULL,                   -- nº COMPE
+  agencia           VARCHAR(20)  NULL,
+  numero_conta      VARCHAR(30)  NULL,
+  moeda             CHAR(3) NOT NULL DEFAULT 'BRL',
+  pix_tipo          ENUM('cpf','cnpj','email','telefone','aleatoria') NULL,
+  pix_chave         VARCHAR(140) NULL,
+  swift             VARCHAR(20) NULL,
+  iban              VARCHAR(40) NULL,
+  routing           VARCHAR(20) NULL,
+  titular_nome      VARCHAR(140) NULL,                   -- quando difere do cliente
+  titular_cpf_cnpj  VARCHAR(20)  NULL,
+  gerente_nome      VARCHAR(120) NULL,
+  gerente_contato   VARCHAR(120) NULL,
+  saldo_atual       DECIMAL(15,2) NULL,                  -- espelho do conta_saldos mais recente
+  saldo_data        DATE NULL,
+  integracao        ENUM('nenhuma','asaas') NOT NULL DEFAULT 'nenhuma',
+  asaas_account_id  VARCHAR(64)  NULL,
+  asaas_wallet_id   VARCHAR(64)  NULL,
+  asaas_api_key     VARCHAR(255) NULL,
+  observacoes       TEXT NULL,
+  ativo             TINYINT(1) NOT NULL DEFAULT 1,
+  criado_em         DATETIME DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em     DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Histórico de saldos (o mais recente atualiza saldo_atual/saldo_data da conta;
+-- origem 'asaas' reservada para a sincronização automática via API).
+CREATE TABLE IF NOT EXISTS conta_saldos (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  conta_id    INT NOT NULL,
+  data        DATE NOT NULL,
+  saldo       DECIMAL(15,2) NOT NULL,
+  origem      ENUM('manual','asaas') NOT NULL DEFAULT 'manual',
+  observacoes VARCHAR(255) NULL,
+  criado_em   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (conta_id) REFERENCES contas_financeiras(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Nota: ENUM tipo_referencia de `documentos` estendido com 'conta_financeira'
+--   e categoria com 'extrato' (contrato de abertura e extratos da conta).

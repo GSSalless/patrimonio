@@ -207,9 +207,12 @@
 > (um imóvel tem N contratos/seguros/documentos; um investimento pertence a uma conta financeira;
 > uma conta pertence a uma pessoa/empresa/holding; um fornecedor atende vários imóveis/veículos/empresas).
 
-### Módulo 01 — Pessoas
-- [ ] Pessoa Física: nome, CPF, RG, data nasc., estado civil, tipo sanguíneo, telefones, e-mails, endereços, documentos, contatos de emergência
-- [ ] Dependentes / cônjuge / filhos
+### Módulo 01 — Pessoas  🔴 *(prioridade — pedido direto do César na reunião de 21/07)*
+- [ ] **Card do cliente** com o básico: nome completo, telefone, e-mail + **botão WhatsApp** (clica → abre wa.me direto) — clicar no card abre o cadastro completo
+- [ ] Exibir **nome completo** (ex.: "Marcos Vinícius Machado Borges", não "Marcos Borges") + CPF + endereço no topo do cliente
+- [ ] Pessoa Física: nome, CPF, RG, data nasc., estado civil, tipo sanguíneo, telefones, e-mails (**múltiplos**), endereços, documentos, contatos de emergência — *"pecar pelo excesso"* (César)
+- [ ] Família / sucessão: nome do pai, nome da mãe, cônjuge, **ex-cônjuge(s)**, filhos/dependentes, herdeiros
+- [ ] **Testamento**: existe? (sim/não) + upload do documento + dados do testamento (vincular em `documentos`)
 - [ ] Observações
 - [ ] Relacionamentos: proprietário de imóveis/veículos, titular de investimentos, sócio de empresas, responsável por contratos
 
@@ -272,8 +275,8 @@
 - [x] Dados por tipo: embarcação (motor, horímetro, marina, vaga, mensalidade, registro), joia (material, quilates, certificado), obra (artista, técnica, dimensões)
 - [x] Seguro: seguradora, apólice, franquia, vencimento
 - [x] Upload de documentos (foto, laudo, apólice, outros)
-- [x] **Manutenções de embarcação (sub-tabela)** — `bem_manutencoes`, `BemManutencao` model, `OutrosController::manutencao`, `outros/manutencao.php`, seção no `editar.php` (só para tipo embarcação). ⚠️ código pronto e lintado — **falta teste HTTP+banco na retomada**
-- [x] **Avaliações periódicas / histórico de valor** — `avaliacoes_bem`, `AvaliacaoBem` model, `OutrosController::avaliacao`, `outros/avaliacao.php`, seção no `editar.php` com variação entre avaliações; a mais recente atualiza `valor_mercado` do bem. ⚠️ código pronto e lintado — **falta teste HTTP+banco na retomada**
+- [x] **Manutenções de embarcação (sub-tabela)** — `bem_manutencoes`, `BemManutencao` model, `OutrosController::manutencao`, `outros/manutencao.php`, seção no `editar.php` (só para tipo embarcação). ✅ testado HTTP+banco (21/07)
+- [x] **Avaliações periódicas / histórico de valor** — `avaliacoes_bem`, `AvaliacaoBem` model, `OutrosController::avaliacao`, `outros/avaliacao.php`, seção no `editar.php` com variação entre avaliações; a mais recente atualiza `valor_mercado` do bem. ✅ testado HTTP+banco (21/07) — inclusive regra "avaliação mais recente vence" com data retroativa
 
 ### Módulo 08 — Bancos e Instituições Financeiras
 - [ ] Cadastro: banco, corretora, family office, gestora
@@ -281,11 +284,15 @@
 - [ ] Contatos: gerente, banker, assessor
 - [ ] Arquivos: contratos, KYC, procurações
 
-### Módulo 09 — Contas Financeiras
-- [ ] Dados: banco, agência, conta
-- [ ] Internacional: SWIFT, IBAN, routing
-- [ ] Titularidade: pessoa, empresa, holding
-- [ ] Saldos: saldo atual, moeda
+### Módulo 09 — Contas Financeiras  🟢 *(cadastro implementado — 21/07)*
+- [x] Tabela `contas_financeiras` + lista/novo/editar (`app/Views/contas/*`, partial `_campos.php`) + código CF-XXXX + ícone "Contas" 🏦 no dashboard
+- [x] Dados: banco (instituição + código COMPE), agência, conta, tipo (corrente/poupança/pagamento/investimento/internacional/outro), PIX (tipo + chave)
+- [x] Internacional: SWIFT, IBAN, routing
+- [x] Titularidade: titular alternativo (empresa/holding) com CPF/CNPJ + gerente/assessor e contato
+- [x] Saldos: moeda + **histórico de saldos** (`conta_saldos`, `ContaSaldo` model, `ContasController::saldo`) — o mais recente espelha `saldo_atual`/`saldo_data`; saldo consolidado (BRL) na lista; aceita saldo negativo
+- [x] Upload de documentos (contrato de abertura, extrato, outros) — enum `documentos` +'conta_financeira'/'extrato'
+- [x] **Preparação Asaas** (https://docs.asaas.com): campos `integracao` ('nenhuma'/'asaas'), `asaas_account_id`, `asaas_wallet_id`, `asaas_api_key` + origem 'asaas' em `conta_saldos` para a futura sincronização automática de saldo/extrato/cobranças via API
+- [ ] **Integração Asaas efetiva** (F3): sincronizar saldo/extrato, emitir cobranças, webhooks
 
 ### Módulo 10 — Investimentos
 - [ ] Cadastro: nome do investimento, instituição
@@ -331,6 +338,44 @@
 
 ---
 
+## Reunião com César — 21/07/2026 (2 chamadas · transcrições 6 e 7)
+
+> César viu a plataforma em produção ("Patri Control") e o local (com Módulo 09 — Contas).
+> Combinado geral: **primeiro finalizar módulos/campos** (validação manual campo a campo),
+> **depois** rodada dedicada de usabilidade/layout. César vai testar os cadastros
+> (veículo, imóvel, joia) e mandar ajustes + referências de ícones pelo WhatsApp.
+
+### R1 — Navegação e estrutura (usabilidade)
+- [ ] **Menu lateral como navegação principal**: Gestão Geral → Clientes (seleção) → módulos do cliente selecionado (mesma sequência dos botões do dashboard)
+- [ ] **Remover o seletor de cliente do topo** (duplicidade) — seleção passa a ser pelo item "Clientes" do menu lateral; menu lateral vira fixo (desktop) se o topo sair
+- [ ] **"Gestão Geral"** *(nome provisório — César vai definir)*: dashboard consolidado da CCR com visão de TODOS os clientes — total de patrimônios cadastrados, caixa geral consolidado, tarefas/lembretes multi-cliente ("3 tarefas de 2 clientes diferentes")
+- [ ] Separação clara **visão gestor × visão cliente** (mesma tela, escopo diferente)
+- [ ] **Botão "Voltar" em todas as telas** (não depender da seta do menu/navegador)
+- [ ] **Dashboard do cliente com dados reais** (hoje é "tela de categorias") — construir quando os módulos estiverem prontos; César escolhe o que aparece
+- [ ] Testar hover/animação dos cards do hub **no celular**
+
+### R2 — Identidade visual (aguardar referências do César)
+- [ ] **Ícones realistas** no lugar dos atuais (estilo lápis realista do WhatsApp/ícones do Instagram; não infantil/colorido demais) — César manda referências
+- [ ] **Trocar a fonte** — César vai escolher
+- [ ] **Sons de interface** (clique/transição ao navegar) + **botão para desligar o som** (preferência salva)
+- [ ] **Animação de fluidez estilo "segundo cérebro"** (linhas conectadas reagindo ao mouse, tipo graph do Obsidian) no hub/dashboard — dar "vida" à interface
+
+### R3 — Automação e IA (após validação manual dos campos — redundância sempre: manual continua existindo)
+- [ ] **Cadastro assistido por IA**: botão em cada cadastro para colar texto/print/PDF (matrícula do imóvel, dados bancários copiados do app do banco, contrato) → IA pré-preenche o formulário → César confere manualmente e salva (fluxo híbrido que ele descreveu)
+- [ ] **E-mail → n8n → Contas a Pagar**: conta chega no e-mail (ex.: conta de luz) → n8n identifica → cria pendência no sistema com vencimento → alerta "conta a pagar vence dia X"
+- [ ] **Baixa automática por comprovante/extrato**: upload do comprovante ou extrato → IA identifica o pagamento → dá baixa na pendência (vinculada à conta financeira cadastrada)
+- [ ] **Integração Conta Azul e/ou Asaas** para conciliação: puxar extrato/saldo sob demanda ou diário automático; baixa vinda do Conta Azul/Asaas
+- [ ] Módulo **Contas a Pagar/Receber** (pré-requisito dos 3 itens acima): pendências com vencimento, status (pendente/pago/atrasado), comprovante, origem (manual/e-mail/n8n), vínculo com conta financeira e caixa
+- [ ] n8n vinculado a todos os módulos — só após finalizar os módulos
+
+### R4 — Pendências de decisão / follow-up
+- [ ] César: testar cadastros (veículo, imóvel, joia — joia ainda sem dados reais) e devolver ajustes campo a campo
+- [ ] César: mandar referências de ícones + escolher fonte + definir nome do botão "Gestão Geral"
+- [ ] Avaliar vínculo das tarefas do César com o **Notion** dele (assunto retomado, sem decisão)
+- [ ] ⚠️ Produção no ar com acesso do César: **trocar as senhas seed** (`cesar123`/`marcos123`) por senhas fortes
+
+---
+
 ## Melhorias de UX/Plataforma (sessão 26/06/2026)
 - [x] Dashboard reformulado como hub de módulos (ícones estilo iPhone: Patrimônios, Caixa, Tarefas, Caixa Geral)
 - [x] Campo "Site do cartório" + inscrição municipal movida para o bloco Identificação
@@ -357,3 +402,6 @@
 | 26/06/2026 | Página intermediária `patrimonio.php` (Imóveis/Carros/Embarcações/Joias) · **Módulo 06 — Veículos** completo: tabela `veiculos`, cadastro com upload de docs, edição, lista, alerta de campos vazios, modal de pendências + PDF + WhatsApp; ícone Carros ligado |
 | 26/06/2026 | Lista de imóveis estilo iOS · ficha redesenhada como **hub central** (modais Cadastro/Financeiro/Reformas/Aluguel/Documentos) com Bootstrap Icons · **Condomínio** vinculado ao imóvel: tabela estendida (síndico, administradora, valores, comodidades), `condominios/novo|editar|vincular.php`, modal na ficha com criar/vincular/desvincular |
 | 08/07/2026 | **Finalização dos Módulos 05/06/07** (sub-tabelas de histórico). Migração `sql/migration_modulos_567.sql`: `manutencoes`, `abastecimentos`, `veiculo_manutencoes`, `sinistros`, `bem_manutencoes`, `avaliacoes_bem` (schema.sql sincronizado; enums de `documentos` estendidos: tipo_referencia +manutencao/veiculo_manutencao/sinistro/bem_manutencao, categoria +habite_se). **M05:** Manutenções (7º nó no hub da ficha + modal + geração de caixa) e Checklist documental na modal Documentos — testados. **M06:** Abastecimentos, Manutenções e Sinistros como seções no `veiculos/editar.php` + telas dedicadas — testados HTTP+banco. **M07:** Manutenções de embarcação + Avaliações (histórico de valor, atualiza valor_mercado) no `outros/editar.php` — código pronto/lintado, **pendente teste HTTP+banco**. Rotas adicionadas em `routes/web.php`. ⏸️ Pausado antes de testar o M07 (inserir uma embarcação e validar os 2 formulários). |
+| 21/07/2026 | **Retomada do teste do M07** (embarcação "Lancha Ferretti 460" já inserida em 20/07 — duplicata id 4 removida). Teste HTTP+banco via curl (login César → cliente Marcos): GET/POST de `outros/manutencao` e `outros/avaliacao` (criação e edição) OK; registros gravados em `bem_manutencoes` e `avaliacoes_bem`; `valor_mercado` atualizado pela avaliação mais recente (validado com avaliação retroativa que não sobrescreve); seções renderizando no `outros/editar.php`. **Módulos 05/06/07 100% testados.** |
+| 21/07/2026 | **Módulo 09 — Contas Financeiras** implementado e testado HTTP+banco: `sql/migration_modulo_09_contas.sql` (`contas_financeiras` + `conta_saldos`; enums de `documentos` +'conta_financeira'/'extrato'), `ContaFinanceira`/`ContaSaldo` models, `ContasController` (index/novo/editar/saldo), views `contas/*` com partial `_campos.php`, rotas, `proximo_codigo_conta()` (CF-XXXX), ícone "Contas" 🏦 ativo no dashboard com badge. Campos de integração Asaas preparados (integracao/account_id/wallet_id/api_key + origem 'asaas' no histórico de saldos). Corrigido `uploads/` sem permissão de escrita p/ Apache (causa dos 500 + cadastros duplicados de 20/07) — `chmod -R 777` local. |
+| 21/07/2026 | **2 reuniões com César** (transcrições analisadas). Novas seções R1–R4 no TAREFAS: navegação pelo menu lateral + "Gestão Geral" consolidada, ícones realistas/fonte/sons/animação (aguardando referências), IA para cadastro assistido, fluxo e-mail→n8n→Contas a Pagar com baixa por comprovante/IA e integração Conta Azul/Asaas. **Módulo 01 — Pessoas virou prioridade** (card com WhatsApp, cadastro completo com família/sucessão/testamento). Combinado: finalizar módulos/campos primeiro, usabilidade depois; César testa cadastros e manda ajustes. |

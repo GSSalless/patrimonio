@@ -31,17 +31,23 @@ class DashboardController extends Controller
         }
 
         $qtd_imoveis = 0;
+        $qtd_contas  = 0;
         if ($cli) {
             $stmt = db()->prepare('SELECT COUNT(*) FROM imoveis WHERE cliente_id = ? AND ativo = 1');
             $stmt->execute([$cli['id']]);
             $qtd_imoveis = (int) $stmt->fetchColumn();
+
+            $stmt = db()->prepare('SELECT COUNT(*) FROM contas_financeiras WHERE cliente_id = ? AND ativo = 1');
+            $stmt->execute([$cli['id']]);
+            $qtd_contas = (int) $stmt->fetchColumn();
         }
 
         $this->view('dashboard/index', compact(
             'total_clientes',
             'total_imoveis',
             'cli',
-            'qtd_imoveis'
+            'qtd_imoveis',
+            'qtd_contas'
         ));
     }
 }

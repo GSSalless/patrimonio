@@ -36,6 +36,13 @@ function proximo_codigo_outro_bem(): string {
     return 'OB-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
 }
 
+function proximo_codigo_conta(): string {
+    $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM contas_financeiras");
+    $row = $stmt->fetch();
+    $proximo = ($row['ultimo'] ?? 0) + 1;
+    return 'CF-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
 /**
  * Salva uploads de campos de arquivo único na tabela `documentos`.
  * @param array  $campos    ['nome_campo' => 'categoria', ...]

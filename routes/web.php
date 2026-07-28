@@ -70,6 +70,15 @@ $router->post('outros/manutencao',  [OutrosController::class, 'manutencao']);
 $router->get('outros/avaliacao',    [OutrosController::class, 'avaliacao']);
 $router->post('outros/avaliacao',   [OutrosController::class, 'avaliacao']);
 
+// Contas Financeiras (Módulo 09)
+$router->get('contas',         [ContasController::class, 'index']);
+$router->get('contas/novo',    [ContasController::class, 'novo']);
+$router->post('contas/novo',   [ContasController::class, 'novo']);
+$router->get('contas/editar',  [ContasController::class, 'editar']);
+$router->post('contas/editar', [ContasController::class, 'editar']);
+$router->get('contas/saldo',   [ContasController::class, 'saldo']);
+$router->post('contas/saldo',  [ContasController::class, 'saldo']);
+
 // Locação
 $router->get('locacao/novo',  [LocacaoController::class, 'novo']);
 $router->post('locacao/novo', [LocacaoController::class, 'novo']);
