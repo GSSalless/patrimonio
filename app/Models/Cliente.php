@@ -1,7 +1,7 @@
 <?php
 /**
- * Model de cliente — encapsula o acesso às tabelas `clientes` e (para o login
- * opcional do cliente) `usuarios`.
+ * Model de cliente/pessoa — tabela `clientes` (âncora do sistema) + `usuarios`
+ * para o login opcional do cliente. INSERT/UPDATE genérico por array coluna=>valor.
  */
 class Cliente
 {
@@ -9,7 +9,7 @@ class Cliente
     public static function listarAtivos(): array
     {
         return db()->query(
-            'SELECT c.*, u.email
+            'SELECT c.*, u.email AS email_login
                FROM clientes c
                LEFT JOIN usuarios u ON u.id = c.usuario_id
               WHERE c.ativo = 1
@@ -33,28 +33,22 @@ class Cliente
         return (int) db()->lastInsertId();
     }
 
-    public static function criar(array $d): int
+    /** INSERT genérico: recebe [coluna => valor]. */
+    public static function criar(array $campos): int
     {
-        $s = db()->prepare(
-            'INSERT INTO clientes (usuario_id, tipo_pessoa, nome, cpf_cnpj, email, telefone)
-             VALUES (?,?,?,?,?,?)'
-        );
-        $s->execute([
-            $d['usuario_id'], $d['tipo_pessoa'], $d['nome'],
-            $d['cpf_cnpj'], $d['email'], $d['telefone'],
-        ]);
+        $cols = array_keys($campos);
+        $ph   = implode(',', array_fill(0, count($cols), '?'));
+        $sql  = 'INSERT INTO clientes (' . implode(', ', $cols) . ') VALUES (' . $ph . ')';
+        db()->prepare($sql)->execute(array_values($campos));
         return (int) db()->lastInsertId();
     }
 
-    public static function atualizar(int $id, array $d): void
+    /** UPDATE genérico: recebe [coluna => valor]. */
+    public static function atualizar(int $id, array $campos): void
     {
-        $s = db()->prepare(
-            'UPDATE clientes SET tipo_pessoa=?, nome=?, cpf_cnpj=?, email=?, telefone=? WHERE id=?'
-        );
-        $s->execute([
-            $d['tipo_pessoa'], $d['nome'], $d['cpf_cnpj'],
-            $d['email'], $d['telefone'], $id,
-        ]);
+        $set = implode(', ', array_map(fn($k) => "$k = ?", array_keys($campos)));
+        db()->prepare("UPDATE clientes SET $set WHERE id = ?")
+            ->execute([...array_values($campos), $id]);
     }
 
     /** Formata o CPF/CNPJ a partir dos dígitos, conforme o tipo de pessoa. */

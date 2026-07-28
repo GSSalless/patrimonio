@@ -15,6 +15,33 @@ function data_br(?string $data): string {
     return date('d/m/Y', strtotime($data));
 }
 
+/** Monta o link wa.me a partir de um telefone. Assume Brasil (+55) se não vier DDI. */
+function link_whatsapp(?string $telefone): string {
+    $d = preg_replace('/\D/', '', $telefone ?? '');
+    if (strlen($d) < 10) return '';
+    if (strlen($d) <= 11) $d = '55' . $d;   // 10/11 dígitos = nº nacional sem DDI
+    return 'https://wa.me/' . $d;
+}
+
+/** Rótulo do estado civil. */
+function estado_civil_label(?string $ec): string {
+    return [
+        'solteiro' => 'Solteiro(a)', 'casado' => 'Casado(a)',
+        'divorciado' => 'Divorciado(a)', 'viuvo' => 'Viúvo(a)',
+        'uniao_estavel' => 'União estável', 'separado' => 'Separado(a)',
+    ][$ec ?? ''] ?? '—';
+}
+
+/** Rótulo do grau de parentesco (família/sucessão). */
+function parentesco_label(?string $p): string {
+    return [
+        'conjuge' => 'Cônjuge', 'ex_conjuge' => 'Ex-cônjuge', 'pai' => 'Pai',
+        'mae' => 'Mãe', 'filho' => 'Filho(a)', 'dependente' => 'Dependente',
+        'herdeiro' => 'Herdeiro(a)', 'irmao' => 'Irmão(ã)', 'neto' => 'Neto(a)',
+        'outro' => 'Outro',
+    ][$p ?? ''] ?? h((string) $p);
+}
+
 function proximo_codigo_imovel(): string {
     $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM imoveis");
     $row = $stmt->fetch();

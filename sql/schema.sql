@@ -26,16 +26,106 @@ CREATE TABLE IF NOT EXISTS usuarios (
 -- CLIENTES (pessoas cujo patrimônio é gerido pelo César)
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS clientes (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id    INT NULL,                          -- conta de acesso (opcional)
-  tipo_pessoa   ENUM('PF','PJ') NOT NULL DEFAULT 'PF',
-  nome          VARCHAR(200) NOT NULL,
-  cpf_cnpj      VARCHAR(18)  NOT NULL,
-  email         VARCHAR(150) NULL,
-  telefone      VARCHAR(20)  NULL,
-  ativo         TINYINT(1) NOT NULL DEFAULT 1,
-  criado_em     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id      INT NULL,                          -- conta de acesso (opcional)
+  tipo_pessoa     ENUM('PF','PJ') NOT NULL DEFAULT 'PF',
+  nome            VARCHAR(200) NOT NULL,             -- nome curto/display
+  nome_completo   VARCHAR(200) NULL,                 -- nome civil completo
+  apelido         VARCHAR(80)  NULL,
+  cpf_cnpj        VARCHAR(18)  NOT NULL,
+  rg              VARCHAR(20)  NULL,
+  rg_orgao        VARCHAR(30)  NULL,
+  rg_uf           VARCHAR(2)   NULL,
+  data_nascimento DATE         NULL,
+  naturalidade    VARCHAR(80)  NULL,
+  nacionalidade   VARCHAR(60)  NULL DEFAULT 'Brasileira',
+  estado_civil    ENUM('solteiro','casado','divorciado','viuvo','uniao_estavel','separado') NULL,
+  regime_bens     ENUM('comunhao_parcial','comunhao_universal','separacao_total','participacao_final','nao_aplicavel') NULL,
+  profissao       VARCHAR(80)  NULL,
+  tipo_sanguineo  ENUM('A+','A-','B+','B-','AB+','AB-','O+','O-') NULL,
+  nome_pai        VARCHAR(200) NULL,
+  nome_mae        VARCHAR(200) NULL,
+  cep             VARCHAR(9)   NULL,                 -- endereço principal (extras em pessoa_enderecos)
+  logradouro      VARCHAR(200) NULL,
+  numero          VARCHAR(20)  NULL,
+  complemento     VARCHAR(100) NULL,
+  bairro          VARCHAR(100) NULL,
+  cidade          VARCHAR(100) NULL,
+  uf              VARCHAR(2)   NULL,
+  email           VARCHAR(150) NULL,                 -- principal (extras em pessoa_emails)
+  telefone        VARCHAR(20)  NULL,                 -- principal (extras em pessoa_telefones)
+  tem_testamento  TINYINT(1) NOT NULL DEFAULT 0,
+  testamento_obs  TEXT         NULL,
+  observacoes     TEXT         NULL,
+  ativo           TINYINT(1) NOT NULL DEFAULT 1,
+  criado_em       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ------------------------------------------------------------
+-- MÓDULO 01 — PESSOAS: sub-tabelas 1:N do cliente/pessoa
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS pessoa_telefones (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id INT NOT NULL,
+  rotulo     VARCHAR(40)  NULL,
+  numero     VARCHAR(20)  NOT NULL,
+  whatsapp   TINYINT(1)   NOT NULL DEFAULT 0,
+  criado_em  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY (cliente_id),
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pessoa_emails (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id INT NOT NULL,
+  rotulo     VARCHAR(40)  NULL,
+  email      VARCHAR(150) NOT NULL,
+  criado_em  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY (cliente_id),
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pessoa_enderecos (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id  INT NOT NULL,
+  rotulo      VARCHAR(40)  NULL,
+  cep         VARCHAR(9)   NULL,
+  logradouro  VARCHAR(200) NULL,
+  numero      VARCHAR(20)  NULL,
+  complemento VARCHAR(100) NULL,
+  bairro      VARCHAR(100) NULL,
+  cidade      VARCHAR(100) NULL,
+  uf          VARCHAR(2)   NULL,
+  criado_em   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY (cliente_id),
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pessoa_familiares (
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id      INT NOT NULL,
+  parentesco      ENUM('conjuge','ex_conjuge','pai','mae','filho','dependente','herdeiro','irmao','neto','outro') NOT NULL DEFAULT 'outro',
+  nome            VARCHAR(200) NOT NULL,
+  cpf             VARCHAR(14)  NULL,
+  data_nascimento DATE         NULL,
+  contato         VARCHAR(60)  NULL,
+  observacoes     VARCHAR(255) NULL,
+  criado_em       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY (cliente_id),
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS pessoa_contatos_emergencia (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id  INT NOT NULL,
+  nome        VARCHAR(200) NOT NULL,
+  parentesco  VARCHAR(60)  NULL,
+  telefone    VARCHAR(20)  NULL,
+  observacoes VARCHAR(255) NULL,
+  criado_em   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY (cliente_id),
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
@@ -245,7 +335,7 @@ CREATE TABLE IF NOT EXISTS documentos (
   cliente_id       INT NOT NULL,
   tipo_referencia  ENUM('imovel','reforma','contrato_locacao','cliente') NOT NULL,
   referencia_id    INT NOT NULL,
-  categoria        ENUM('escritura','matricula','iptu','contrato_compra','laudo','foto','boleto','nf','outro') NOT NULL DEFAULT 'outro',
+  categoria        ENUM('escritura','matricula','iptu','contrato_compra','habite_se','laudo','foto','boleto','nf','crlv','apolice','manutencao','cnpj','contrato','conta_financeira','extrato','testamento','identidade','comprovante_residencia','certidao','procuracao','outro') NOT NULL DEFAULT 'outro',
   nome_arquivo     VARCHAR(300) NOT NULL,           -- nome original
   caminho          VARCHAR(500) NOT NULL,           -- caminho relativo em /uploads/
   mime_type        VARCHAR(100) NULL,

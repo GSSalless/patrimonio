@@ -207,14 +207,25 @@
 > (um imóvel tem N contratos/seguros/documentos; um investimento pertence a uma conta financeira;
 > uma conta pertence a uma pessoa/empresa/holding; um fornecedor atende vários imóveis/veículos/empresas).
 
-### Módulo 01 — Pessoas  🔴 *(prioridade — pedido direto do César na reunião de 21/07)*
-- [ ] **Card do cliente** com o básico: nome completo, telefone, e-mail + **botão WhatsApp** (clica → abre wa.me direto) — clicar no card abre o cadastro completo
-- [ ] Exibir **nome completo** (ex.: "Marcos Vinícius Machado Borges", não "Marcos Borges") + CPF + endereço no topo do cliente
-- [ ] Pessoa Física: nome, CPF, RG, data nasc., estado civil, tipo sanguíneo, telefones, e-mails (**múltiplos**), endereços, documentos, contatos de emergência — *"pecar pelo excesso"* (César)
-- [ ] Família / sucessão: nome do pai, nome da mãe, cônjuge, **ex-cônjuge(s)**, filhos/dependentes, herdeiros
-- [ ] **Testamento**: existe? (sim/não) + upload do documento + dados do testamento (vincular em `documentos`)
-- [ ] Observações
-- [ ] Relacionamentos: proprietário de imóveis/veículos, titular de investimentos, sócio de empresas, responsável por contratos
+### Módulo 01 — Pessoas  🟢 *(implementado 28/07 — pedido direto do César na reunião de 21/07)*
+- [x] **Card do cliente** com o básico: nome completo, telefone, e-mail + **botão WhatsApp** (clica → abre wa.me direto) — clicar no card abre o cadastro completo (`clientes/lista.php` em cards)
+- [x] Exibir **nome completo** (ex.: "Marcos Vinícius Machado Borges", não "Marcos Borges") + CPF + endereço no topo do cliente (resumo em `clientes/editar.php`)
+- [x] Pessoa Física: nome, CPF, RG, data nasc., estado civil, regime de bens, tipo sanguíneo, profissão, filiação, telefones, e-mails (**múltiplos**), endereços, documentos, contatos de emergência — *"pecar pelo excesso"* (César)
+- [x] Família / sucessão: nome do pai, nome da mãe, cônjuge, **ex-cônjuge(s)**, filhos/dependentes, herdeiros (`pessoa_familiares` com enum de parentesco)
+- [x] **Testamento**: existe? (sim/não) + upload do documento + dados do testamento (categoria `testamento` em `documentos`)
+- [x] Observações
+- [ ] Relacionamentos: proprietário de imóveis/veículos, titular de investimentos, sócio de empresas, responsável por contratos *(→ F3, depende dos módulos 08/10)*
+
+> **Implementação (28/07):** `sql/migration_modulo_01_pessoas.sql` amplia `clientes` (nome_completo,
+> apelido, RG, nascimento, naturalidade, nacionalidade, estado civil, regime de bens, profissão,
+> tipo sanguíneo, filiação, endereço principal, testamento, observações) + 5 sub-tabelas 1:N
+> (`pessoa_telefones`, `pessoa_emails`, `pessoa_enderecos`, `pessoa_familiares`,
+> `pessoa_contatos_emergencia`). `Cliente` model migrado p/ INSERT/UPDATE genérico; novo model
+> `Pessoa` (allow-list de sub-tabelas, DELETE restrito a cliente_id → sem IDOR). `ClientesController`
+> com lista em cards, `novo` (base → segue p/ completo), `editar` (dados + sub-seções + upload de
+> testamento) e `itemRemover`. Partial `clientes/_campos.php` compartilhado (novo ↔ editar). Enum
+> `documentos.categoria` estendido (testamento/identidade/comprovante_residencia/certidao/procuracao).
+> ✅ testado HTTP+banco (criação, edição, sub-tabelas, remoção, IDOR).
 
 ### Módulo 02 — Colaboradores
 - [ ] Dados pessoais (cadastro completo)
@@ -405,3 +416,4 @@
 | 21/07/2026 | **Retomada do teste do M07** (embarcação "Lancha Ferretti 460" já inserida em 20/07 — duplicata id 4 removida). Teste HTTP+banco via curl (login César → cliente Marcos): GET/POST de `outros/manutencao` e `outros/avaliacao` (criação e edição) OK; registros gravados em `bem_manutencoes` e `avaliacoes_bem`; `valor_mercado` atualizado pela avaliação mais recente (validado com avaliação retroativa que não sobrescreve); seções renderizando no `outros/editar.php`. **Módulos 05/06/07 100% testados.** |
 | 21/07/2026 | **Módulo 09 — Contas Financeiras** implementado e testado HTTP+banco: `sql/migration_modulo_09_contas.sql` (`contas_financeiras` + `conta_saldos`; enums de `documentos` +'conta_financeira'/'extrato'), `ContaFinanceira`/`ContaSaldo` models, `ContasController` (index/novo/editar/saldo), views `contas/*` com partial `_campos.php`, rotas, `proximo_codigo_conta()` (CF-XXXX), ícone "Contas" 🏦 ativo no dashboard com badge. Campos de integração Asaas preparados (integracao/account_id/wallet_id/api_key + origem 'asaas' no histórico de saldos). Corrigido `uploads/` sem permissão de escrita p/ Apache (causa dos 500 + cadastros duplicados de 20/07) — `chmod -R 777` local. |
 | 21/07/2026 | **2 reuniões com César** (transcrições analisadas). Novas seções R1–R4 no TAREFAS: navegação pelo menu lateral + "Gestão Geral" consolidada, ícones realistas/fonte/sons/animação (aguardando referências), IA para cadastro assistido, fluxo e-mail→n8n→Contas a Pagar com baixa por comprovante/IA e integração Conta Azul/Asaas. **Módulo 01 — Pessoas virou prioridade** (card com WhatsApp, cadastro completo com família/sucessão/testamento). Combinado: finalizar módulos/campos primeiro, usabilidade depois; César testa cadastros e manda ajustes. |
+| 28/07/2026 | **Commit + deploy do Módulo 09 — Contas Financeiras** (estava pronto mas sem versionar). **Módulo 01 — Pessoas implementado e testado HTTP+banco:** `migration_modulo_01_pessoas.sql` (amplia `clientes` + 5 sub-tabelas 1:N + enum de documentos), `Cliente` migrado p/ INSERT/UPDATE genérico, novo model `Pessoa` (allow-list + DELETE por cliente_id, sem IDOR), `ClientesController` reescrito (cards com WhatsApp, cadastro completo, sub-seções, upload de testamento, itemRemover), partial `clientes/_campos.php`, rota `clientes/item-remover`, helpers `link_whatsapp`/`estado_civil_label`/`parentesco_label`. Falta só "Relacionamentos" (→ F3). ⚠️ Pendente rodar as 2 migrations (09 e 01) no banco de **produção**. |

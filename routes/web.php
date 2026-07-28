@@ -19,6 +19,7 @@ $router->get('clientes/novo',    [ClientesController::class, 'novo']);
 $router->post('clientes/novo',   [ClientesController::class, 'novo']);
 $router->get('clientes/editar',  [ClientesController::class, 'editar']);
 $router->post('clientes/editar', [ClientesController::class, 'editar']);
+$router->get('clientes/item-remover', [ClientesController::class, 'itemRemover']);
 
 // Imóveis
 $router->get('imoveis',                [ImoveisController::class, 'index']);
