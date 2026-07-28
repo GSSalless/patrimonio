@@ -381,6 +381,7 @@
 - [ ] n8n vinculado a todos os módulos — só após finalizar os módulos
 
 ### R4 — Pendências de decisão / follow-up
+- [ ] ⚠️ **[Gilson] Rodar migrations no banco de PRODUÇÃO** (phpMyAdmin): `sql/migration_modulo_09_contas.sql` + `sql/migration_modulo_01_pessoas.sql`. O deploy FTP não executa SQL — sem isso, as telas **Contas** e **Pessoas** dão 500 no ar. Rodar assim que possível.
 - [ ] César: testar cadastros (veículo, imóvel, joia — joia ainda sem dados reais) e devolver ajustes campo a campo
 - [ ] César: mandar referências de ícones + escolher fonte + definir nome do botão "Gestão Geral"
 - [ ] Avaliar vínculo das tarefas do César com o **Notion** dele (assunto retomado, sem decisão)

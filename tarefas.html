@@ -74,6 +74,12 @@
   .nota-rel{max-width:1100px;margin:0 auto 1.5rem;padding:1rem 1.25rem;background:#eaf2fc;border-left:4px solid var(--azul2);
     border-radius:8px;font-size:.83rem;color:#3a4656}
   .nota-rel strong{color:var(--azul)}
+
+  .alerta-prod{max-width:1100px;margin:1.25rem auto 0;padding:1rem 1.25rem;background:#fff4e5;
+    border:1px solid #f0b429;border-left:5px solid #f0b429;border-radius:10px;color:#7a4d00;
+    font-size:.86rem;display:flex;gap:.75rem;align-items:flex-start}
+  .alerta-prod strong{color:#7a3d00}
+  .alerta-prod code{background:#fce8c8;padding:.1rem .4rem;border-radius:4px;font-size:.92em}
 </style>
 </head>
 <body>
@@ -102,6 +108,21 @@
   <button class="btn" onclick="marcarTodos(false)">▢ Desmarcar tudo</button>
   <button class="btn" onclick="resetar()">↺ Restaurar padrão</button>
   <span class="legenda">Suas marcações ficam salvas neste navegador.</span>
+</div>
+
+<div class="alerta-prod">
+  <span style="font-size:1.4rem;line-height:1">⚠️</span>
+  <div>
+    <strong>PENDENTE — rodar migrations no banco de PRODUÇÃO</strong> (phpMyAdmin da hospedagem).
+    O deploy envia os arquivos mas <u>não executa SQL</u>. Enquanto estas duas migrations não forem
+    rodadas em produção, as telas <strong>Contas</strong> (Mód. 09) e <strong>Pessoas</strong> (Mód. 01)
+    retornam <strong>erro 500</strong> no ar:
+    <div style="margin-top:.45rem;line-height:1.7">
+      1. <code>sql/migration_modulo_09_contas.sql</code><br>
+      2. <code>sql/migration_modulo_01_pessoas.sql</code>
+    </div>
+    <div style="margin-top:.4rem;font-size:.92em;opacity:.85">Responsável: Gilson · rodar assim que possível.</div>
+  </div>
 </div>
 
 <div class="nota-rel">
@@ -317,6 +338,7 @@ const DADOS = [
     {t:'n8n vinculado a todos os módulos (só após finalizar os módulos)', done:false},
   ]},
   { id:'r4', nome:'Reunião 21/07 — Decisões e Follow-up', icone:'📌', cor:'#0f766e', sub:'pendências de definição', itens:[
+    {t:'⚠️ [Gilson] Rodar migrations no banco de PRODUÇÃO: migration_modulo_09_contas.sql + migration_modulo_01_pessoas.sql (senão Contas/Pessoas dão 500)', done:false},
     {t:'⚠️ Trocar as senhas seed de PRODUÇÃO (cesar123/marcos123) por senhas fortes', done:false},
     {t:'César: testar cadastros (veículo, imóvel, joia) e devolver ajustes campo a campo', done:false},
     {t:'César: mandar referências de ícones + escolher fonte', done:false},
