@@ -22,3 +22,13 @@ spl_autoload_register(function (string $class): void {
 });
 
 session_init();
+
+// Seleção de cliente (admin) via ?cliente_id — tratada aqui, ANTES dos
+// controllers, para funcionar mesmo em ações que redirecionam antes de
+// renderizar a view (ex.: Dashboard → Gestão Geral). Depois redireciona para
+// a URL limpa (sem o parâmetro).
+if (isset($_GET['cliente_id']) && ($u = usuario_logado()) && $u['nivel'] === 'admin') {
+    selecionar_cliente((int) $_GET['cliente_id']);
+    header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
+    exit;
+}

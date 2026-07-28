@@ -12,6 +12,7 @@ $router->get('logout',    [AuthController::class, 'logout']);
 
 // Dashboard
 $router->get('dashboard', [DashboardController::class, 'index']);
+$router->get('gestao-geral', [GestaoGeralController::class, 'index']);
 
 // Clientes (admin)
 $router->get('clientes',         [ClientesController::class, 'index']);

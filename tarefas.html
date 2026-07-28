@@ -315,14 +315,15 @@ const DADOS = [
     {t:'Deploy automático GitHub Actions → FTP', done:true},
     {t:'uploads/ com permissão de escrita p/ Apache (causa dos 500 + duplicados)', done:true},
   ]},
-  { id:'r1', nome:'Reunião 21/07 — Navegação e Estrutura', icone:'🧭', cor:'#b45309', sub:'usabilidade — após fechar os módulos', itens:[
-    {t:'Menu lateral como navegação principal (Gestão Geral → Clientes → módulos)', done:false},
-    {t:'Remover seletor de cliente do topo (duplicidade) — seleção via menu lateral', done:false},
-    {t:'Menu lateral fixo no desktop (se o topo sair)', done:false},
-    {t:'"Gestão Geral" (nome provisório): dashboard consolidado da CCR — patrimônio total de todos os clientes, caixa geral, tarefas multi-cliente', done:false},
-    {t:'Separação visão gestor × visão cliente', done:false},
-    {t:'Botão "Voltar" em todas as telas', done:false},
-    {t:'Dashboard do cliente com dados reais (César escolhe o que aparece)', done:false},
+  { id:'r1', nome:'Reunião 21/07 — Navegação e Estrutura', icone:'🧭', cor:'#b45309', sub:'chassi de navegação implementado 28/07', itens:[
+    {t:'Menu lateral como navegação principal, em grupos (Geral: Gestão Geral + Clientes · [Cliente]: Dashboard/Patrimônios/Contas) — 28/07', done:true},
+    {t:'Remover seletor de cliente do topo (duplicidade) → chip do cliente + seleção pela lista de Clientes — 28/07', done:true},
+    {t:'Menu lateral fixo no desktop (≥1024px) e drawer no mobile — 28/07', done:true},
+    {t:'"Gestão Geral" (visão gestor): tela própria com KPIs consolidados (nº clientes, patrimônio imobiliário, saldo em contas) + grade de clientes — 28/07', done:true},
+    {t:'Separação visão gestor × visão cliente (Gestão Geral × Dashboard do cliente) — 28/07', done:true},
+    {t:'Botão "Voltar" global no topo (em todas as telas) — 28/07', done:true},
+    {t:'Gestão Geral: caixa geral consolidado + tarefas/lembretes multi-cliente (depende dos módulos Caixa/Tarefas)', done:false},
+    {t:'Dashboard do cliente com dados reais (hoje é hub de categorias; César escolhe o que aparece)', done:false},
     {t:'Testar hover/animação dos cards no celular', done:false},
   ]},
   { id:'r2', nome:'Reunião 21/07 — Identidade Visual', icone:'🎨', cor:'#be185d', sub:'emoji padronizado 28/07 · ícones customizados aguardam refs do César', itens:[

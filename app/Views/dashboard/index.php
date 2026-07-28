@@ -1,40 +1,25 @@
 <?php
 /**
- * View do dashboard. Reaproveita o header/footer legados (topo, seletor de
- * cliente e navegação). O header define $usuario, $cliente_sel e $clientes_lista.
+ * Dashboard — visão de UM cliente (hub de módulos).
+ * Admin sem cliente selecionado é redirecionado para a Gestão Geral no controller.
  *
- * @var int        $total_clientes
- * @var int        $total_imoveis
  * @var array|null $cli
  * @var int        $qtd_imoveis
+ * @var int        $qtd_contas
  */
 $page_title = 'Dashboard — Gestão Patrimonial';
 require APP_ROOT . '/includes/header.php';
 ?>
 <div class="container">
 
-  <?php if ($usuario['nivel'] === 'admin' && !$cliente_sel): ?>
-  <!-- Visão admin sem cliente selecionado -->
+  <?php if (!$cli): ?>
   <div class="card">
-    <div class="card-header">
-      <span class="card-titulo">Painel Administrativo</span>
-    </div>
-    <div class="form-grid form-grid-3" style="gap:1rem">
-      <div style="background:#faf7ef;padding:1.25rem;border-radius:8px;text-align:center">
-        <div style="font-size:2rem;font-weight:800;color:var(--cor-primaria)"><?= $total_clientes ?></div>
-        <div style="color:var(--cor-secundario);font-size:.9rem">Clientes ativos</div>
-      </div>
-      <div style="background:#faf7ef;padding:1.25rem;border-radius:8px;text-align:center">
-        <div style="font-size:2rem;font-weight:800;color:var(--cor-primaria)"><?= $total_imoveis ?></div>
-        <div style="color:var(--cor-secundario);font-size:.9rem">Imóveis cadastrados</div>
-      </div>
-    </div>
-    <div style="margin-top:1.25rem">
-      <p style="color:var(--cor-secundario);font-size:.9rem">
-        Selecione um cliente no topo para ver seu patrimônio, ou
-        <a href="<?= base_url('clientes') ?>">acesse a lista de clientes</a>.
-      </p>
-    </div>
+    <p style="color:var(--cor-secundario);text-align:center;padding:2rem">
+      Nenhum cliente selecionado.
+      <?php if (($usuario['nivel'] ?? '') === 'admin'): ?>
+        Vá para <a href="<?= base_url('gestao-geral') ?>">Gestão Geral</a> e escolha um cliente.
+      <?php endif; ?>
+    </p>
   </div>
 
   <?php else: ?>
@@ -69,11 +54,6 @@ require APP_ROOT . '/includes/header.php';
     <span class="app-icon app-icon-off">
       <span class="app-icon-tile app-tile-laranja">✅</span>
       <span class="app-icon-label">Tarefas</span>
-    </span>
-
-    <span class="app-icon app-icon-off">
-      <span class="app-icon-tile app-tile-roxo">📊</span>
-      <span class="app-icon-label">Caixa Geral</span>
     </span>
   </div>
   <?php endif; ?>

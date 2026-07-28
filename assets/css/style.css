@@ -81,24 +81,42 @@ h1, h2, h3 { font-family: var(--fonte-titulo); }
 
 .topo-logo span { color: var(--dourado-claro); font-style: italic; }
 
-.topo-seletor {
-  flex: 1;
-  max-width: 280px;
-}
-
-.topo-seletor select {
-  width: 100%;
-  padding: .45rem .7rem;
-  border-radius: var(--raio-sm);
-  border: 1px solid rgba(212,175,55,.35);
-  background: rgba(255,255,255,.06);
-  color: #f4f1e8;
-  font-size: .9rem;
+/* Botão Voltar global (topo) */
+.topo-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .42rem .8rem;
+  font-size: .86rem;
   font-family: var(--fonte-corpo);
+  color: rgba(244,241,232,.85);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(212,175,55,.3);
+  border-radius: var(--raio-sm);
   cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  flex-shrink: 0;
 }
+.topo-voltar:hover { background: rgba(212,175,55,.15); border-color: rgba(212,175,55,.55); color: var(--dourado-claro); }
+.topo-voltar:active { transform: translateY(1px); }
 
-.topo-seletor select option { background: var(--preto); color: #f4f1e8; }
+/* Chip do cliente selecionado (substitui o seletor duplicado) */
+.topo-cliente {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  max-width: 240px;
+  padding: .4rem .8rem;
+  font-size: .88rem;
+  color: #f4f1e8;
+  background: rgba(212,175,55,.1);
+  border: 1px solid rgba(212,175,55,.35);
+  border-radius: 999px;
+}
+.topo-cliente i { color: var(--dourado-claro); font-size: 1rem; }
+.topo-cliente span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topo-cliente:hover { background: rgba(212,175,55,.18); border-color: rgba(212,175,55,.6); text-decoration: none; }
 
 /* Botão hambúrguer (abre o menu lateral) */
 .menu-toggle {
@@ -212,6 +230,27 @@ body.menu-aberto .menu-lateral { transform: translateX(0); }
   color: var(--dourado-claro);
 }
 .menu-item.ativo i { color: var(--dourado-claro); }
+
+.menu-grupo-tit {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: rgba(212,175,55,.6);
+  font-weight: 700;
+  padding: .3rem .85rem;
+  margin: .9rem 0 .35rem;
+}
+.menu-grupo-tit:first-child { margin-top: .2rem; }
+
+/* ── Desktop: menu lateral fixo (deixa de ser drawer) ─────── */
+@media (min-width: 1024px) {
+  body { padding-left: 268px; }
+  .menu-toggle { display: none; }
+  .menu-fechar { display: none; }
+  .menu-overlay { display: none !important; }
+  .menu-lateral { transform: none !important; box-shadow: none; }
+  body.menu-aberto { overflow: auto; }   /* neutraliza trava de scroll do drawer */
+}
 
 .menu-lateral-rodape {
   padding: 1rem 1.25rem 1.25rem;
