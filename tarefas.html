@@ -117,12 +117,13 @@
   <div>
     <strong>PENDENTE — rodar migrations no banco de PRODUÇÃO</strong> (phpMyAdmin da hospedagem).
     O deploy envia os arquivos mas <u>não executa SQL</u>. Enquanto estas migrations não forem
-    rodadas em produção, as telas <strong>Contas</strong> (Mód. 09), <strong>Pessoas</strong> (Mód. 01)
-    e <strong>Seguros</strong> (Mód. 11) retornam <strong>erro 500</strong> no ar:
+    rodadas em produção, as telas <strong>Contas</strong> (Mód. 09), <strong>Pessoas</strong> (Mód. 01),
+    <strong>Seguros</strong> (Mód. 11) e <strong>Empresas</strong> (Mód. 03) retornam <strong>erro 500</strong> no ar:
     <div style="margin-top:.45rem;line-height:1.9">
       1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_09_contas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_09_contas.sql</code></a> ↗<br>
       2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_01_pessoas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_01_pessoas.sql</code></a> ↗<br>
-      3. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_11_seguros.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_11_seguros.sql</code></a> ↗
+      3. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_11_seguros.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_11_seguros.sql</code></a> ↗<br>
+      4. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_03_empresas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_03_empresas.sql</code></a> ↗
     </div>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
       Responsável: Gilson · rodar no phpMyAdmin da hospedagem assim que possível (local já está aplicado ✅).
@@ -177,12 +178,14 @@ const DADOS = [
     {t:'Histórico: salários, promoções, advertências, avaliações', done:false},
     {t:'Controle: férias, faltas, atestados, treinamentos', done:false},
   ]},
-  { id:'m03', nome:'Módulo 03 — Empresas', icone:'🏢', cor:'#1f6fe0', sub:'parcial (PJ em clientes)', itens:[
-    {t:'PJ básica via `clientes` (razão social, CNPJ) — feita', done:true},
-    {t:'Tabela `empresas` dedicada (CNAEs, capital social, fantasia)', done:false},
-    {t:'Estrutura: sócios, administradores, holdings', done:false},
-    {t:'Documentos: contrato social, alterações, certidões', done:false},
-    {t:'Relacionamentos: contabilidade, jurídico, bancos, imóveis, veículos', done:false},
+  { id:'m03', nome:'Módulo 03 — Empresas', icone:'🏢', cor:'#1f6fe0', sub:'implementado 12/08 · testado HTTP+banco', itens:[
+    {t:'Tabela `empresas` dedicada + CRUD completo (lista com filtros/capital somado, novo, editar, _campos) · código EM-XXXX', done:true},
+    {t:'Dados: razão social, fantasia, CNPJ, natureza (operacional/holding/SPE), natureza jurídica, regime tributário, situação, inscrições, CNAEs, capital social, abertura, endereço, contato, contabilidade', done:true},
+    {t:'Estrutura: quadro societário (`empresa_socios`) com sócios/administradores/procuradores, participação % e conferência do 100%', done:true},
+    {t:'Documentos: contrato social, cartão CNPJ, outros (tipo_referencia `empresa` + categoria `contrato_social`)', done:true},
+    {t:'Integração: app 🏢 no dashboard com badge + item no menu lateral', done:true},
+    {t:'Relacionamentos: holdings ↔ imóveis/veículos/investimentos (→ F3)', done:false},
+    {t:'⚠️ Rodar migration_modulo_03_empresas.sql no banco de PRODUÇÃO (senão /empresas dá 500)', done:false},
   ]},
   { id:'m04', nome:'Módulo 04 — Fornecedores e Parceiros', icone:'🤝', cor:'#0d9488', sub:'não iniciado', itens:[
     {t:'Tabela `fornecedores` + página de listagem', done:false},
@@ -351,7 +354,7 @@ const DADOS = [
     {t:'n8n vinculado a todos os módulos (só após finalizar os módulos)', done:false},
   ]},
   { id:'r4', nome:'Reunião 21/07 — Decisões e Follow-up', icone:'📌', cor:'#0f766e', sub:'pendências de definição', itens:[
-    {t:'⚠️ [Gilson] Rodar migrations no banco de PRODUÇÃO: migration_modulo_09_contas.sql + migration_modulo_01_pessoas.sql + migration_modulo_11_seguros.sql (senão Contas/Pessoas/Seguros dão 500)', done:false},
+    {t:'⚠️ [Gilson] Rodar migrations no banco de PRODUÇÃO: migration_modulo_09_contas.sql + migration_modulo_01_pessoas.sql + migration_modulo_11_seguros.sql + migration_modulo_03_empresas.sql (senão Contas/Pessoas/Seguros/Empresas dão 500)', done:false},
     {t:'⚠️ Trocar as senhas seed de PRODUÇÃO (cesar123/marcos123) por senhas fortes', done:false},
     {t:'César: testar cadastros (veículo, imóvel, joia) e devolver ajustes campo a campo', done:false},
     {t:'César: mandar referências de ícones + escolher fonte', done:false},

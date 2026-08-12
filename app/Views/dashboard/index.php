@@ -74,6 +74,14 @@ $linhas = [
       <span class="app-icon-label">Contas</span>
     </a>
 
+    <a href="<?= base_url('empresas') ?>" class="app-icon">
+      <span class="app-icon-tile app-tile-azul">
+        🏢
+        <?php if (($qtd_empresas ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_empresas ?></span><?php endif; ?>
+      </span>
+      <span class="app-icon-label">Empresas</span>
+    </a>
+
     <a href="<?= base_url('seguros') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
         🛡️

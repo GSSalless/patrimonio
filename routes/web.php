@@ -95,6 +95,15 @@ $router->post('seguros/novo',  [SegurosController::class, 'novo']);
 $router->get('seguros/editar', [SegurosController::class, 'editar']);
 $router->post('seguros/editar',[SegurosController::class, 'editar']);
 
+// Empresas (Módulo 03)
+$router->get('empresas',              [EmpresasController::class, 'index']);
+$router->get('empresas/novo',         [EmpresasController::class, 'novo']);
+$router->post('empresas/novo',        [EmpresasController::class, 'novo']);
+$router->get('empresas/editar',       [EmpresasController::class, 'editar']);
+$router->post('empresas/editar',      [EmpresasController::class, 'editar']);
+$router->post('empresas/socio',       [EmpresasController::class, 'socio']);
+$router->get('empresas/socio-remover',[EmpresasController::class, 'socioRemover']);
+
 // Financeiro
 $router->get('financeiro/iptu',               [FinanceiroController::class, 'iptu']);
 $router->post('financeiro/iptu',              [FinanceiroController::class, 'iptu']);

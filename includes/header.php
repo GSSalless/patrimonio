@@ -82,6 +82,7 @@ if ($usuario):
         $grupos[] = [$cliente_sel['nome'], [
           ['dashboard',  'Dashboard',   'bi-speedometer2', true],
           ['patrimonio', 'Patrimônios', 'bi-buildings',    true],
+          ['empresas',   'Empresas',    'bi-briefcase',    true],
           ['contas',     'Contas',      'bi-bank',         true],
           ['seguros',    'Seguros',     'bi-shield-check', true],
         ]];
@@ -91,6 +92,7 @@ if ($usuario):
         ['Meu patrimônio', [
           ['dashboard',  'Dashboard',   'bi-speedometer2',   true],
           ['patrimonio', 'Patrimônios', 'bi-buildings',      true],
+          ['empresas',   'Empresas',    'bi-briefcase',      true],
           ['contas',     'Contas',      'bi-bank',           true],
           ['seguros',    'Seguros',     'bi-shield-check',   true],
           ['agenda',     'Agenda',      'bi-calendar-check', true],

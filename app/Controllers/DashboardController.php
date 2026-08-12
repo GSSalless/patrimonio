@@ -41,7 +41,11 @@ class DashboardController extends Controller
         $stmt = db()->prepare('SELECT COUNT(*) FROM seguros WHERE cliente_id = ? AND ativo = 1');
         $stmt->execute([$cli['id']]);
         $qtd_seguros = (int) $stmt->fetchColumn();
+        // Contagem de empresas (Módulo 03) para o badge do app.
+        $stmt = db()->prepare('SELECT COUNT(*) FROM empresas WHERE cliente_id = ? AND ativo = 1');
+        $stmt->execute([$cli['id']]);
+        $qtd_empresas = (int) $stmt->fetchColumn();
 
-        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros'));
+        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros', 'qtd_empresas'));
     }
 }

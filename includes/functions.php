@@ -136,6 +136,33 @@ function proximo_codigo_seguro(): string {
     return 'SG-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
 }
 
+function proximo_codigo_empresa(): string {
+    $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM empresas");
+    $row = $stmt->fetch();
+    $proximo = ($row['ultimo'] ?? 0) + 1;
+    return 'EM-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
+/** Rótulos do Módulo 03 — Empresas. */
+function empresa_natureza_label(string $n): string {
+    return [
+        'operacional' => 'Operacional', 'holding_patrimonial' => 'Holding patrimonial',
+        'holding_participacao' => 'Holding de participação', 'spe' => 'SPE', 'outro' => 'Outra',
+    ][$n] ?? ucfirst($n);
+}
+function empresa_regime_label(?string $r): string {
+    return [
+        'simples' => 'Simples Nacional', 'lucro_presumido' => 'Lucro Presumido',
+        'lucro_real' => 'Lucro Real', 'mei' => 'MEI', 'imune' => 'Imune/Isenta', 'outro' => 'Outro',
+    ][$r] ?? '—';
+}
+function empresa_socio_funcao_label(string $f): string {
+    return [
+        'socio' => 'Sócio', 'administrador' => 'Administrador',
+        'socio_administrador' => 'Sócio-administrador', 'procurador' => 'Procurador', 'outro' => 'Outro',
+    ][$f] ?? ucfirst($f);
+}
+
 /** Rótulos de tipo de seguro (Módulo 11). */
 function seguro_tipo_label(string $t): string {
     return [
