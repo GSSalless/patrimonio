@@ -13,6 +13,7 @@ $comp = [
     ['label' => 'Imóveis',  'emoji' => '🏛️', 'valor' => $pat['imoveis_valor'],  'qtd' => $pat['imoveis_qtd'],  'cor' => '#c9a227'],
     ['label' => 'Veículos', 'emoji' => '🚗', 'valor' => $pat['veiculos_valor'], 'qtd' => $pat['veiculos_qtd'], 'cor' => '#5b8def'],
     ['label' => 'Outros bens', 'emoji' => '💎', 'valor' => $pat['outros_valor'], 'qtd' => $pat['outros_qtd'], 'cor' => '#9b6dd6'],
+    ['label' => 'Investimentos', 'emoji' => '📈', 'valor' => $pat['invest_valor'], 'qtd' => $pat['invest_qtd'], 'cor' => '#e0669e'],
     ['label' => 'Contas',   'emoji' => '🏦', 'valor' => $pat['contas_saldo'],  'qtd' => $pat['contas_qtd'],  'cor' => '#3fae7a'],
 ];
 $total_pat = (float) $pat['total'];
@@ -92,7 +93,7 @@ $total_pat = (float) $pat['total'];
           <div class="gg-cli-nome"><?= h($nome) ?></div>
           <div class="gg-cli-sub"><span class="tag"><?= $c['tipo_pessoa'] ?></span> <?= h($c['cpf_cnpj']) ?></div>
           <div class="gg-cli-pat"><?= moeda($c['patrimonio']['total']) ?></div>
-          <div class="gg-cli-meta">🏛️ <?= (int)$c['patrimonio']['imoveis_qtd'] ?> · 🚗 <?= (int)$c['patrimonio']['veiculos_qtd'] ?> · 💎 <?= (int)$c['patrimonio']['outros_qtd'] ?> · 🏦 <?= (int)$c['patrimonio']['contas_qtd'] ?></div>
+          <div class="gg-cli-meta">🏛️ <?= (int)$c['patrimonio']['imoveis_qtd'] ?> · 🚗 <?= (int)$c['patrimonio']['veiculos_qtd'] ?> · 💎 <?= (int)$c['patrimonio']['outros_qtd'] ?> · 📈 <?= (int)$c['patrimonio']['invest_qtd'] ?> · 🏦 <?= (int)$c['patrimonio']['contas_qtd'] ?></div>
         </div>
         <i class="bi bi-chevron-right" style="color:var(--cor-secundario)"></i>
       </a>

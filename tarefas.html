@@ -112,18 +112,19 @@
   <span class="legenda">Suas marcações ficam salvas neste navegador.</span>
 </div>
 
-<div class="alerta-prod" style="background:#ecfdf5;border-color:#6ee7b7">
-  <span style="font-size:1.4rem;line-height:1">✅</span>
+<div class="alerta-prod">
+  <span style="font-size:1.4rem;line-height:1">⚠️</span>
   <div>
-    <strong>Produção sincronizada</strong> (12/08/2026) — o banco de produção
-    (<code>u250260449_cezar_db</code>) já contém <strong>todas</strong> as tabelas e colunas dos
-    Módulos 01, 03, 09 e 11 (verificado via <code>information_schema</code>: tabelas
-    <code>contas_financeiras</code>, <code>seguros</code>, <code>empresas</code>, <code>pessoa_*</code>
-    presentes; enums de <code>documentos</code> com <code>seguro</code>/<code>empresa</code>/<code>contrato_social</code>).
-    <strong>Nenhuma migration pendente.</strong>
+    <strong>1 migration nova para rodar em PRODUÇÃO</strong> (Módulo 10 — Investimentos).
+    Os Módulos 01/03/09/11 já estão no ar (banco sincronizado por dump em 12/08). Já o
+    <strong>Módulo 10</strong> criou tabelas novas — rode este SQL no phpMyAdmin, senão a tela
+    <strong>Investimentos</strong> dá <strong>erro 500</strong>:
+    <div style="margin-top:.45rem;line-height:1.9">
+      1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_10_investimentos.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_10_investimentos.sql</code></a> ↗
+    </div>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
-      Observação: novas migrations (tabelas/colunas futuras) continuam precisando ser rodadas à mão
-      no phpMyAdmin — o deploy FTP não executa SQL.
+      Lembrete: selecionar o banco <code>u250260449_cezar_db</code> e remover a linha
+      <code>USE gestao_patrimonial;</code> antes de rodar (local já está aplicado ✅).
     </div>
   </div>
 </div>
@@ -256,14 +257,15 @@ const DADOS = [
     {t:'Ícone "Contas" 🏦 ativo no dashboard com badge', done:true},
     {t:'Integração Asaas efetiva (saldo/extrato/cobranças/webhooks) — F3', done:false},
   ]},
-  { id:'m10', nome:'Módulo 10 — Investimentos', icone:'📈', cor:'#16a34a', sub:'não iniciado', itens:[
-    {t:'Tabela `investimentos` + listagem + cadastro', done:false},
-    {t:'Classificação: renda fixa, fundos, ações, previdência, offshore, cripto', done:false},
-    {t:'Aplicação: data, valor aplicado, valor atual', done:false},
-    {t:'Rentabilidade: mensal, anual, acumulada', done:false},
-    {t:'Liquidez (D0/D1/D30/D90) · Tributação (IR/IOF/come-cotas)', done:false},
-    {t:'Custos: taxa de administração e performance', done:false},
-    {t:'Histórico: aplicações, resgates, rendimentos · Documentos', done:false},
+  { id:'m10', nome:'Módulo 10 — Investimentos', icone:'📈', cor:'#16a34a', sub:'implementado 12/08 · testado HTTP+banco', itens:[
+    {t:'Tabela `investimentos` + CRUD completo (lista com filtros + totais da carteira, novo, editar, _campos) · código IV-XXXX · vínculo opcional à conta financeira', done:true},
+    {t:'Classificação: renda fixa, tesouro, fundo, multimercado, ações, previdência, offshore, cripto · situação (ativo/resgatado/vencido)', done:true},
+    {t:'Rentabilidade: indexador + rentabilidade contratada · valores aplicado/atual + ganho/perda (R$ e %)', done:true},
+    {t:'Liquidez (D0/D1/D30/D90) · Tributação (IR/IOF/come-cotas) · Custos (taxa adm/performance)', done:true},
+    {t:'Histórico de movimentos (aplicações, resgates, rendimentos) na edição', done:true},
+    {t:'Documentos: proposta, regulamento, extrato (tipo_referencia `investimento` + categorias proposta/regulamento)', done:true},
+    {t:'Integração: entra no PATRIMÔNIO CONSOLIDADO (dashboard + Gestão Geral) · vencimento alimenta a Agenda · app 📈 + menu', done:true},
+    {t:'⚠️ Rodar migration_modulo_10_investimentos.sql no banco de PRODUÇÃO', done:false},
   ]},
   { id:'m11', nome:'Módulo 11 — Seguros', icone:'🛡️', cor:'#ca8a04', sub:'implementado 11/08 · testado HTTP+banco', itens:[
     {t:'Tabela `seguros` + vínculo polimórfico (item_tipo+item_id) a imóvel/veículo/outro bem/pessoa · código SG-XXXX', done:true},

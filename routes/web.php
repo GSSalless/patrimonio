@@ -95,6 +95,15 @@ $router->post('seguros/novo',  [SegurosController::class, 'novo']);
 $router->get('seguros/editar', [SegurosController::class, 'editar']);
 $router->post('seguros/editar',[SegurosController::class, 'editar']);
 
+// Investimentos (Módulo 10)
+$router->get('investimentos',                  [InvestimentosController::class, 'index']);
+$router->get('investimentos/novo',             [InvestimentosController::class, 'novo']);
+$router->post('investimentos/novo',            [InvestimentosController::class, 'novo']);
+$router->get('investimentos/editar',           [InvestimentosController::class, 'editar']);
+$router->post('investimentos/editar',          [InvestimentosController::class, 'editar']);
+$router->post('investimentos/movimento',       [InvestimentosController::class, 'movimento']);
+$router->get('investimentos/movimento-remover',[InvestimentosController::class, 'movimentoRemover']);
+
 // Empresas (Módulo 03)
 $router->get('empresas',              [EmpresasController::class, 'index']);
 $router->get('empresas/novo',         [EmpresasController::class, 'novo']);

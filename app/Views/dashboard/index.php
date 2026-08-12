@@ -16,6 +16,7 @@ $linhas = [
     ['Imóveis',  '🏛️', $pat['imoveis_valor']  ?? 0, $pat['imoveis_qtd']  ?? 0, '#c9a227'],
     ['Veículos', '🚗', $pat['veiculos_valor'] ?? 0, $pat['veiculos_qtd'] ?? 0, '#5b8def'],
     ['Outros bens', '💎', $pat['outros_valor'] ?? 0, $pat['outros_qtd'] ?? 0, '#9b6dd6'],
+    ['Investimentos', '📈', $pat['invest_valor'] ?? 0, $pat['invest_qtd'] ?? 0, '#e0669e'],
     ['Contas',   '🏦', $pat['contas_saldo']   ?? 0, $pat['contas_qtd']   ?? 0, '#3fae7a'],
 ];
 ?>
@@ -80,6 +81,14 @@ $linhas = [
         <?php if (($qtd_empresas ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_empresas ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Empresas</span>
+    </a>
+
+    <a href="<?= base_url('investimentos') ?>" class="app-icon">
+      <span class="app-icon-tile app-tile-verde">
+        📈
+        <?php if (($qtd_investimentos ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_investimentos ?></span><?php endif; ?>
+      </span>
+      <span class="app-icon-label">Investimentos</span>
     </a>
 
     <a href="<?= base_url('seguros') ?>" class="app-icon">

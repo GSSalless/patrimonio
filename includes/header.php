@@ -84,6 +84,7 @@ if ($usuario):
           ['patrimonio', 'Patrimônios', 'bi-buildings',    true],
           ['empresas',   'Empresas',    'bi-briefcase',    true],
           ['contas',     'Contas',      'bi-bank',         true],
+          ['investimentos','Investimentos','bi-graph-up-arrow', true],
           ['seguros',    'Seguros',     'bi-shield-check', true],
         ]];
       }
@@ -94,6 +95,7 @@ if ($usuario):
           ['patrimonio', 'Patrimônios', 'bi-buildings',      true],
           ['empresas',   'Empresas',    'bi-briefcase',      true],
           ['contas',     'Contas',      'bi-bank',           true],
+          ['investimentos','Investimentos','bi-graph-up-arrow', true],
           ['seguros',    'Seguros',     'bi-shield-check',   true],
           ['agenda',     'Agenda',      'bi-calendar-check', true],
         ]],

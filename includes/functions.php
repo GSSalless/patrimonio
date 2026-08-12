@@ -110,11 +110,17 @@ function patrimonio_consolidado(?int $cliente_id = null): array {
         "SELECT COUNT(*), COALESCE(SUM(CASE WHEN moeda = 'BRL' THEN saldo_atual ELSE 0 END),0)
            FROM contas_financeiras WHERE $where"
     );
+    // Investimentos: valor atual dos que ainda estão ativos
+    [$invest_qtd, $invest_valor] = $uma(
+        "SELECT COUNT(*), COALESCE(SUM(valor_atual),0)
+           FROM investimentos WHERE $where AND status = 'ativo'"
+    );
 
     $imoveis_valor  = (float) $imoveis_valor;
     $veiculos_valor = (float) $veiculos_valor;
     $outros_valor   = (float) $outros_valor;
     $contas_saldo   = (float) $contas_saldo;
+    $invest_valor   = (float) $invest_valor;
 
     return [
         'imoveis_qtd'    => (int) $imoveis_qtd,
@@ -123,9 +129,11 @@ function patrimonio_consolidado(?int $cliente_id = null): array {
         'veiculos_valor' => $veiculos_valor,
         'outros_qtd'     => (int) $outros_qtd,
         'outros_valor'   => $outros_valor,
+        'invest_qtd'     => (int) $invest_qtd,
+        'invest_valor'   => $invest_valor,
         'contas_qtd'     => (int) $contas_qtd,
         'contas_saldo'   => $contas_saldo,
-        'total'          => $imoveis_valor + $veiculos_valor + $outros_valor + $contas_saldo,
+        'total'          => $imoveis_valor + $veiculos_valor + $outros_valor + $invest_valor + $contas_saldo,
     ];
 }
 
@@ -141,6 +149,28 @@ function proximo_codigo_empresa(): string {
     $row = $stmt->fetch();
     $proximo = ($row['ultimo'] ?? 0) + 1;
     return 'EM-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
+function proximo_codigo_investimento(): string {
+    $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM investimentos");
+    $row = $stmt->fetch();
+    $proximo = ($row['ultimo'] ?? 0) + 1;
+    return 'IV-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
+/** Rótulos do Módulo 10 — Investimentos. */
+function investimento_classe_label(string $c): string {
+    return [
+        'renda_fixa' => 'Renda fixa', 'tesouro' => 'Tesouro Direto', 'fundo' => 'Fundo',
+        'multimercado' => 'Multimercado', 'acoes' => 'Ações', 'previdencia' => 'Previdência',
+        'offshore' => 'Offshore', 'cripto' => 'Cripto', 'outro' => 'Outro',
+    ][$c] ?? ucfirst($c);
+}
+function investimento_indexador_label(?string $i): string {
+    return [
+        'pre' => 'Prefixado', 'cdi' => 'CDI', 'ipca' => 'IPCA', 'selic' => 'Selic',
+        'cambio' => 'Câmbio', 'misto' => 'Misto', 'na' => 'N/A',
+    ][$i] ?? '—';
 }
 
 /** Rótulos do Módulo 03 — Empresas. */
@@ -254,6 +284,14 @@ function alertas_consolidado(?int $cliente_id = null): array {
                s.vigencia_fim, CONCAT('seguros/editar?id=', s.id)$C
           FROM seguros s
          WHERE s.ativo = 1 AND s.status = 'vigente' AND s.vigencia_fim IS NOT NULL
+
+        UNION ALL
+        -- Vencimento de investimento (renda fixa ativa)
+        SELECT iv.cliente_id, 'investimento'$C, CONCAT('Vencimento · ', iv.nome)$C,
+               COALESCE(NULLIF(iv.instituicao, ''), iv.codigo)$C,
+               iv.data_vencimento, CONCAT('investimentos/editar?id=', iv.id)$C
+          FROM investimentos iv
+         WHERE iv.ativo = 1 AND iv.status = 'ativo' AND iv.data_vencimento IS NOT NULL
 
         UNION ALL
         -- Documentos com validade

@@ -718,3 +718,55 @@ CREATE TABLE IF NOT EXISTS empresa_socios (
 
 -- Nota: ENUM tipo_referencia de `documentos` estendido com 'empresa' e
 --   categoria com 'contrato_social' (contrato social e alterações da empresa).
+
+-- ============================================================================
+-- Módulo 10 — Investimentos (migration_modulo_10_investimentos.sql · 12/08/2026)
+-- Carteira de investimentos + histórico de movimentos. valor_atual entra no
+-- patrimônio consolidado; data_vencimento alimenta a Agenda (Mód. 14).
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS investimentos (
+  id                  INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id          INT NOT NULL,
+  codigo              VARCHAR(10) NOT NULL,             -- IV-0001
+  conta_id            INT NULL,
+  nome                VARCHAR(180) NOT NULL,
+  classe              ENUM('renda_fixa','tesouro','fundo','multimercado','acoes','previdencia','offshore','cripto','outro') NOT NULL DEFAULT 'renda_fixa',
+  instituicao         VARCHAR(120) NULL,
+  emissor             VARCHAR(120) NULL,
+  indexador           ENUM('pre','cdi','ipca','selic','cambio','misto','na') NULL,
+  rentabilidade_contratada VARCHAR(80) NULL,
+  data_aplicacao      DATE NULL,
+  data_vencimento     DATE NULL,
+  valor_aplicado      DECIMAL(15,2) NULL,
+  valor_atual         DECIMAL(15,2) NULL,
+  quantidade          DECIMAL(18,6) NULL,
+  liquidez            ENUM('D0','D1','D2','D30','D90','vencimento','outro') NULL,
+  carencia_ate        DATE NULL,
+  ir_aliquota         DECIMAL(5,2) NULL,
+  tem_iof             TINYINT(1) NOT NULL DEFAULT 0,
+  come_cotas          TINYINT(1) NOT NULL DEFAULT 0,
+  taxa_administracao  DECIMAL(5,2) NULL,
+  taxa_performance    VARCHAR(80)  NULL,
+  status              ENUM('ativo','resgatado','vencido') NOT NULL DEFAULT 'ativo',
+  observacoes         TEXT NULL,
+  ativo               TINYINT(1) NOT NULL DEFAULT 1,
+  criado_em           DATETIME DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+  INDEX idx_investimentos_cliente (cliente_id),
+  INDEX idx_investimentos_vencimento (data_vencimento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS investimento_movimentos (
+  id               INT AUTO_INCREMENT PRIMARY KEY,
+  investimento_id  INT NOT NULL,
+  data             DATE NOT NULL,
+  tipo             ENUM('aplicacao','resgate','rendimento','ajuste') NOT NULL DEFAULT 'aplicacao',
+  valor            DECIMAL(15,2) NOT NULL,
+  observacoes      VARCHAR(255) NULL,
+  criado_em        DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (investimento_id) REFERENCES investimentos(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Nota: ENUM tipo_referencia de `documentos` += 'investimento'; categoria +=
+--   'proposta'/'regulamento' (anexos de investimento).
