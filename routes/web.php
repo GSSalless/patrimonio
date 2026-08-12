@@ -14,6 +14,9 @@ $router->get('logout',    [AuthController::class, 'logout']);
 $router->get('dashboard', [DashboardController::class, 'index']);
 $router->get('gestao-geral', [GestaoGeralController::class, 'index']);
 
+// Agenda e Alertas (Módulo 14)
+$router->get('agenda', [AgendaController::class, 'index']);
+
 // Clientes (admin)
 $router->get('clientes',         [ClientesController::class, 'index']);
 $router->get('clientes/novo',    [ClientesController::class, 'novo']);
@@ -84,6 +87,13 @@ $router->post('contas/saldo',  [ContasController::class, 'saldo']);
 // Locação
 $router->get('locacao/novo',  [LocacaoController::class, 'novo']);
 $router->post('locacao/novo', [LocacaoController::class, 'novo']);
+
+// Seguros (Módulo 11)
+$router->get('seguros',        [SegurosController::class, 'index']);
+$router->get('seguros/novo',   [SegurosController::class, 'novo']);
+$router->post('seguros/novo',  [SegurosController::class, 'novo']);
+$router->get('seguros/editar', [SegurosController::class, 'editar']);
+$router->post('seguros/editar',[SegurosController::class, 'editar']);
 
 // Financeiro
 $router->get('financeiro/iptu',               [FinanceiroController::class, 'iptu']);

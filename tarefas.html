@@ -116,12 +116,13 @@
   <span style="font-size:1.4rem;line-height:1">⚠️</span>
   <div>
     <strong>PENDENTE — rodar migrations no banco de PRODUÇÃO</strong> (phpMyAdmin da hospedagem).
-    O deploy envia os arquivos mas <u>não executa SQL</u>. Enquanto estas duas migrations não forem
-    rodadas em produção, as telas <strong>Contas</strong> (Mód. 09) e <strong>Pessoas</strong> (Mód. 01)
-    retornam <strong>erro 500</strong> no ar:
+    O deploy envia os arquivos mas <u>não executa SQL</u>. Enquanto estas migrations não forem
+    rodadas em produção, as telas <strong>Contas</strong> (Mód. 09), <strong>Pessoas</strong> (Mód. 01)
+    e <strong>Seguros</strong> (Mód. 11) retornam <strong>erro 500</strong> no ar:
     <div style="margin-top:.45rem;line-height:1.9">
       1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_09_contas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_09_contas.sql</code></a> ↗<br>
-      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_01_pessoas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_01_pessoas.sql</code></a> ↗
+      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_01_pessoas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_01_pessoas.sql</code></a> ↗<br>
+      3. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_11_seguros.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_11_seguros.sql</code></a> ↗
     </div>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
       Responsável: Gilson · rodar no phpMyAdmin da hospedagem assim que possível (local já está aplicado ✅).
@@ -264,11 +265,14 @@ const DADOS = [
     {t:'Custos: taxa de administração e performance', done:false},
     {t:'Histórico: aplicações, resgates, rendimentos · Documentos', done:false},
   ]},
-  { id:'m11', nome:'Módulo 11 — Seguros', icone:'🛡️', cor:'#ca8a04', sub:'não iniciado', itens:[
-    {t:'Tabela `seguros` (relacionável a imóvel/veículo/embarcação/pessoa)', done:false},
-    {t:'Tipos: vida, saúde, veículos, imóveis, embarcações, empresarial', done:false},
-    {t:'Dados: seguradora, corretora, apólice, vigência, franquia', done:false},
-    {t:'Arquivos: contratos, apólices, boletos', done:false},
+  { id:'m11', nome:'Módulo 11 — Seguros', icone:'🛡️', cor:'#ca8a04', sub:'implementado 11/08 · testado HTTP+banco', itens:[
+    {t:'Tabela `seguros` + vínculo polimórfico (item_tipo+item_id) a imóvel/veículo/outro bem/pessoa · código SG-XXXX', done:true},
+    {t:'CRUD completo: lista (filtros tipo/situação/busca + prêmio total), novo, editar, partial _campos, model Seguro, SegurosController, rotas', done:true},
+    {t:'Tipos: vida, saúde, veículo, residencial, imóvel, embarcação, empresarial, viagem, outro · situação (vigente/cotação/vencida/cancelada)', done:true},
+    {t:'Dados: seguradora, corretora, corretor, apólice, vigência, valor segurado, prêmio, franquia, forma de pagamento, cobertura, beneficiários', done:true},
+    {t:'Arquivos: apólice, boleto, outros (tipo_referencia `seguro` add ao enum de documentos)', done:true},
+    {t:'Integração: alimenta a Agenda pela vigência · app 🛡️ no dashboard com badge · item no menu lateral', done:true},
+    {t:'⚠️ Rodar migration_modulo_11_seguros.sql no banco de PRODUÇÃO (senão /seguros dá 500)', done:false},
   ]},
   { id:'m12', nome:'Módulo 12 — Contratos', icone:'📜', cor:'#9333ea', sub:'parcial (só locação)', itens:[
     {t:'Contrato de locação (contratos_locacao) — feito', done:true},
@@ -282,17 +286,20 @@ const DADOS = [
     {t:'Categorias completas (pessoas, veículos, empresas, investimentos…)', done:false},
     {t:'Campos: data de emissão, vencimento, observações', done:false},
   ]},
-  { id:'m14', nome:'Módulo 14 — Agenda e Alertas', icone:'🔔', cor:'#ea580c', sub:'não iniciado', itens:[
-    {t:'Motor de alertas + página de agenda', done:false},
-    {t:'Pessoas: CNH / passaporte vencendo', done:false},
-    {t:'Colaboradores: férias, cursos vencendo', done:false},
-    {t:'Imóveis: IPTU, seguro · Veículos: IPVA, licenciamento, revisão', done:false},
-    {t:'Investimentos: vencimento, carência · Contratos: renovação, reajuste', done:false},
+  { id:'m14', nome:'Módulo 14 — Agenda e Alertas', icone:'🔔', cor:'#ea580c', sub:'implementado 11/08 · testado HTTP+navegador', itens:[
+    {t:'Motor de alertas (helper alertas_consolidado) + página /agenda em baldes (vencidos, 7d, 30d, adiante) com cores por urgência', done:true},
+    {t:'Imóveis: IPTU em aberto · Veículos: licenciamento, seguro, revisão prevista', done:true},
+    {t:'Outros bens: seguro + manutenção prevista · Contratos: fim da locação · Documentos com validade', done:true},
+    {t:'Item "Agenda" no menu lateral + app no dashboard com badge de urgentes + faixa de alertas na Gestão Geral', done:true},
+    {t:'Pessoas: CNH / passaporte vencendo (campos de validade a criar no Módulo 01)', done:false},
+    {t:'Colaboradores: férias, cursos vencendo (depende do Módulo 02)', done:false},
+    {t:'Investimentos: vencimento, carência (depende do Módulo 10)', done:false},
   ]},
   { id:'m15', nome:'Módulo 15 — Dashboard Executivo', icone:'📊', cor:'#b06bff', sub:'parcial', itens:[
     {t:'Hub de módulos no dashboard (feito)', done:true},
-    {t:'Patrimônio: total de imóveis, veículos, embarcações, investimentos', done:false},
-    {t:'Financeiro: caixa consolidado, bancos, aplicações', done:false},
+    {t:'Patrimônio total consolidado (imóveis + veículos + outros bens + contas BRL) — herói na Gestão Geral + barra de composição + patrimônio por cliente nos cards', done:true},
+    {t:'Dashboard do cliente: patrimônio total + quebra por categoria com barras de participação', done:true},
+    {t:'Financeiro: caixa consolidado, aplicações (falta Investimentos/Caixa)', done:false},
     {t:'RH: nº de colaboradores, férias, treinamentos', done:false},
     {t:'Contratos ativos/vencendo · Seguros vigentes/vencendo', done:false},
   ]},
@@ -344,12 +351,19 @@ const DADOS = [
     {t:'n8n vinculado a todos os módulos (só após finalizar os módulos)', done:false},
   ]},
   { id:'r4', nome:'Reunião 21/07 — Decisões e Follow-up', icone:'📌', cor:'#0f766e', sub:'pendências de definição', itens:[
-    {t:'⚠️ [Gilson] Rodar migrations no banco de PRODUÇÃO: migration_modulo_09_contas.sql + migration_modulo_01_pessoas.sql (senão Contas/Pessoas dão 500)', done:false},
+    {t:'⚠️ [Gilson] Rodar migrations no banco de PRODUÇÃO: migration_modulo_09_contas.sql + migration_modulo_01_pessoas.sql + migration_modulo_11_seguros.sql (senão Contas/Pessoas/Seguros dão 500)', done:false},
     {t:'⚠️ Trocar as senhas seed de PRODUÇÃO (cesar123/marcos123) por senhas fortes', done:false},
     {t:'César: testar cadastros (veículo, imóvel, joia) e devolver ajustes campo a campo', done:false},
     {t:'César: mandar referências de ícones + escolher fonte', done:false},
     {t:'César: definir o nome do botão "Gestão Geral"', done:false},
     {t:'Avaliar vínculo das tarefas do César com o Notion (sem decisão)', done:false},
+  ]},
+  { id:'testes', nome:'Testes com dados reais (Bloco K)', icone:'🧪', cor:'#b91c1c', sub:'⭐ SUAS tarefas — validar com dados/Cliente reais antes de avançar', itens:[
+    {t:'[Gilson] Cadastro completo do imóvel "4D Complex – unid. 321" (Marcos Borges) — todos os blocos', done:false},
+    {t:'[Gilson] IPTU + condomínio com boleto (upload + competência + vencimento)', done:false},
+    {t:'[Gilson] Reforma (custo previsto × realizado + upload de NF)', done:false},
+    {t:'[Gilson] Preencher valor de mercado/FIPE do veículo do Marcos (hoje R$ 0 no dashboard)', done:false},
+    {t:'[César] Revisão campo a campo (veículo, imóvel, joia) → aprovação para avançar à F2', done:false},
   ]},
 ];
 

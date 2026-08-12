@@ -624,3 +624,41 @@ CREATE TABLE IF NOT EXISTS conta_saldos (
 
 -- Nota: ENUM tipo_referencia de `documentos` estendido com 'conta_financeira'
 --   e categoria com 'extrato' (contrato de abertura e extratos da conta).
+
+-- ============================================================================
+-- Módulo 11 — Seguros (migration_modulo_11_seguros.sql · 11/08/2026)
+-- Cadastro central de apólices. Vínculo polimórfico opcional (item_tipo+item_id)
+-- a imóvel/veículo/outro bem/pessoa. `vigencia_fim` alimenta a Agenda (Mód. 14).
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS seguros (
+  id               INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id       INT NOT NULL,
+  codigo           VARCHAR(10) NOT NULL,                 -- SG-0001
+  tipo             ENUM('vida','saude','veiculo','residencial','imovel','embarcacao','empresarial','viagem','outro') NOT NULL DEFAULT 'outro',
+  item_tipo        ENUM('nenhum','imovel','veiculo','outro_bem','pessoa') NOT NULL DEFAULT 'nenhum',
+  item_id          INT NULL,
+  seguradora       VARCHAR(120) NULL,
+  corretora        VARCHAR(120) NULL,
+  corretor_nome    VARCHAR(120) NULL,
+  corretor_contato VARCHAR(120) NULL,
+  numero_apolice   VARCHAR(80)  NULL,
+  vigencia_inicio  DATE NULL,
+  vigencia_fim     DATE NULL,
+  valor_segurado   DECIMAL(15,2) NULL,
+  premio           DECIMAL(15,2) NULL,
+  franquia         DECIMAL(15,2) NULL,
+  forma_pagamento  ENUM('anual','semestral','mensal','parcelado','unico','outro') NULL,
+  cobertura        TEXT NULL,
+  beneficiarios    TEXT NULL,
+  status           ENUM('vigente','vencida','cancelada','em_cotacao') NOT NULL DEFAULT 'vigente',
+  observacoes      TEXT NULL,
+  ativo            TINYINT(1) NOT NULL DEFAULT 1,
+  criado_em        DATETIME DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em    DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+  INDEX idx_seguros_cliente (cliente_id),
+  INDEX idx_seguros_vigencia (vigencia_fim)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Nota: ENUM tipo_referencia de `documentos` estendido com 'seguro'
+--   (categorias 'apolice'/'boleto'/'outro' já cobrem os anexos de seguro).

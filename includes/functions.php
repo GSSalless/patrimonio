@@ -71,6 +71,232 @@ function proximo_codigo_conta(): string {
 }
 
 /**
+ * Patrimônio consolidado (Módulo 15 — Dashboard Executivo).
+ * Soma o valor de mercado dos bens + saldo em contas (BRL).
+ *
+ * @param int|null $cliente_id  filtra por cliente; null = todos os clientes ativos
+ * @return array {
+ *   imoveis_qtd, imoveis_valor, veiculos_qtd, veiculos_valor,
+ *   outros_qtd, outros_valor, contas_qtd, contas_saldo, total
+ * }  — valores em float, quantidades em int
+ */
+function patrimonio_consolidado(?int $cliente_id = null): array {
+    // Cláusula de filtro por cliente (ou todos). Cada tabela tem cliente_id + ativo.
+    $where = 'ativo = 1' . ($cliente_id !== null ? ' AND cliente_id = :cid' : '');
+    $bind  = $cliente_id !== null ? [':cid' => $cliente_id] : [];
+
+    $uma = function (string $sql) use ($bind) {
+        $stmt = db()->prepare($sql);
+        $stmt->execute($bind);
+        return $stmt->fetch(PDO::FETCH_NUM);
+    };
+
+    // Imóveis: valor de mercado
+    [$imoveis_qtd, $imoveis_valor] = $uma(
+        "SELECT COUNT(*), COALESCE(SUM(valor_mercado),0) FROM imoveis WHERE $where"
+    );
+    // Veículos: mercado → FIPE → aquisição
+    [$veiculos_qtd, $veiculos_valor] = $uma(
+        "SELECT COUNT(*), COALESCE(SUM(COALESCE(valor_mercado, valor_fipe, valor_aquisicao, 0)),0)
+           FROM veiculos WHERE $where"
+    );
+    // Outros bens: mercado → aquisição
+    [$outros_qtd, $outros_valor] = $uma(
+        "SELECT COUNT(*), COALESCE(SUM(COALESCE(valor_mercado, valor_aquisicao, 0)),0)
+           FROM outros_bens WHERE $where"
+    );
+    // Contas: só BRL entra no consolidado (moedas diferentes não se somam)
+    [$contas_qtd, $contas_saldo] = $uma(
+        "SELECT COUNT(*), COALESCE(SUM(CASE WHEN moeda = 'BRL' THEN saldo_atual ELSE 0 END),0)
+           FROM contas_financeiras WHERE $where"
+    );
+
+    $imoveis_valor  = (float) $imoveis_valor;
+    $veiculos_valor = (float) $veiculos_valor;
+    $outros_valor   = (float) $outros_valor;
+    $contas_saldo   = (float) $contas_saldo;
+
+    return [
+        'imoveis_qtd'    => (int) $imoveis_qtd,
+        'imoveis_valor'  => $imoveis_valor,
+        'veiculos_qtd'   => (int) $veiculos_qtd,
+        'veiculos_valor' => $veiculos_valor,
+        'outros_qtd'     => (int) $outros_qtd,
+        'outros_valor'   => $outros_valor,
+        'contas_qtd'     => (int) $contas_qtd,
+        'contas_saldo'   => $contas_saldo,
+        'total'          => $imoveis_valor + $veiculos_valor + $outros_valor + $contas_saldo,
+    ];
+}
+
+function proximo_codigo_seguro(): string {
+    $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM seguros");
+    $row = $stmt->fetch();
+    $proximo = ($row['ultimo'] ?? 0) + 1;
+    return 'SG-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
+/** Rótulos de tipo de seguro (Módulo 11). */
+function seguro_tipo_label(string $t): string {
+    return [
+        'vida' => 'Vida', 'saude' => 'Saúde', 'veiculo' => 'Veículo',
+        'residencial' => 'Residencial', 'imovel' => 'Imóvel', 'embarcacao' => 'Embarcação',
+        'empresarial' => 'Empresarial', 'viagem' => 'Viagem', 'outro' => 'Outro',
+    ][$t] ?? ucfirst($t);
+}
+
+/**
+ * Agenda e Alertas (Módulo 14) — varre todas as datas de vencimento espalhadas
+ * pelos módulos e devolve uma lista unificada de compromissos.
+ *
+ * @param int|null $cliente_id  filtra por cliente; null = todos os clientes ativos
+ * @return array  linhas com: cliente_id, cliente_nome, categoria, titulo, bem,
+ *                data (Y-m-d), link — ordenadas por data crescente
+ */
+function alertas_consolidado(?int $cliente_id = null): array {
+    // `veiculos` está em utf8mb4_general_ci e as demais tabelas em _unicode_ci; sem
+    // forçar uma collation comum, o UNION dá "Illegal mix of collations". Todas as
+    // colunas de texto saem em _unicode_ci via COLLATE.
+    $C = ' COLLATE utf8mb4_unicode_ci ';
+    $sql = "
+    SELECT a.* FROM (
+        -- IPTU em aberto
+        SELECT im.cliente_id, 'iptu'$C AS categoria,
+               CONCAT('IPTU ', COALESCE(ip.ano, ''))$C AS titulo,
+               im.nome_referencia$C AS bem, ip.data_vencimento_1 AS data,
+               CONCAT('imoveis/ficha?id=', im.id)$C AS link
+          FROM iptu ip
+          JOIN imoveis im ON im.id = ip.imovel_id AND im.ativo = 1
+         WHERE ip.pago = 0 AND ip.data_vencimento_1 IS NOT NULL
+
+        UNION ALL
+        -- Licenciamento de veículo
+        SELECT v.cliente_id, 'licenciamento'$C, 'Licenciamento do veículo'$C,
+               TRIM(CONCAT_WS(' ', v.marca, v.modelo, NULLIF(CONCAT('· ', v.placa), '· ')))$C,
+               v.vencimento_licenciamento, CONCAT('veiculos/editar?id=', v.id)$C
+          FROM veiculos v
+         WHERE v.ativo = 1 AND v.vencimento_licenciamento IS NOT NULL
+
+        UNION ALL
+        -- Seguro de veículo
+        SELECT v.cliente_id, 'seguro'$C, 'Seguro do veículo'$C,
+               TRIM(CONCAT_WS(' ', v.marca, v.modelo))$C,
+               v.vencimento_seguro, CONCAT('veiculos/editar?id=', v.id)$C
+          FROM veiculos v
+         WHERE v.ativo = 1 AND v.vencimento_seguro IS NOT NULL
+
+        UNION ALL
+        -- Seguro de outro bem (embarcação/joia/obra)
+        SELECT o.cliente_id, 'seguro'$C, 'Seguro do bem'$C,
+               COALESCE(NULLIF(o.nome, ''), o.tipo)$C,
+               o.vencimento_seguro, CONCAT('outros/editar?id=', o.id)$C
+          FROM outros_bens o
+         WHERE o.ativo = 1 AND o.vencimento_seguro IS NOT NULL
+
+        UNION ALL
+        -- Fim de contrato de locação (ativos)
+        SELECT im.cliente_id, 'contrato'$C, 'Fim do contrato de locação'$C,
+               CONCAT_WS(' · ', im.nome_referencia, cl.locatario_nome)$C,
+               cl.data_fim, CONCAT('imoveis/ficha?id=', im.id)$C
+          FROM contratos_locacao cl
+          JOIN imoveis im ON im.id = cl.imovel_id AND im.ativo = 1
+         WHERE cl.status = 'ativo' AND cl.data_fim IS NOT NULL
+
+        UNION ALL
+        -- Próxima revisão de veículo (só futuras)
+        SELECT v.cliente_id, 'revisao'$C, 'Revisão prevista do veículo'$C,
+               TRIM(CONCAT_WS(' ', v.marca, v.modelo))$C,
+               vm.proxima_data, CONCAT('veiculos/editar?id=', v.id)$C
+          FROM veiculo_manutencoes vm
+          JOIN veiculos v ON v.id = vm.veiculo_id AND v.ativo = 1
+         WHERE vm.proxima_data IS NOT NULL AND vm.proxima_data >= CURDATE()
+
+        UNION ALL
+        -- Próxima manutenção de embarcação (só futuras)
+        SELECT o.cliente_id, 'revisao'$C, 'Manutenção prevista do bem'$C,
+               COALESCE(NULLIF(o.nome, ''), o.tipo)$C,
+               bm.proxima_data, CONCAT('outros/editar?id=', o.id)$C
+          FROM bem_manutencoes bm
+          JOIN outros_bens o ON o.id = bm.outro_bem_id AND o.ativo = 1
+         WHERE bm.proxima_data IS NOT NULL AND bm.proxima_data >= CURDATE()
+
+        UNION ALL
+        -- Apólices de seguro (vigência)
+        SELECT s.cliente_id, 'seguro'$C, CONCAT('Vigência do seguro · ', s.tipo)$C,
+               COALESCE(NULLIF(s.seguradora, ''), CONCAT('Apólice ', COALESCE(s.numero_apolice, s.codigo)))$C,
+               s.vigencia_fim, CONCAT('seguros/editar?id=', s.id)$C
+          FROM seguros s
+         WHERE s.ativo = 1 AND s.status = 'vigente' AND s.vigencia_fim IS NOT NULL
+
+        UNION ALL
+        -- Documentos com validade
+        SELECT d.cliente_id, 'documento'$C, CONCAT('Documento: ', d.categoria)$C,
+               d.nome_arquivo$C, d.data_validade, ''$C
+          FROM documentos d
+         WHERE d.data_validade IS NOT NULL
+    ) AS a
+    JOIN clientes c ON c.id = a.cliente_id AND c.ativo = 1
+    ";
+
+    $bind = [];
+    if ($cliente_id !== null) { $sql .= ' WHERE a.cliente_id = :cid'; $bind[':cid'] = $cliente_id; }
+    $sql .= ' ORDER BY a.data ASC';
+
+    $stmt = db()->prepare($sql);
+    $stmt->execute($bind);
+    $linhas = $stmt->fetchAll();
+
+    // Anexa o nome do cliente (uma consulta leve, evita repetir o JOIN 8x no SELECT).
+    if ($linhas) {
+        $nomes = db()->query('SELECT id, nome FROM clientes')->fetchAll(PDO::FETCH_KEY_PAIR);
+        foreach ($linhas as &$l) { $l['cliente_nome'] = $nomes[$l['cliente_id']] ?? '—'; }
+        unset($l);
+    }
+    return $linhas;
+}
+
+/**
+ * Dias entre hoje e uma data (Y-m-d). Negativo = já passou; 0 = hoje.
+ */
+function dias_ate(string $data): int {
+    $hoje = new DateTimeImmutable('today');
+    $alvo = new DateTimeImmutable($data);
+    return (int) $hoje->diff($alvo)->format('%r%a');
+}
+
+/**
+ * Classe/rótulo do alerta conforme a proximidade (em dias).
+ * @return array ['classe', 'cor', 'rotulo']
+ */
+function alerta_status(int $dias): array {
+    if ($dias < 0)   return ['vencido',  '#b91c1c', 'Vencido há ' . abs($dias) . ' dia' . (abs($dias) == 1 ? '' : 's')];
+    if ($dias === 0) return ['hoje',     '#c2410c', 'Vence hoje'];
+    if ($dias <= 7)  return ['urgente',  '#c2410c', 'Em ' . $dias . ' dia' . ($dias == 1 ? '' : 's')];
+    if ($dias <= 30) return ['proximo',  '#b45309', 'Em ' . $dias . ' dias'];
+    return ['futuro', '#3fae7a', 'Em ' . $dias . ' dias'];
+}
+
+/**
+ * Resumo de alertas para badges: quantos vencidos e quantos urgentes (≤ $dias).
+ * @return array ['vencidos', 'proximos', 'urgentes' (soma), 'total']
+ */
+function alertas_resumo(?int $cliente_id = null, int $dias = 30): array {
+    $vencidos = $proximos = 0;
+    $lista = alertas_consolidado($cliente_id);
+    foreach ($lista as $a) {
+        $d = dias_ate($a['data']);
+        if ($d < 0) $vencidos++;
+        elseif ($d <= $dias) $proximos++;
+    }
+    return [
+        'vencidos' => $vencidos,
+        'proximos' => $proximos,
+        'urgentes' => $vencidos + $proximos,
+        'total'    => count($lista),
+    ];
+}
+
+/**
  * Salva uploads de campos de arquivo único na tabela `documentos`.
  * @param array  $campos    ['nome_campo' => 'categoria', ...]
  * @param string $tipo_ref  tipo_referencia (ex.: 'condominio')

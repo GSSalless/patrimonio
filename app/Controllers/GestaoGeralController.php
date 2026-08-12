@@ -12,12 +12,13 @@ class GestaoGeralController extends Controller
         exige_admin();
 
         $total_clientes = (int) db()->query('SELECT COUNT(*) FROM clientes WHERE ativo = 1')->fetchColumn();
-        $total_imoveis  = (int) db()->query('SELECT COUNT(*) FROM imoveis WHERE ativo = 1')->fetchColumn();
-        $valor_imoveis  = (float) db()->query('SELECT COALESCE(SUM(valor_mercado),0) FROM imoveis WHERE ativo = 1')->fetchColumn();
-        $total_contas   = (int) db()->query('SELECT COUNT(*) FROM contas_financeiras WHERE ativo = 1')->fetchColumn();
-        $saldo_contas   = (float) db()->query('SELECT COALESCE(SUM(saldo_atual),0) FROM contas_financeiras WHERE ativo = 1')->fetchColumn();
 
-        // Clientes com contagem de imóveis (para os cards)
+        // Patrimônio consolidado de TODOS os clientes (Módulo 15).
+        $pat = patrimonio_consolidado();
+        // Resumo de alertas de todos os clientes (Módulo 14).
+        $alertas = alertas_resumo();
+
+        // Clientes com o patrimônio de cada um (para os cards + ordenação por valor).
         $clientes = db()->query(
             'SELECT c.*,
                     (SELECT COUNT(*) FROM imoveis i WHERE i.cliente_id = c.id AND i.ativo = 1) AS qtd_imoveis
@@ -25,10 +26,11 @@ class GestaoGeralController extends Controller
               WHERE c.ativo = 1
               ORDER BY c.nome'
         )->fetchAll();
+        foreach ($clientes as &$c) {
+            $c['patrimonio'] = patrimonio_consolidado((int) $c['id']);
+        }
+        unset($c);
 
-        $this->view('gestao_geral/index', compact(
-            'total_clientes', 'total_imoveis', 'valor_imoveis',
-            'total_contas', 'saldo_contas', 'clientes'
-        ));
+        $this->view('gestao_geral/index', compact('total_clientes', 'pat', 'alertas', 'clientes'));
     }
 }

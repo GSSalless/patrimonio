@@ -180,7 +180,7 @@
 - [ ] Co-propriedade e percentual de participação
 - [ ] Regime de bens / holding / beneficiário final
 - [ ] Condomínio detalhado (CNPJ, síndico, administradora, estrutura)
-- [ ] Seguros (apólice, coberturas, valor segurado, vencimento)
+- [x] Seguros (apólice, coberturas, valor segurado, vencimento) — Módulo 11 (11/08)
 - [ ] Manutenção (histórico, equipamentos, garantias)
 - [ ] Checklist de documentação (matrícula atualizada, certidão negativa, habite-se…)
 - [ ] Locação completa (índice de reajuste, garantias, caução, seguro-fiança)
@@ -316,10 +316,14 @@
 - [ ] Histórico: aplicações, resgates, rendimentos
 - [ ] Documentos: propostas, regulamentos, extratos
 
-### Módulo 11 — Seguros
-- [ ] Tipos: vida, saúde, veículos, imóveis, embarcações, empresarial
-- [ ] Dados: seguradora, corretora, apólice, vigência, franquia
-- [ ] Arquivos: contratos, apólices, boletos
+### Módulo 11 — Seguros  🟢 *(implementado 11/08 — testado HTTP+banco)*
+- [x] Tabela `seguros` + **vínculo polimórfico** (item_tipo+item_id) a imóvel/veículo/outro bem/pessoa · código SG-XXXX · `Seguro` model (INSERT/UPDATE genérico, `buscarDoCliente` sem IDOR, `itensSeguraveis`/`descreverVinculo`)
+- [x] CRUD completo: `SegurosController`, views `seguros/{lista,novo,editar,_campos}.php`, rotas
+- [x] Tipos: vida, saúde, veículo, residencial, imóvel, embarcação, empresarial, viagem, outro · situação (vigente/em cotação/vencida/cancelada)
+- [x] Dados: seguradora, corretora, corretor+contato, apólice, vigência (início/fim), valor segurado, prêmio, franquia, forma de pagamento, cobertura, beneficiários
+- [x] Arquivos: apólice, boleto, outros (`tipo_referencia` `seguro` add ao enum de `documentos`)
+- [x] **Integração:** alimenta a **Agenda** (Mód. 14) pela `vigencia_fim` (status vigente) · app 🛡️ no dashboard com badge · item "Seguros" no menu lateral · lista com filtros + prêmio total (vigentes)
+- [ ] ⚠️ Rodar `sql/migration_modulo_11_seguros.sql` no banco de **produção**
 
 ### Módulo 12 — Contratos
 - [ ] Cadastro: número, tipo
@@ -331,21 +335,25 @@
 - [ ] Categorias completas: pessoais, imóveis, veículos, empresas, investimentos, contratos, seguros
 - [ ] Campos: arquivo, categoria, data emissão, data vencimento, observações
 
-### Módulo 14 — Agenda e Alertas
-- [ ] Pessoas: CNH/passaporte vencendo
-- [ ] Colaboradores: férias, cursos vencendo
-- [ ] Imóveis: IPTU, seguro
-- [ ] Veículos: IPVA, licenciamento, seguro, revisão
-- [ ] Investimentos: vencimento, carência
-- [ ] Contratos: renovação, reajuste
+### Módulo 14 — Agenda e Alertas  🟢 *(implementado 11/08 — testado HTTP+navegador)*
+- [x] **Motor de alertas** — helper `alertas_consolidado(?cliente_id)` em `functions.php` (UNION varrendo todas as datas de vencimento) + `dias_ate()`, `alerta_status()`, `alertas_resumo()`. `AgendaController` + rota `agenda` + view `agenda/index.php` em baldes (Vencidos / 7 dias / 30 dias / Mais adiante) com cor por urgência e chips de resumo. Escopo: admin com cliente = agenda do cliente; admin sem cliente = agenda geral (todos); cliente = a própria.
+- [x] Imóveis: **IPTU em aberto** (pago=0) · **fim de contrato de locação** (ativo)
+- [x] Veículos: **licenciamento**, **seguro**, **revisão prevista** (próxima_data futura)
+- [x] Outros bens: **seguro** + **manutenção prevista** de embarcação
+- [x] **Documentos com validade**
+- [x] Integração: item "Agenda" no menu lateral · app "Agenda" 📅 no dashboard com **badge de urgentes** · **faixa de alertas** clicável na Gestão Geral
+- [x] Fix de collation: `veiculos` é `utf8mb4_general_ci` e as demais `_unicode_ci` → `COLLATE utf8mb4_unicode_ci` nas colunas de texto do UNION (sem ALTER, funciona em produção)
+- [ ] Pessoas: CNH/passaporte vencendo *(depende de campos de validade no Módulo 01)*
+- [ ] Colaboradores: férias, cursos vencendo *(depende do Módulo 02)*
+- [ ] Investimentos: vencimento, carência *(depende do Módulo 10)*
 
-### Módulo 15 — Dashboard Executivo  🟡 *(parcial)*
+### Módulo 15 — Dashboard Executivo  🟡 *(parcial — patrimônio consolidado feito 11/08)*
 - [x] Hub de módulos no dashboard (menu estilo apps)
-- [ ] Patrimônio: valor total de imóveis, veículos, embarcações, investimentos
-- [ ] Financeiro: caixa consolidado, bancos, aplicações
-- [ ] RH: nº de colaboradores, férias, treinamentos
-- [ ] Contratos: ativos, vencendo
-- [ ] Seguros: vigentes, vencendo
+- [x] **Patrimônio total consolidado** — helper `patrimonio_consolidado(?cliente_id)` em `functions.php` (imóveis `valor_mercado` + veículos `valor_mercado→fipe→aquisição` + outros bens `valor_mercado→aquisição` + contas `saldo_atual` só BRL). **Gestão Geral:** herói preto&dourado com total sob gestão + barra de composição empilhada + legenda (valor/qtd/%) + patrimônio por cliente nos cards. **Dashboard do cliente:** painel com total + quebra por categoria com barras de participação. ✅ testado HTTP+navegador (total R$ 4.048.750,00 p/ Marcos)
+- [ ] Financeiro: caixa consolidado, bancos, aplicações *(depende de Caixa/Investimentos)*
+- [ ] RH: nº de colaboradores, férias, treinamentos *(depende do Módulo 02)*
+- [ ] Contratos: ativos, vencendo *(depende do Módulo 12)*
+- [ ] Seguros: vigentes, vencendo *(depende do Módulo 11)*
 
 ---
 
@@ -364,7 +372,7 @@
 - [x] Separação clara **visão gestor × visão cliente**: Gestão Geral (todos os clientes) × Dashboard (sempre um cliente).
 - [x] **Botão "Voltar" global** no topo (todas as telas; `history.back()` com fallback p/ Gestão Geral/Dashboard).
 - [ ] **Gestão Geral — caixa geral consolidado + tarefas/lembretes multi-cliente** ("3 tarefas de 2 clientes diferentes") — depende dos módulos Caixa/Tarefas.
-- [ ] **Dashboard do cliente com dados reais** (hoje é hub de categorias) — construir quando os módulos estiverem prontos; César escolhe o que aparece
+- [x] **Dashboard do cliente com patrimônio real** (11/08) — painel de patrimônio consolidado (total + quebra por categoria com barras) acima do hub. Falta caixa/tarefas/alertas quando os módulos existirem; César escolhe o restante que aparece
 - [ ] Testar hover/animação dos cards do hub **no celular**
 
 ### R2 — Identidade visual (aguardar referências do César)
@@ -384,7 +392,7 @@
 - [ ] n8n vinculado a todos os módulos — só após finalizar os módulos
 
 ### R4 — Pendências de decisão / follow-up
-- [ ] ⚠️ **[Gilson] Rodar migrations no banco de PRODUÇÃO** (phpMyAdmin): `sql/migration_modulo_09_contas.sql` + `sql/migration_modulo_01_pessoas.sql`. O deploy FTP não executa SQL — sem isso, as telas **Contas** e **Pessoas** dão 500 no ar. Rodar assim que possível.
+- [ ] ⚠️ **[Gilson] Rodar migrations no banco de PRODUÇÃO** (phpMyAdmin): `sql/migration_modulo_09_contas.sql` + `sql/migration_modulo_01_pessoas.sql` + `sql/migration_modulo_11_seguros.sql`. O deploy FTP não executa SQL — sem isso, as telas **Contas**, **Pessoas** e **Seguros** dão 500 no ar. Rodar assim que possível.
 - [ ] César: testar cadastros (veículo, imóvel, joia — joia ainda sem dados reais) e devolver ajustes campo a campo
 - [ ] César: mandar referências de ícones + escolher fonte + definir nome do botão "Gestão Geral"
 - [ ] Avaliar vínculo das tarefas do César com o **Notion** dele (assunto retomado, sem decisão)
@@ -424,4 +432,7 @@
 | 28/07/2026 | **R2 — Animação "segundo cérebro":** hub da ficha do imóvel (`imoveis/ficha.php`) deixou de ser layout estático e virou **grafo interativo d3-force** (`assets/js/hub-grafo.js`, D3 v7 via CDN, `.hg-*` no CSS): nós flutuam/reagem ao arraste, hover/segurar realça em lilás os conectados, clique abre o modal (fallback p/ grade de botões sem D3). Testado HTTP (render 200, container+dados+scripts presentes; interação é client-side). |
 | 28/07/2026 | **R1 — Chassi de navegação:** menu lateral virou navegação principal em grupos (Geral: Gestão Geral+Clientes · [Cliente]: Dashboard/Patrimônios/Contas), fixo no desktop (≥1024px) e drawer no mobile; seletor do topo removido → chip do cliente + seleção via bootstrap (`?cliente_id` antes dos controllers, corrige regressão do redirect); botão Voltar global; nova tela **Gestão Geral** (`GestaoGeralController` + view + rota) com KPIs consolidados + grade de clientes = visão gestor separada do Dashboard (visão cliente). `DashboardController` redireciona admin-sem-cliente p/ Gestão Geral. Testado HTTP (todas as telas 200, seleção/ativo/chip OK). Falta: caixa geral+tarefas multi-cliente (dep. módulos), dashboard do cliente com dados reais, teste hover no celular. |
 | 28/07/2026 | **Padronização de ícones (R2, paliativo até refs do César):** hub da ficha do imóvel migrado de Bootstrap Icons flat p/ emoji realista igual ao dashboard (📋💰🔨🛠️🏢🔑📁 + `.hub-no-emoji` no CSS); `/patrimonio` alinhado (Imóveis 🏠→🏛️). |
+| 11/08/2026 | **Módulo 11 — Seguros:** cadastro central de apólices. `sql/migration_modulo_11_seguros.sql` (tabela `seguros` com vínculo polimórfico item_tipo+item_id, vigência, valores, cobertura/beneficiários, status; `tipo_referencia` de `documentos` += 'seguro'; schema.sql sincronizado). `Seguro` model (INSERT/UPDATE genérico, `buscarDoCliente` sem IDOR, `itensSeguraveis`/`descreverVinculo`), `SegurosController`, views `seguros/{lista,novo,editar,_campos}.php`, rotas, `proximo_codigo_seguro()` (SG-XXXX) + `seguro_tipo_label()`. Vínculo opcional por select único "tipo:id" com optgroups (imóveis/veículos/outros). **Alimenta a Agenda** (novo UNION branch pela `vigencia_fim`/status vigente), app 🛡️ no dashboard com badge + item no menu. Testado HTTP+banco (criar/editar seguro do veículo do Marcos → SG-0001, aparece na lista/agenda/badges) + navegador. ⚠️ Migration pendente em produção. |
+| 11/08/2026 | **Módulo 14 — Agenda e Alertas:** motor de alertas `alertas_consolidado(?cliente_id)` em `includes/functions.php` (UNION varrendo IPTU em aberto, licenciamento/seguro/revisão de veículos, seguro/manutenção de outros bens, fim de contrato de locação e documentos com validade) + helpers `dias_ate`/`alerta_status`/`alertas_resumo`. Novo `AgendaController` + rota `agenda` + view `agenda/index.php` (baldes Vencidos/7d/30d/Mais adiante, cores por urgência, chips de resumo). Escopo por cliente ou geral. Integrado: item "Agenda" no menu lateral (`header.php`), app 📅 no dashboard com badge de urgentes, faixa de alertas clicável na Gestão Geral. Fix de collation no UNION (`veiculos` general_ci × demais unicode_ci → `COLLATE utf8mb4_unicode_ci`, sem ALTER). Testado HTTP (curl) + navegador: 4 baldes renderizando, badges corretos (3 urgentes p/ Marcos com datas de teste, revertidas depois). |
+| 11/08/2026 | **Módulo 15 — Dashboard Executivo (patrimônio consolidado):** novo helper `patrimonio_consolidado(?cliente_id)` em `includes/functions.php` (soma valor de mercado de imóveis/veículos/outros bens + saldo BRL de contas, com fallback de valor por bem). **Gestão Geral** (`GestaoGeralController` + view) ganhou herói "Patrimônio total sob gestão" (preto&dourado) com barra de composição empilhada + legenda (valor/qtd/%) e passou a exibir o patrimônio de cada cliente nos cards. **Dashboard do cliente** (`DashboardController` + view) ganhou painel de patrimônio total + quebra por categoria com barras de participação, acima do hub de apps. Testado HTTP (curl, login César→Marcos) + navegador: total R$ 4.048.750,00, sem erros PHP, layout consistente com o tema. Substitui os KPIs antigos (imóveis/contas soltos) da Gestão Geral. |
 | 28/07/2026 | **Commit + deploy do Módulo 09 — Contas Financeiras** (estava pronto mas sem versionar). **Módulo 01 — Pessoas implementado e testado HTTP+banco:** `migration_modulo_01_pessoas.sql` (amplia `clientes` + 5 sub-tabelas 1:N + enum de documentos), `Cliente` migrado p/ INSERT/UPDATE genérico, novo model `Pessoa` (allow-list + DELETE por cliente_id, sem IDOR), `ClientesController` reescrito (cards com WhatsApp, cadastro completo, sub-seções, upload de testamento, itemRemover), partial `clientes/_campos.php`, rota `clientes/item-remover`, helpers `link_whatsapp`/`estado_civil_label`/`parentesco_label`. Falta só "Relacionamentos" (→ F3). ⚠️ Pendente rodar as 2 migrations (09 e 01) no banco de **produção**. |

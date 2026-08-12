@@ -29,18 +29,19 @@ class DashboardController extends Controller
                 $this->redirect('gestao-geral');
             }
             // Cliente sem registro vinculado: nada a mostrar.
-            $this->view('dashboard/index', ['cli' => null, 'qtd_imoveis' => 0, 'qtd_contas' => 0]);
+            $this->view('dashboard/index', ['cli' => null, 'pat' => patrimonio_consolidado(0)]);
             return;
         }
 
-        $stmt = db()->prepare('SELECT COUNT(*) FROM imoveis WHERE cliente_id = ? AND ativo = 1');
+        // Patrimônio consolidado do cliente em foco (Módulo 15).
+        $pat = patrimonio_consolidado((int) $cli['id']);
+        // Resumo de alertas para o badge da Agenda (Módulo 14).
+        $alertas = alertas_resumo((int) $cli['id']);
+        // Contagem de seguros (Módulo 11) para o badge do app.
+        $stmt = db()->prepare('SELECT COUNT(*) FROM seguros WHERE cliente_id = ? AND ativo = 1');
         $stmt->execute([$cli['id']]);
-        $qtd_imoveis = (int) $stmt->fetchColumn();
+        $qtd_seguros = (int) $stmt->fetchColumn();
 
-        $stmt = db()->prepare('SELECT COUNT(*) FROM contas_financeiras WHERE cliente_id = ? AND ativo = 1');
-        $stmt->execute([$cli['id']]);
-        $qtd_contas = (int) $stmt->fetchColumn();
-
-        $this->view('dashboard/index', compact('cli', 'qtd_imoveis', 'qtd_contas'));
+        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros'));
     }
 }

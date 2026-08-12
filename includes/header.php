@@ -73,8 +73,9 @@ if ($usuario):
     if ($eh_admin) {
       $grupos = [
         ['Geral', [
-          ['gestao-geral', 'Gestão Geral', 'bi-columns-gap', true],
-          ['clientes',     'Clientes',     'bi-people',      true],
+          ['gestao-geral', 'Gestão Geral', 'bi-columns-gap',    true],
+          ['clientes',     'Clientes',     'bi-people',         true],
+          ['agenda',       'Agenda',       'bi-calendar-check', true],
         ]],
       ];
       if ($cliente_sel) {
@@ -82,14 +83,17 @@ if ($usuario):
           ['dashboard',  'Dashboard',   'bi-speedometer2', true],
           ['patrimonio', 'Patrimônios', 'bi-buildings',    true],
           ['contas',     'Contas',      'bi-bank',         true],
+          ['seguros',    'Seguros',     'bi-shield-check', true],
         ]];
       }
     } else {
       $grupos = [
         ['Meu patrimônio', [
-          ['dashboard',  'Dashboard',   'bi-speedometer2', true],
-          ['patrimonio', 'Patrimônios', 'bi-buildings',    true],
-          ['contas',     'Contas',      'bi-bank',         true],
+          ['dashboard',  'Dashboard',   'bi-speedometer2',   true],
+          ['patrimonio', 'Patrimônios', 'bi-buildings',      true],
+          ['contas',     'Contas',      'bi-bank',           true],
+          ['seguros',    'Seguros',     'bi-shield-check',   true],
+          ['agenda',     'Agenda',      'bi-calendar-check', true],
         ]],
       ];
     }
