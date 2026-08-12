@@ -99,6 +99,14 @@ $linhas = [
       <span class="app-icon-label">Seguros</span>
     </a>
 
+    <a href="<?= base_url('fornecedores') ?>" class="app-icon">
+      <span class="app-icon-tile app-tile-laranja">
+        🤝
+        <?php if (($qtd_fornecedores ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_fornecedores ?></span><?php endif; ?>
+      </span>
+      <span class="app-icon-label">Fornecedores</span>
+    </a>
+
     <?php $ag_urg = $alertas['urgentes'] ?? 0; ?>
     <a href="<?= base_url('agenda') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-laranja">

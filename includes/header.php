@@ -86,6 +86,7 @@ if ($usuario):
           ['contas',     'Contas',      'bi-bank',         true],
           ['investimentos','Investimentos','bi-graph-up-arrow', true],
           ['seguros',    'Seguros',     'bi-shield-check', true],
+          ['fornecedores','Fornecedores','bi-people-fill',  true],
         ]];
       }
     } else {
@@ -97,6 +98,7 @@ if ($usuario):
           ['contas',     'Contas',      'bi-bank',           true],
           ['investimentos','Investimentos','bi-graph-up-arrow', true],
           ['seguros',    'Seguros',     'bi-shield-check',   true],
+          ['fornecedores','Fornecedores','bi-people-fill',    true],
           ['agenda',     'Agenda',      'bi-calendar-check', true],
         ]],
       ];

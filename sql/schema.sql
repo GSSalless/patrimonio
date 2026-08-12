@@ -770,3 +770,50 @@ CREATE TABLE IF NOT EXISTS investimento_movimentos (
 
 -- Nota: ENUM tipo_referencia de `documentos` += 'investimento'; categoria +=
 --   'proposta'/'regulamento' (anexos de investimento).
+
+-- ============================================================================
+-- Módulo 04 — Fornecedores e Parceiros (migration_modulo_04_fornecedores.sql · 12/08/2026)
+-- Prestadores/parceiros do cliente. contrato_fim alimenta a Agenda (Mód. 14).
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS fornecedores (
+  id                  INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id          INT NOT NULL,
+  codigo              VARCHAR(10) NOT NULL,             -- FO-0001
+  tipo_pessoa         ENUM('PJ','PF') NOT NULL DEFAULT 'PJ',
+  nome                VARCHAR(180) NOT NULL,
+  nome_fantasia       VARCHAR(180) NULL,
+  cpf_cnpj            VARCHAR(20)  NULL,
+  categoria           ENUM('contabilidade','juridico','seguros','marina','saude','tecnologia','rh','imobiliaria','manutencao','construcao','financeiro','transporte','outro') NOT NULL DEFAULT 'outro',
+  contato_nome        VARCHAR(140) NULL,
+  telefone            VARCHAR(40)  NULL,
+  email               VARCHAR(140) NULL,
+  site                VARCHAR(140) NULL,
+  cep                 VARCHAR(10)  NULL,
+  logradouro          VARCHAR(180) NULL,
+  numero              VARCHAR(20)  NULL,
+  complemento         VARCHAR(120) NULL,
+  bairro              VARCHAR(120) NULL,
+  cidade              VARCHAR(120) NULL,
+  estado              CHAR(2)      NULL,
+  contrato_inicio     DATE NULL,
+  contrato_fim        DATE NULL,
+  contrato_valor      DECIMAL(15,2) NULL,
+  contrato_reajuste   VARCHAR(120) NULL,
+  forma_pagamento     VARCHAR(80)  NULL,
+  banco               VARCHAR(120) NULL,
+  agencia             VARCHAR(20)  NULL,
+  conta               VARCHAR(30)  NULL,
+  pix_tipo            ENUM('cpf','cnpj','email','telefone','aleatoria') NULL,
+  pix_chave           VARCHAR(140) NULL,
+  avaliacao_nota      TINYINT NULL,
+  sla                 VARCHAR(180) NULL,
+  avaliacao_obs       TEXT NULL,
+  observacoes         TEXT NULL,
+  ativo               TINYINT(1) NOT NULL DEFAULT 1,
+  criado_em           DATETIME DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+  INDEX idx_fornecedores_cliente (cliente_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Nota: ENUM tipo_referencia de `documentos` += 'fornecedor'.

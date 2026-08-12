@@ -115,12 +115,13 @@
 <div class="alerta-prod">
   <span style="font-size:1.4rem;line-height:1">⚠️</span>
   <div>
-    <strong>1 migration nova para rodar em PRODUÇÃO</strong> (Módulo 10 — Investimentos).
-    Os Módulos 01/03/09/11 já estão no ar (banco sincronizado por dump em 12/08). Já o
-    <strong>Módulo 10</strong> criou tabelas novas — rode este SQL no phpMyAdmin, senão a tela
-    <strong>Investimentos</strong> dá <strong>erro 500</strong>:
+    <strong>2 migrations novas para rodar em PRODUÇÃO</strong> (Módulos 10 e 04).
+    Os Módulos 01/03/09/11 já estão no ar (banco sincronizado por dump em 12/08). Já os
+    <strong>Módulos 10 e 04</strong> criaram tabelas novas — rode estes SQL no phpMyAdmin, senão as telas
+    <strong>Investimentos</strong> e <strong>Fornecedores</strong> dão <strong>erro 500</strong>:
     <div style="margin-top:.45rem;line-height:1.9">
-      1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_10_investimentos.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_10_investimentos.sql</code></a> ↗
+      1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_10_investimentos.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_10_investimentos.sql</code></a> ↗<br>
+      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_04_fornecedores.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_04_fornecedores.sql</code></a> ↗
     </div>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
       Lembrete: selecionar o banco <code>u250260449_cezar_db</code> e remover a linha
@@ -185,14 +186,15 @@ const DADOS = [
     {t:'Relacionamentos: holdings ↔ imóveis/veículos/investimentos (→ F3)', done:false},
     {t:'✅ migration_modulo_03_empresas.sql já aplicada em produção (verificado 12/08)', done:true},
   ]},
-  { id:'m04', nome:'Módulo 04 — Fornecedores e Parceiros', icone:'🤝', cor:'#0d9488', sub:'não iniciado', itens:[
-    {t:'Tabela `fornecedores` + página de listagem', done:false},
-    {t:'Cadastro: razão social, fantasia, CNPJ, endereço, contatos', done:false},
-    {t:'Classificação: contábil, jurídico, seguros, marina, saúde, TI, RH…', done:false},
-    {t:'Contratos: vigência, valor, reajustes', done:false},
-    {t:'Financeiro: banco, PIX, pagamentos', done:false},
-    {t:'Avaliação: SLA, qualidade, prazo, custo-benefício', done:false},
-    {t:'Arquivos: contratos, NFs, certidões', done:false},
+  { id:'m04', nome:'Módulo 04 — Fornecedores e Parceiros', icone:'🤝', cor:'#0d9488', sub:'implementado 12/08 · testado HTTP+banco', itens:[
+    {t:'Tabela `fornecedores` + CRUD completo (lista com filtros, novo, editar, _campos) · código FO-XXXX · PJ/PF', done:true},
+    {t:'Cadastro: razão social, fantasia, CPF/CNPJ, endereço, contato + telefone/e-mail/site', done:true},
+    {t:'Classificação: contabilidade, jurídico, seguros, marina, saúde, TI, RH, imobiliária, manutenção, construção, financeiro, transporte', done:true},
+    {t:'Contratos: início/fim, valor, reajuste, forma de pagamento (fim alimenta a Agenda)', done:true},
+    {t:'Financeiro: banco, agência, conta, PIX', done:true},
+    {t:'Avaliação: nota 1–5 (★), SLA, observações', done:true},
+    {t:'Arquivos: contrato, NF, certidão (tipo_referencia `fornecedor`) · app 🤝 + menu', done:true},
+    {t:'⚠️ Rodar migration_modulo_04_fornecedores.sql no banco de PRODUÇÃO', done:false},
   ]},
   { id:'m05', nome:'Módulo 05 — Imóveis', icone:'🏛️', cor:'#1a7a45', sub:'implementado (F1)', itens:[
     {t:'Tabelas `imoveis` + `avaliacoes`', done:true},

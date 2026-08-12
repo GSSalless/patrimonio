@@ -49,7 +49,11 @@ class DashboardController extends Controller
         $stmt = db()->prepare('SELECT COUNT(*) FROM investimentos WHERE cliente_id = ? AND ativo = 1');
         $stmt->execute([$cli['id']]);
         $qtd_investimentos = (int) $stmt->fetchColumn();
+        // Contagem de fornecedores (Módulo 04) para o badge do app.
+        $stmt = db()->prepare('SELECT COUNT(*) FROM fornecedores WHERE cliente_id = ? AND ativo = 1');
+        $stmt->execute([$cli['id']]);
+        $qtd_fornecedores = (int) $stmt->fetchColumn();
 
-        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros', 'qtd_empresas', 'qtd_investimentos'));
+        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros', 'qtd_empresas', 'qtd_investimentos', 'qtd_fornecedores'));
     }
 }

@@ -151,6 +151,23 @@ function proximo_codigo_empresa(): string {
     return 'EM-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
 }
 
+function proximo_codigo_fornecedor(): string {
+    $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM fornecedores");
+    $row = $stmt->fetch();
+    $proximo = ($row['ultimo'] ?? 0) + 1;
+    return 'FO-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
+/** Rótulo de categoria de fornecedor (Módulo 04). */
+function fornecedor_categoria_label(string $c): string {
+    return [
+        'contabilidade' => 'Contabilidade', 'juridico' => 'Jurídico', 'seguros' => 'Seguros',
+        'marina' => 'Marina', 'saude' => 'Saúde', 'tecnologia' => 'Tecnologia', 'rh' => 'RH',
+        'imobiliaria' => 'Imobiliária', 'manutencao' => 'Manutenção', 'construcao' => 'Construção',
+        'financeiro' => 'Financeiro', 'transporte' => 'Transporte', 'outro' => 'Outro',
+    ][$c] ?? ucfirst($c);
+}
+
 function proximo_codigo_investimento(): string {
     $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM investimentos");
     $row = $stmt->fetch();
@@ -284,6 +301,14 @@ function alertas_consolidado(?int $cliente_id = null): array {
                s.vigencia_fim, CONCAT('seguros/editar?id=', s.id)$C
           FROM seguros s
          WHERE s.ativo = 1 AND s.status = 'vigente' AND s.vigencia_fim IS NOT NULL
+
+        UNION ALL
+        -- Fim de contrato de fornecedor
+        SELECT f.cliente_id, 'contrato'$C, CONCAT('Contrato do fornecedor · ', f.nome)$C,
+               COALESCE(NULLIF(f.nome_fantasia, ''), f.categoria)$C,
+               f.contrato_fim, CONCAT('fornecedores/editar?id=', f.id)$C
+          FROM fornecedores f
+         WHERE f.ativo = 1 AND f.contrato_fim IS NOT NULL
 
         UNION ALL
         -- Vencimento de investimento (renda fixa ativa)
