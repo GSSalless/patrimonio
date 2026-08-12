@@ -115,13 +115,14 @@
 <div class="alerta-prod">
   <span style="font-size:1.4rem;line-height:1">⚠️</span>
   <div>
-    <strong>2 migrations novas para rodar em PRODUÇÃO</strong> (Módulos 10 e 04).
+    <strong>3 migrations novas para rodar em PRODUÇÃO</strong> (Módulos 10, 04 e 02).
     Os Módulos 01/03/09/11 já estão no ar (banco sincronizado por dump em 12/08). Já os
-    <strong>Módulos 10 e 04</strong> criaram tabelas novas — rode estes SQL no phpMyAdmin, senão as telas
-    <strong>Investimentos</strong> e <strong>Fornecedores</strong> dão <strong>erro 500</strong>:
+    <strong>Módulos 10, 04 e 02</strong> criaram tabelas novas — rode estes SQL no phpMyAdmin, senão as telas
+    <strong>Investimentos</strong>, <strong>Fornecedores</strong> e <strong>Colaboradores</strong> dão <strong>erro 500</strong>:
     <div style="margin-top:.45rem;line-height:1.9">
       1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_10_investimentos.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_10_investimentos.sql</code></a> ↗<br>
-      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_04_fornecedores.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_04_fornecedores.sql</code></a> ↗
+      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_04_fornecedores.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_04_fornecedores.sql</code></a> ↗<br>
+      3. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_02_colaboradores.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_02_colaboradores.sql</code></a> ↗
     </div>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
       Lembrete: selecionar o banco <code>u250260449_cezar_db</code> e remover a linha
@@ -166,16 +167,15 @@ const DADOS = [
     {t:'Contatos de emergência', done:true},
     {t:'Relacionamentos: imóveis, veículos, investimentos, empresas, contratos', done:false},
   ]},
-  { id:'m02', nome:'Módulo 02 — Colaboradores', icone:'🧑‍💼', cor:'#7d3ff0', sub:'não iniciado', itens:[
-    {t:'Tabela `colaboradores` + página de listagem', done:false},
-    {t:'Cadastro: dados pessoais + RH (cargo, salário, depto, gestor)', done:false},
-    {t:'Dependentes (cônjuge, filhos)', done:false},
-    {t:'Escolaridade: formação, cursos, certificações', done:false},
-    {t:'Saúde: tipo sanguíneo, convênios, alergias', done:false},
-    {t:'Uniformes: camiseta, camisa, calça, calçado', done:false},
-    {t:'Benefícios: VA, plano de saúde, seguro de vida', done:false},
-    {t:'Histórico: salários, promoções, advertências, avaliações', done:false},
-    {t:'Controle: férias, faltas, atestados, treinamentos', done:false},
+  { id:'m02', nome:'Módulo 02 — Colaboradores', icone:'🧑‍💼', cor:'#7d3ff0', sub:'implementado 12/08 · testado HTTP+banco', itens:[
+    {t:'Tabela `colaboradores` + CRUD completo (lista com filtros + folha mensal, novo, editar, _campos) · código CO-XXXX', done:true},
+    {t:'Cadastro: dados pessoais + RH (cargo, depto, gestor, contrato, jornada, admissão/demissão, salário, situação)', done:true},
+    {t:'Dependentes (cônjuge/filhos) — sub-tabela `colaborador_dependentes` com add/remove', done:true},
+    {t:'Escolaridade + Saúde (tipo sanguíneo, convênio, alergias)', done:true},
+    {t:'Uniformes (camiseta/camisa/calça/calçado) + Benefícios (VA, plano de saúde, seguro de vida)', done:true},
+    {t:'Histórico unificado `colaborador_historico` (salário/promoção/avaliação/férias/advertência/atestado/treinamento/falta) com add/remove', done:true},
+    {t:'Documentos (contrato/identidade/outros) · app 👔 no dashboard + menu', done:true},
+    {t:'⚠️ Rodar migration_modulo_02_colaboradores.sql no banco de PRODUÇÃO', done:false},
   ]},
   { id:'m03', nome:'Módulo 03 — Empresas', icone:'🏢', cor:'#1f6fe0', sub:'implementado 12/08 · testado HTTP+banco', itens:[
     {t:'Tabela `empresas` dedicada + CRUD completo (lista com filtros/capital somado, novo, editar, _campos) · código EM-XXXX', done:true},

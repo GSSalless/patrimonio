@@ -817,3 +817,82 @@ CREATE TABLE IF NOT EXISTS fornecedores (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Nota: ENUM tipo_referencia de `documentos` += 'fornecedor'.
+
+-- ============================================================================
+-- Módulo 02 — Colaboradores (migration_modulo_02_colaboradores.sql · 12/08/2026)
+-- RH dos colaboradores do cliente + dependentes + histórico.
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS colaboradores (
+  id                  INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id          INT NOT NULL,
+  codigo              VARCHAR(10) NOT NULL,             -- CO-0001
+  nome                VARCHAR(180) NOT NULL,
+  cpf                 VARCHAR(14)  NULL,
+  rg                  VARCHAR(20)  NULL,
+  data_nascimento     DATE NULL,
+  estado_civil        ENUM('solteiro','casado','divorciado','viuvo','uniao_estavel','separado') NULL,
+  tipo_sanguineo      ENUM('A+','A-','B+','B-','AB+','AB-','O+','O-') NULL,
+  telefone            VARCHAR(40)  NULL,
+  email               VARCHAR(140) NULL,
+  cep                 VARCHAR(10)  NULL,
+  logradouro          VARCHAR(180) NULL,
+  numero              VARCHAR(20)  NULL,
+  complemento         VARCHAR(120) NULL,
+  bairro              VARCHAR(120) NULL,
+  cidade              VARCHAR(120) NULL,
+  estado              CHAR(2)      NULL,
+  cargo               VARCHAR(120) NULL,
+  departamento        VARCHAR(120) NULL,
+  gestor_nome         VARCHAR(140) NULL,
+  tipo_contrato       ENUM('clt','pj','autonomo','diarista','temporario','estagio','outro') NULL,
+  jornada             VARCHAR(80)  NULL,
+  data_admissao       DATE NULL,
+  data_demissao       DATE NULL,
+  salario             DECIMAL(15,2) NULL,
+  status              ENUM('ativo','experiencia','afastado','ferias','desligado') NOT NULL DEFAULT 'ativo',
+  escolaridade        ENUM('fundamental','medio','tecnico','superior','pos','mestrado','doutorado','outro') NULL,
+  formacao            VARCHAR(180) NULL,
+  convenio_medico     VARCHAR(140) NULL,
+  alergias            VARCHAR(255) NULL,
+  uniforme_camiseta   VARCHAR(20) NULL,
+  uniforme_camisa     VARCHAR(20) NULL,
+  uniforme_calca      VARCHAR(20) NULL,
+  uniforme_calcado    VARCHAR(20) NULL,
+  vale_alimentacao    DECIMAL(15,2) NULL,
+  plano_saude         VARCHAR(140) NULL,
+  seguro_vida         VARCHAR(140) NULL,
+  outros_beneficios   TEXT NULL,
+  observacoes         TEXT NULL,
+  ativo               TINYINT(1) NOT NULL DEFAULT 1,
+  criado_em           DATETIME DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+  INDEX idx_colaboradores_cliente (cliente_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS colaborador_dependentes (
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  colaborador_id  INT NOT NULL,
+  nome            VARCHAR(180) NOT NULL,
+  parentesco      ENUM('conjuge','filho','filha','pai','mae','outro') NOT NULL DEFAULT 'filho',
+  data_nascimento DATE NULL,
+  cpf             VARCHAR(14) NULL,
+  observacoes     VARCHAR(255) NULL,
+  criado_em       DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (colaborador_id) REFERENCES colaboradores(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS colaborador_historico (
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  colaborador_id  INT NOT NULL,
+  data            DATE NOT NULL,
+  data_fim        DATE NULL,
+  tipo            ENUM('salario','promocao','advertencia','avaliacao','ferias','atestado','treinamento','falta','beneficio','outro') NOT NULL DEFAULT 'outro',
+  descricao       VARCHAR(255) NULL,
+  valor           DECIMAL(15,2) NULL,
+  observacoes     VARCHAR(255) NULL,
+  criado_em       DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (colaborador_id) REFERENCES colaboradores(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Nota: ENUM tipo_referencia de `documentos` += 'colaborador'.

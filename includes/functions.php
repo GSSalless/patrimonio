@@ -151,6 +151,34 @@ function proximo_codigo_empresa(): string {
     return 'EM-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
 }
 
+function proximo_codigo_colaborador(): string {
+    $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM colaboradores");
+    $row = $stmt->fetch();
+    $proximo = ($row['ultimo'] ?? 0) + 1;
+    return 'CO-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
+/** Rótulos do Módulo 02 — Colaboradores. */
+function colaborador_status_label(string $s): string {
+    return [
+        'ativo' => 'Ativo', 'experiencia' => 'Experiência', 'afastado' => 'Afastado',
+        'ferias' => 'Férias', 'desligado' => 'Desligado',
+    ][$s] ?? ucfirst($s);
+}
+function colaborador_contrato_label(?string $t): string {
+    return [
+        'clt' => 'CLT', 'pj' => 'PJ', 'autonomo' => 'Autônomo', 'diarista' => 'Diarista',
+        'temporario' => 'Temporário', 'estagio' => 'Estágio', 'outro' => 'Outro',
+    ][$t] ?? '—';
+}
+function colaborador_hist_tipo_label(string $t): string {
+    return [
+        'salario' => 'Salário', 'promocao' => 'Promoção', 'advertencia' => 'Advertência',
+        'avaliacao' => 'Avaliação', 'ferias' => 'Férias', 'atestado' => 'Atestado',
+        'treinamento' => 'Treinamento', 'falta' => 'Falta', 'beneficio' => 'Benefício', 'outro' => 'Outro',
+    ][$t] ?? ucfirst($t);
+}
+
 function proximo_codigo_fornecedor(): string {
     $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM fornecedores");
     $row = $stmt->fetch();

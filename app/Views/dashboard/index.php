@@ -107,6 +107,14 @@ $linhas = [
       <span class="app-icon-label">Fornecedores</span>
     </a>
 
+    <a href="<?= base_url('colaboradores') ?>" class="app-icon">
+      <span class="app-icon-tile app-tile-laranja">
+        👔
+        <?php if (($qtd_colaboradores ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_colaboradores ?></span><?php endif; ?>
+      </span>
+      <span class="app-icon-label">Colaboradores</span>
+    </a>
+
     <?php $ag_urg = $alertas['urgentes'] ?? 0; ?>
     <a href="<?= base_url('agenda') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-laranja">

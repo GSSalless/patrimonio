@@ -95,6 +95,17 @@ $router->post('seguros/novo',  [SegurosController::class, 'novo']);
 $router->get('seguros/editar', [SegurosController::class, 'editar']);
 $router->post('seguros/editar',[SegurosController::class, 'editar']);
 
+// Colaboradores (Módulo 02)
+$router->get('colaboradores',                    [ColaboradoresController::class, 'index']);
+$router->get('colaboradores/novo',               [ColaboradoresController::class, 'novo']);
+$router->post('colaboradores/novo',              [ColaboradoresController::class, 'novo']);
+$router->get('colaboradores/editar',             [ColaboradoresController::class, 'editar']);
+$router->post('colaboradores/editar',            [ColaboradoresController::class, 'editar']);
+$router->post('colaboradores/dependente',        [ColaboradoresController::class, 'dependente']);
+$router->get('colaboradores/dependente-remover', [ColaboradoresController::class, 'dependenteRemover']);
+$router->post('colaboradores/historico',         [ColaboradoresController::class, 'historico']);
+$router->get('colaboradores/historico-remover',  [ColaboradoresController::class, 'historicoRemover']);
+
 // Fornecedores (Módulo 04)
 $router->get('fornecedores',        [FornecedoresController::class, 'index']);
 $router->get('fornecedores/novo',   [FornecedoresController::class, 'novo']);
