@@ -245,7 +245,7 @@
 - [x] Documentos: contrato social, cartão CNPJ, outros (`tipo_referencia` `empresa` + categoria `contrato_social`)
 - [x] Integração: app 🏢 no dashboard com badge + item "Empresas" no menu lateral · lista com filtros + capital social somado
 - [ ] Relacionamentos: holdings ↔ imóveis/veículos/investimentos *(→ F3)*
-- [ ] ⚠️ Rodar `sql/migration_modulo_03_empresas.sql` no banco de **produção**
+- [x] ✅ `sql/migration_modulo_03_empresas.sql` já aplicada em produção (verificado 12/08)
 
 ### Módulo 04 — Fornecedores e Parceiros
 - [ ] Cadastro: razão social, nome fantasia, CNPJ, endereço, contatos
@@ -326,7 +326,7 @@
 - [x] Dados: seguradora, corretora, corretor+contato, apólice, vigência (início/fim), valor segurado, prêmio, franquia, forma de pagamento, cobertura, beneficiários
 - [x] Arquivos: apólice, boleto, outros (`tipo_referencia` `seguro` add ao enum de `documentos`)
 - [x] **Integração:** alimenta a **Agenda** (Mód. 14) pela `vigencia_fim` (status vigente) · app 🛡️ no dashboard com badge · item "Seguros" no menu lateral · lista com filtros + prêmio total (vigentes)
-- [ ] ⚠️ Rodar `sql/migration_modulo_11_seguros.sql` no banco de **produção**
+- [x] ✅ `sql/migration_modulo_11_seguros.sql` já aplicada em produção (verificado 12/08)
 
 ### Módulo 12 — Contratos
 - [ ] Cadastro: número, tipo
@@ -395,7 +395,7 @@
 - [ ] n8n vinculado a todos os módulos — só após finalizar os módulos
 
 ### R4 — Pendências de decisão / follow-up
-- [ ] ⚠️ **[Gilson] Rodar migrations no banco de PRODUÇÃO** (phpMyAdmin): `sql/migration_modulo_09_contas.sql` + `sql/migration_modulo_01_pessoas.sql` + `sql/migration_modulo_11_seguros.sql` + `sql/migration_modulo_03_empresas.sql`. O deploy FTP não executa SQL — sem isso, as telas **Contas**, **Pessoas**, **Seguros** e **Empresas** dão 500 no ar. Rodar assim que possível.
+- [x] ✅ **Migrations em produção (09/01/11/03)** — verificado em 12/08/2026 que o banco `u250260449_cezar_db` já está **sincronizado** (foi por dump completo do local, não migration a migration): tabelas `contas_financeiras`, `conta_saldos`, `pessoa_*`, `seguros`, `empresas`, `empresa_socios` presentes; enums de `documentos` com `seguro`/`empresa`/`contrato_social`. Nada pendente. *(Novas migrations futuras continuam sendo à mão no phpMyAdmin — deploy FTP não roda SQL.)*
 - [ ] César: testar cadastros (veículo, imóvel, joia — joia ainda sem dados reais) e devolver ajustes campo a campo
 - [ ] César: mandar referências de ícones + escolher fonte + definir nome do botão "Gestão Geral"
 - [ ] Avaliar vínculo das tarefas do César com o **Notion** dele (assunto retomado, sem decisão)

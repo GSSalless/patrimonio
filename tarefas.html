@@ -112,21 +112,18 @@
   <span class="legenda">Suas marcações ficam salvas neste navegador.</span>
 </div>
 
-<div class="alerta-prod">
-  <span style="font-size:1.4rem;line-height:1">⚠️</span>
+<div class="alerta-prod" style="background:#ecfdf5;border-color:#6ee7b7">
+  <span style="font-size:1.4rem;line-height:1">✅</span>
   <div>
-    <strong>PENDENTE — rodar migrations no banco de PRODUÇÃO</strong> (phpMyAdmin da hospedagem).
-    O deploy envia os arquivos mas <u>não executa SQL</u>. Enquanto estas migrations não forem
-    rodadas em produção, as telas <strong>Contas</strong> (Mód. 09), <strong>Pessoas</strong> (Mód. 01),
-    <strong>Seguros</strong> (Mód. 11) e <strong>Empresas</strong> (Mód. 03) retornam <strong>erro 500</strong> no ar:
-    <div style="margin-top:.45rem;line-height:1.9">
-      1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_09_contas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_09_contas.sql</code></a> ↗<br>
-      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_01_pessoas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_01_pessoas.sql</code></a> ↗<br>
-      3. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_11_seguros.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_11_seguros.sql</code></a> ↗<br>
-      4. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_03_empresas.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_03_empresas.sql</code></a> ↗
-    </div>
+    <strong>Produção sincronizada</strong> (12/08/2026) — o banco de produção
+    (<code>u250260449_cezar_db</code>) já contém <strong>todas</strong> as tabelas e colunas dos
+    Módulos 01, 03, 09 e 11 (verificado via <code>information_schema</code>: tabelas
+    <code>contas_financeiras</code>, <code>seguros</code>, <code>empresas</code>, <code>pessoa_*</code>
+    presentes; enums de <code>documentos</code> com <code>seguro</code>/<code>empresa</code>/<code>contrato_social</code>).
+    <strong>Nenhuma migration pendente.</strong>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
-      Responsável: Gilson · rodar no phpMyAdmin da hospedagem assim que possível (local já está aplicado ✅).
+      Observação: novas migrations (tabelas/colunas futuras) continuam precisando ser rodadas à mão
+      no phpMyAdmin — o deploy FTP não executa SQL.
     </div>
   </div>
 </div>
@@ -185,7 +182,7 @@ const DADOS = [
     {t:'Documentos: contrato social, cartão CNPJ, outros (tipo_referencia `empresa` + categoria `contrato_social`)', done:true},
     {t:'Integração: app 🏢 no dashboard com badge + item no menu lateral', done:true},
     {t:'Relacionamentos: holdings ↔ imóveis/veículos/investimentos (→ F3)', done:false},
-    {t:'⚠️ Rodar migration_modulo_03_empresas.sql no banco de PRODUÇÃO (senão /empresas dá 500)', done:false},
+    {t:'✅ migration_modulo_03_empresas.sql já aplicada em produção (verificado 12/08)', done:true},
   ]},
   { id:'m04', nome:'Módulo 04 — Fornecedores e Parceiros', icone:'🤝', cor:'#0d9488', sub:'não iniciado', itens:[
     {t:'Tabela `fornecedores` + página de listagem', done:false},
@@ -275,7 +272,7 @@ const DADOS = [
     {t:'Dados: seguradora, corretora, corretor, apólice, vigência, valor segurado, prêmio, franquia, forma de pagamento, cobertura, beneficiários', done:true},
     {t:'Arquivos: apólice, boleto, outros (tipo_referencia `seguro` add ao enum de documentos)', done:true},
     {t:'Integração: alimenta a Agenda pela vigência · app 🛡️ no dashboard com badge · item no menu lateral', done:true},
-    {t:'⚠️ Rodar migration_modulo_11_seguros.sql no banco de PRODUÇÃO (senão /seguros dá 500)', done:false},
+    {t:'✅ migration_modulo_11_seguros.sql já aplicada em produção (verificado 12/08)', done:true},
   ]},
   { id:'m12', nome:'Módulo 12 — Contratos', icone:'📜', cor:'#9333ea', sub:'parcial (só locação)', itens:[
     {t:'Contrato de locação (contratos_locacao) — feito', done:true},
@@ -354,7 +351,7 @@ const DADOS = [
     {t:'n8n vinculado a todos os módulos (só após finalizar os módulos)', done:false},
   ]},
   { id:'r4', nome:'Reunião 21/07 — Decisões e Follow-up', icone:'📌', cor:'#0f766e', sub:'pendências de definição', itens:[
-    {t:'⚠️ [Gilson] Rodar migrations no banco de PRODUÇÃO: migration_modulo_09_contas.sql + migration_modulo_01_pessoas.sql + migration_modulo_11_seguros.sql + migration_modulo_03_empresas.sql (senão Contas/Pessoas/Seguros/Empresas dão 500)', done:false},
+    {t:'✅ Migrations em PRODUÇÃO (09/01/11/03): banco já sincronizado por dump completo — verificado 12/08 (tabelas + enums de documentos presentes). Nada pendente.', done:true},
     {t:'⚠️ Trocar as senhas seed de PRODUÇÃO (cesar123/marcos123) por senhas fortes', done:false},
     {t:'César: testar cadastros (veículo, imóvel, joia) e devolver ajustes campo a campo', done:false},
     {t:'César: mandar referências de ícones + escolher fonte', done:false},
