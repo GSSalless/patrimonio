@@ -136,7 +136,10 @@
   <strong>codificados no projeto</strong> (com o arquivo/tabela ao lado); os demais são o que falta desenvolver.
   Módulos <strong>05 · 06 · 07 · 09</strong> implementados e testados. Os cartões <strong>"Reunião 21/07"</strong>
   concentram o que saiu das 2 chamadas com o César (navegação, visual, IA/n8n e pendências de decisão) —
-  o Módulo <strong>01 — Pessoas</strong> virou prioridade.
+  o Módulo <strong>01 — Pessoas</strong> virou prioridade. Os cartões <strong>"Reunião 12/08"</strong> (5 cartões)
+  são o levantamento da última chamada: revisão profunda do <strong>cadastro de Pessoas</strong> (campos,
+  nomenclaturas, documentos/OCR/pendências, upload-first), <strong>padrão de layout</strong> e ajustes de
+  <strong>navegação/Gestão Geral</strong>. Combinado: <strong>arredondar os campos primeiro</strong>, layout depois.
 </div>
 
 <div class="grid" id="grid"></div>
@@ -361,6 +364,55 @@ const DADOS = [
     {t:'César: mandar referências de ícones + escolher fonte', done:false},
     {t:'César: definir o nome do botão "Gestão Geral"', done:false},
     {t:'Avaliar vínculo das tarefas do César com o Notion (sem decisão)', done:false},
+  ]},
+  { id:'r5a', nome:'Reunião 12/08 — Pessoas: campos, nomes e lógica', icone:'🧾', cor:'#0369a1', sub:'levantamento da transcrição 16 · revisa parte do Módulo 01', itens:[
+    {t:'Renomear/simplificar seções repetitivas (Identificação / Dados pessoais / Filiação) — avaliar cadastro mais contínuo', done:false},
+    {t:'Rótulo "Nome (como é chamado)" → "Nome completo" (nome civil); Apelido = campo à parte, não obrigatório', done:false},
+    {t:'Obrigatoriedade flexível: cadastro rápido só com nome (ou só CNH); resto vira pendência (não bloqueia). Revisar asteriscos (CPF/RG opcionais)', done:false},
+    {t:'"Pecar pelo excesso": incluir o máximo de campos/documentos possíveis da pessoa', done:false},
+    {t:'CNH: nº/registro + categoria + validade + upload com OCR (leitura automática)', done:false},
+    {t:'Passaporte: número + data de validade + demais dados + upload/OCR', done:false},
+    {t:'Profissão vira lista pré-cadastrada (dropdown); ao escolher, abre o registro profissional (OAB/CREA/CRC…) + validade + pendência de upload', done:false},
+    {t:'Estado civil: ao marcar (ex.: casado) → pedir certidão de casamento (upload/pendência)', done:false},
+    {t:'Tipo sanguíneo: campo + documento de comprovação (não obrigatório → pendência/alerta)', done:false},
+    {t:'Filiação integrada a "Família e Sucessão"; documentos de pai/mãe como pendências', done:false},
+    {t:'Endereço: "Endereço principal" → "Endereço" + botão "+" p/ múltiplos (estilo iFood/Mercado Livre); com >1, perguntar qual é o principal', done:false},
+    {t:'Contato: mover p/ cima (perto da identificação); renomear → "Contato"; múltiplos telefones com "+"; rótulo só "Telefone" (tirar "WhatsApp")', done:false},
+    {t:'E-mail: um principal + adicionais, botão "+" (mesmo padrão do telefone)', done:false},
+    {t:'Consolidar telefones/e-mails/endereços adicionais dentro das próprias seções (hoje soltos no editar.php)', done:false},
+    {t:'Garantir Contato de emergência', done:false},
+    {t:'Testamento/Sucessão → mover p/ área de documentos (opcionais); checkbox "tem testamento"; se marcado, campos estruturados (cartório, livro, data); upload com OCR', done:false},
+    {t:'Família e Sucessão / árvore genealógica: cadastrar familiares (cônjuge, filhos, pais, avós, bisavós) tipo organograma; cada um com documentos anexos', done:false},
+    {t:'(F3) Item de menu "Árvore Genealógica" com visualização em organograma/árvore', done:false},
+  ]},
+  { id:'r5b', nome:'Reunião 12/08 — Documentos da Pessoa (lista, OCR, upload-first)', icone:'🗂️', cor:'#1d4ed8', sub:'levantamento da transcrição 16', itens:[
+    {t:'Renomear "Documentos da pessoa" → "Lista de documentos" com 2 blocos: (a) enviados; (b) pendências (o que falta pelo cadastro)', done:false},
+    {t:'Catálogo de tipos de documento pré-cadastrados (CNH, passaporte, porte de arma/PDA, motonauta, certidões…), cada um com seus campos', done:false},
+    {t:'Permitir cadastrar tipo de documento novo (cria coluna/estrutura no banco) — caminho para o César criar', done:false},
+    {t:'Área de upload padronizada no fim da tela — mesmo padrão do módulo Imóvel; replicar em todas as telas', done:false},
+    {t:'Fluxo upload-first: pop-up "tem o documento em mãos?" → sobe → OCR preenche; senão, manual. Ao salvar, painel com todas as pendências', done:false},
+    {t:'OCR genérico: subiu documento → lê os campos e marca como salvo (sai da pendência)', done:false},
+  ]},
+  { id:'r5c', nome:'Reunião 12/08 — Layout e Padrão Visual', icone:'🎨', cor:'#9333ea', sub:'levantamento da transcrição 16 · aplicar a TODAS as telas', itens:[
+    {t:'Trocar blocos colapsáveis pelo layout novo "humanizado/limpo" (referência que o Gilson mostrou) — todas as telas de cadastro', done:false},
+    {t:'Padronizar tamanho/alinhamento dos campos (grid consistente — hoje CPF muda de largura); manter responsivo (celular/iPad)', done:false},
+    {t:'Botão WhatsApp = só o ícone (remover a palavra "WhatsApp") em todos os lugares', done:false},
+    {t:'Propagar novo layout + anexos + upload-first + painel de pendências a todas as telas (imóveis, veículos, outros, empresas, colaboradores, fornecedores, investimentos, contas, seguros, PJ)', done:false},
+  ]},
+  { id:'r5d', nome:'Reunião 12/08 — Navegação, Gestão Geral e PJ', icone:'🧭', cor:'#b45309', sub:'levantamento da transcrição 16', itens:[
+    {t:'BUG: não exibir o nome do cliente no topo enquanto nenhum cliente estiver selecionado (visão Gestão Geral); só após seleção', done:false},
+    {t:'Revisar nomenclaturas do menu ("Gestão Geral" → nome definitivo; avaliar "Clientes"→"Contas" + item "Banco")', done:false},
+    {t:'Decisão: César/CCR usa o sistema como um cliente (cadastrar a CCR como cliente + login próprio na futura área do cliente) — sem área privilegiada/duplicada', done:false},
+    {t:'Gestão Geral — painel de pendências consolidadas de todos os clientes (documentos faltando, valores/datas a vencer: IPVA, multas, dívidas, pagamentos). Amplia a faixa de alertas/Agenda', done:false},
+    {t:'Botão "Enviar dados" do cliente (PF + dados bancários) via WhatsApp: escolher banco, quais dados e destinatário', done:false},
+    {t:'PJ: replicar toda a lógica (upload-first, OCR, pendências, layout) no cadastro de Pessoa Jurídica — muda classificação e documentos (cartão CNPJ, certidões negativas, contrato social)', done:false},
+  ]},
+  { id:'r5e', nome:'Reunião 12/08 — Notificações & IA/WhatsApp', icone:'📣', cor:'#6d28d9', sub:'estágio posterior · complementa o card "Automação e IA"', itens:[
+    {t:'Área de notificações por cliente: ligar/desligar se cada cliente recebe notificações (e-mail/WhatsApp) de pendências', done:false},
+    {t:'n8n dispara e-mail/WhatsApp ao cliente com pendências periódicas (ex.: 1x/mês) — só depois de fechar os campos', done:false},
+    {t:'Pendências consolidadas no WhatsApp do César (manhã/meio-dia/noite) + integração Notion', done:false},
+    {t:'Assistente WhatsApp/Claude conectado ao banco (leitura + insert por foto/áudio; criar/ver tarefas; sem DELETE/DROP) — fluxo por tipo de documento', done:false},
+    {t:'Nota de dependência: mexer em campo agora impacta banco + automações → "arredondar" todos os campos antes de automatizar', done:false},
   ]},
   { id:'testes', nome:'Testes com dados reais (Bloco K)', icone:'🧪', cor:'#b91c1c', sub:'⭐ SUAS tarefas — validar com dados/Cliente reais antes de avançar', itens:[
     {t:'[Gilson] Cadastro completo do imóvel "4D Complex – unid. 321" (Marcos Borges) — todos os blocos', done:false},

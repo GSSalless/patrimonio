@@ -405,6 +405,66 @@
 
 ---
 
+## Reunião com César — 12/08/2026 (transcrição 16)
+
+> César revisou o sistema (foco no **cadastro do Marcos**) e trouxe **muitas mudanças** de campos,
+> nomenclaturas, padrão de layout e lógica de documentos/pendências, além de ajustes de navegação.
+> **Combinado (reforçado):** *arredondar/finalizar os campos primeiro* — mexer em campo mexe no banco e
+> depois nas automações — **e só então** a rodada de layout. Vários itens abaixo **revisam** entregas que
+> o Módulo 01 já marcou como concluídas (rótulo "como é chamado", "Endereço principal", "Contato principal"),
+> ficando como novas tarefas de ajuste. Fonte: PDF "Meeting Transcription (16)".
+
+### R5.1 — Pessoas: campos, nomenclaturas e lógica
+- [ ] Renomear/simplificar seções repetitivas (Identificação / Dados pessoais / Filiação) — avaliar cadastro mais contínuo (menos divisões)
+- [ ] Rótulo do `nome`: **"Nome (como é chamado)" → "Nome completo"** (nome civil); **Apelido** = campo à parte, não obrigatório
+- [ ] **Obrigatoriedade flexível**: cadastro rápido só com nome (ou só CNH); o resto vira **pendência** (não bloqueia). Revisar asteriscos — CPF/RG opcionais
+- [ ] Princípio **"pecar pelo excesso"**: incluir o máximo de campos/documentos possíveis da pessoa
+- [ ] **CNH**: nº/registro + categoria + **validade** + upload com **OCR** (leitura automática dos campos)
+- [ ] **Passaporte**: número + data de validade + demais dados + upload/OCR
+- [ ] **Profissão** vira **lista pré-cadastrada** (dropdown, não texto livre); ao escolher, abre o **registro profissional** equivalente (advogado→OAB, engenheiro→CREA, contador→CRC…) + validade + **pendência de upload** (alerta de vencimento → Agenda)
+- [ ] **Estado civil**: ao marcar (ex.: casado) → pedir certidão de casamento (upload/pendência)
+- [ ] **Tipo sanguíneo**: campo + documento de comprovação (não obrigatório → pendência/alerta)
+- [ ] **Filiação** integrada a "Família e Sucessão"; documentos de pai/mãe como pendências
+- [ ] **Endereço**: "Endereço principal" → **"Endereço"** + botão **"+"** p/ múltiplos (estilo iFood/Mercado Livre); com >1, perguntar qual é o principal
+- [ ] **Contato**: mover para cima (perto da identificação); renomear → **"Contato"**; múltiplos telefones com "+"; rótulo só **"Telefone"** (tirar "WhatsApp")
+- [ ] **E-mail**: um principal + adicionais, botão "+" (mesmo padrão do telefone)
+- [ ] Consolidar telefones/e-mails/endereços adicionais **dentro das próprias seções** (hoje soltos no `editar.php`)
+- [ ] Garantir **Contato de emergência**
+- [ ] **Testamento/Sucessão** → mover para a área de documentos (opcionais); checkbox "tem testamento"; se marcado, **campos estruturados** (cartório, livro, data — não texto livre); upload com OCR
+- [ ] **Família e Sucessão / árvore genealógica**: cadastrar familiares (cônjuge, filhos, pais, avós, bisavós) tipo organograma; cada familiar com **documentos anexos** (ex.: certidão de nascimento do filho); banco de docs da família
+- [ ] *(F3)* Item de menu lateral **"Árvore Genealógica"** com visualização em organograma/árvore
+
+### R5.2 — Documentos da Pessoa: lista, OCR e upload-first
+- [ ] Renomear "Documentos da pessoa" → **"Lista de documentos"** com 2 blocos: (a) enviados; (b) **pendências** (o que falta conforme o cadastro)
+- [ ] **Catálogo de tipos de documento** pré-cadastrados (CNH, passaporte, porte de arma/PDA, motonauta, certidões…), cada um com seus campos conhecidos; ao adicionar, abre campos ou faz OCR do upload
+- [ ] Permitir **cadastrar tipo de documento novo** (cria coluna/estrutura no banco) — caminho para o César criar
+- [ ] **Área de upload padronizada no fim da tela** — mesmo padrão do módulo Imóvel; replicar em todas as telas
+- [ ] Fluxo **"upload-first"**: ao "Cadastrar nova pessoa", pop-up "tem o documento em mãos?" → sobe → OCR preenche; senão, manual. Ao salvar, painel com **todas as pendências** geradas
+- [ ] **OCR** genérico: subiu documento → lê os campos e marca como salvo (sai da pendência)
+
+### R5.3 — Layout e padrão visual dos cadastros
+- [ ] Trocar **blocos colapsáveis** pelo layout novo **"humanizado/limpo"** (referência que o Gilson mostrou) — em **todas** as telas de cadastro
+- [ ] **Padronizar tamanho/alinhamento** dos campos (grid consistente — hoje CPF etc. mudam de largura); manter responsivo (celular/iPad)
+- [ ] **Botão WhatsApp = só o ícone** (remover a palavra "WhatsApp") em todos os lugares
+- [ ] Propagar novo layout + anexos + upload-first + painel de pendências a **todas as telas já feitas** (imóveis, veículos, outros, empresas, colaboradores, fornecedores, investimentos, contas, seguros, PJ)
+
+### R5.4 — Navegação, Gestão Geral e PJ
+- [ ] **BUG**: não exibir o nome do cliente no topo enquanto nenhum cliente estiver selecionado (visão Gestão Geral); só aparece após seleção
+- [ ] Revisar **nomenclaturas do menu** ("Gestão Geral" → nome definitivo; avaliar "Clientes"→"Contas" + item "Banco")
+- [ ] **Decisão**: César/CCR usará o sistema **como um cliente** (cadastrar a CCR como cliente + login próprio na futura área do cliente), em vez de área privilegiada/duplicada
+- [ ] **Gestão Geral — painel de pendências consolidadas** de todos os clientes (documentos faltando, valores/datas a vencer: IPVA, multas, dívidas, pagamentos). Amplia a faixa de alertas/Agenda já existente para pendências de cadastro/documentos
+- [ ] **Botão "Enviar dados"** do cliente (PF + dados bancários) via WhatsApp: escolher banco, quais dados e destinatário
+- [ ] **PJ**: replicar toda a lógica (upload-first, OCR, pendências, layout) no cadastro de Pessoa Jurídica — muda a classificação e os documentos (cartão CNPJ, certidões negativas, contrato social)
+
+### R5.5 — Notificações e IA/WhatsApp *(estágio posterior — complementa R3)*
+- [ ] **Área de notificações por cliente**: ligar/desligar se cada cliente recebe notificações (e-mail/WhatsApp) de pendências
+- [ ] **n8n** dispara e-mail/WhatsApp ao cliente com pendências periódicas (ex.: 1x/mês) — só depois de fechar os campos
+- [ ] Pendências consolidadas no **WhatsApp do César** (manhã/meio-dia/noite) + integração **Notion**
+- [ ] **Assistente WhatsApp/Claude conectado ao banco** (leitura + insert por foto/áudio; criar/ver tarefas; **sem DELETE/DROP**) — fluxo por tipo de documento
+- [ ] **Nota de dependência**: mexer em campo agora impacta banco + automações → "arredondar" todos os campos antes de automatizar
+
+---
+
 ## Melhorias de UX/Plataforma (sessão 26/06/2026)
 - [x] Dashboard reformulado como hub de módulos (ícones estilo iPhone: Patrimônios, Caixa, Tarefas, Caixa Geral)
 - [x] Campo "Site do cartório" + inscrição municipal movida para o bloco Identificação
@@ -425,6 +485,7 @@
 
 | Data | O que foi feito |
 |------|----------------|
+| 12/08/2026 | **Reunião com César (transcrição 16) — levantamento.** Decodificado o PDF (fonte subset com CMap próprio → texto via ToUnicode) e catalogadas as mudanças em 5 grupos: **R5.1** Pessoas — campos/nomenclaturas/lógica (nome completo vs apelido, obrigatoriedade flexível, CNH/passaporte com OCR, profissão→registro OAB/CREA/CRC, certidões por estado civil, filiação↔família/árvore genealógica, múltiplos endereços/telefones/e-mails, testamento estruturado, contato de emergência); **R5.2** documentos da pessoa (lista enviados×pendências, catálogo de tipos, tipo novo, upload padrão do imóvel, upload-first + OCR); **R5.3** layout humanizado + campos padronizados + WhatsApp só ícone (todas as telas); **R5.4** navegação (bug do nome do cliente no topo sem seleção, nomes do menu, CCR como cliente, painel de pendências na Gestão Geral, enviar dados bancários por WhatsApp, PJ); **R5.5** notificações por cliente + n8n + assistente WhatsApp/Claude no banco. Combinado: **arredondar campos primeiro, layout depois**. Registrado em `TAREFAS.md` (seção nova) e `tarefas.html` (5 cartões "Reunião 12/08"). |
 | 23/06/2026 | Leitura do PDF · Exclusão do HTML anterior · CLAUDE.md e TAREFAS.md criados · Estrutura de pastas definida |
 | 23/06/2026 | Banco criado (gestao_patrimonial) · schema.sql + seed.sql executados · Blocos A e B completos: db.php, auth.php, functions.php, header/footer, style.css, main.js, index.php, logout.php, dashboard.php |
 | 26/06/2026 | Lista de imóveis estilizada · campos do imóvel reorganizados (site cartório, inscrição no bloco 1, coproprietários, remoção de regime/holding/beneficiário) · valor m² automático · dashboard como hub de apps · modal de pendências + PDF + WhatsApp · confirmação antes de salvar · cache-busting CSS · **Arquitetura ERP de 15 módulos** definida + `tarefas.html` criado |
