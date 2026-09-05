@@ -9,7 +9,8 @@
 
 | Fase | Status | Progresso |
 |------|--------|-----------|
-| F1 — MVP | 🟡 Em andamento | 90% (blocos A–J concluídos · falta K: testes com César) |
+| **🎯 MVP de entrega (reunião 27/08)** | 🟡 Em finalização | ~70% cliente / ~80% interno · **apresentação 08/09/2026** · ver seção abaixo |
+| F1 — MVP (substituir Excel) | 🟢 Base concluída | Blocos A–J concluídos · falta K: testes com César |
 | F2 — Cadastro completo | 🟡 Iniciada | Matrícula+site cartório, características físicas, co-propriedade já adiantados no módulo Imóveis |
 | F3 — Family Office | ⏳ Aguardando F2 | — |
 
@@ -17,6 +18,75 @@
 > uma **Arquitetura de Dados de ERP Patrimonial / Family Office** com 15 módulos relacionáveis entre si.
 > Ver seção **"Arquitetura ERP"** abaixo. Acompanhamento visual em **`tarefas.html`**
 > (`http://127.0.0.1/cezar/tarefas.html`).
+
+---
+
+## 🎯 MVP DE ENTREGA — Reunião 27/08/2026 (apresentação 08/09/2026)
+
+> **Esta é a fatia acordada para entregar** — não o documento de visão completo. Fonte:
+> transcrição da reunião de 27/08/2026 (César + Gilson + Izarley).
+>
+> **Distinção que ficou clara na reunião:**
+> - O **documento de visão** que o César mandou (60 pontos: SaaS multi-tenant, inteligência
+>   patrimonial/financeira profunda, concierge, teia patrimonial, internacionalização…) é o
+>   **"teto"** — o destino do produto, **fase posterior**.
+> - O **MVP combinado** é: **gerenciador de patrimônio + controle financeiro, single-tenant**,
+>   com o núcleo já pronto **finalizado e testado**, **já preparado para ligar a uma IA** — via
+>   **n8n agora** (migração para código só quando virar SaaS/escalar).
+>
+> **Estado hoje:** ~**70%** do que o cliente quer (análise) · ~**80%** interno (Gilson). A base é
+> uma **fundação para reaproveitar** (15 módulos prontos). Para chegar ao "teto" seriam ~3–6 meses;
+> **o MVP em si é ~1 semana** de finalização + testes.
+>
+> **Princípio (César):** *"não construir agora nada que impeça a evolução futura"* — decisões de
+> arquitetura já pensam em multi-tenant/IA/escala, mesmo entregando single-tenant.
+
+### Bloco M1 — Finalização e testes do núcleo *(Gilson)*
+- [x] 15 módulos base implementados (Pessoas, Colaboradores, Empresas, Fornecedores, Imóveis, Veículos, Outros Bens, Contas, Investimentos, Seguros, Agenda, Manutenções, Condomínios, Patrimônio consolidado, Dashboard)
+- [ ] **Revisar campos por categoria de ativo** (imóvel, veículo, jet-ski/embarcação, joia, obra…) — enxugar excesso e definir os campos certos por tipo de documento/ativo
+- [ ] Rodar todas as telas por **orquestrador (Claude)** → mapear erros → corrigir
+- [ ] **Teste end-to-end** de todas as telas (CRUD completo dos 15 módulos)
+
+### Bloco M2 — Segurança e controle de arquivos *(Gilson)* ⚠️
+- [ ] **Auditoria/controle de arquivos** — onde ficam os uploads + trilha de auditoria (lacuna de segurança herdada do projeto anterior, assumida pelo Gilson na reunião)
+- [ ] Conferir **isolamento de uploads por cliente** (`/uploads/{cliente_id}/`) e bloqueio de acesso indevido
+- [ ] LGPD básico + HTTPS (criptografia em trânsito) — checklist mínimo do MVP
+
+### Bloco M3 — Automação via n8n *(Izarley, em paralelo)*
+- [ ] **n8n acoplado às tarefas** do sistema *(não confundir com Notion — ponto esclarecido na reunião)*
+- [ ] **Leitura automática de documentos**: foto / PDF / áudio → IA extrai os dados → cadastra/atualiza no sistema (CNH do Marcos, conta de condomínio, IPVA…)
+- [ ] **Recepção de contas por e-mail** → n8n identifica fornecedor/valor/vencimento → cria pendência — **PF e PJ** (foco na *troca do mês*, quando o César recebe ~R$ 100k+ em contas)
+- [ ] **Cotação de moedas no painel** (dólar, euro) no dashboard — item do "finalzinho"
+
+### Bloco M4 — Assistente WhatsApp (MCP) *(Izarley/Gilson)*
+- [ ] Conectar **WhatsApp Business** (número dedicado do César) ao sistema via **MCP**
+- [ ] **Consultas por áudio/texto** ("quantos carros o Marcos tem?", "placas finais?") → IA consulta o banco e responde
+- [ ] **Criar lembretes** no sistema + Notion (ex.: avisar 10 dias antes do IPVA)
+- [ ] **Cadastro por foto/PDF/áudio** (leitura + insert) — **sem DELETE/DROP**
+- [ ] IA **simula o dia a dia** via WhatsApp para estressar/testar sem depender do uso manual do César
+
+### Bloco M5 — Visão do cliente + acesso
+- [x] Dois níveis de acesso (gestor × cliente) — base já preparada no banco
+- [ ] **Liberar a visão do cliente** (login próprio + telas restritas ao próprio patrimônio)
+- [ ] ⚠️ **Trocar as senhas seed** (`cesar123`/`marcos123`) por senhas fortes antes do acesso real
+
+### Bloco M6 — Entrega, logística e validação
+- [ ] **Apresentação/entrega: 08/09/2026** (evitar feriado 07/09)
+- [ ] Criar **grupo de WhatsApp** (César + Izarley + Gilson)
+- [ ] César fornece **número dedicado** p/ conectar o WhatsApp Business
+- [ ] MVP roda no **navegador do celular** (app nativo = futuro)
+- [ ] **Período de validação do César** (~25–30 dias de uso) → coleta de ajustes campo a campo
+
+### 🚫 Fora do MVP — fase posterior (o "teto" do documento de visão)
+- Multi-tenant / **SaaS** (várias organizações administrando vários clientes) — exige servidor + investimento
+- Migração **n8n → código** (quando escalar: menos consumo de token, mais escala, menos gargalo de servidor)
+- **Inteligência financeira profunda**: composição da conta de luz (kWh × tarifa × bandeira), previsão de comportamento financeiro, cruzamento de histórico — exige ~1 ano de dados + **LLM própria** em servidor potente *("já muda o projeto", Gilson)*
+- **LLM local** em servidor dedicado
+- **Concierge / avatar-persona** do cliente / inteligência de viagens (hotéis, restaurantes, roteiros)
+- **App nativo** (iOS/Android)
+- **Teia Patrimonial** avançada (visual futurista/interativo)
+- Marca própria / **white label** / internacionalização / multi-moeda completa / integrações bancárias internacionais
+- Venda do código-fonte / captação
 
 ---
 
@@ -235,7 +305,7 @@
 - [x] Uniformes (camiseta/camisa/calça/calçado) + Benefícios (VA, plano de saúde, seguro de vida, outros)
 - [x] **Histórico** unificado (`colaborador_historico`, 1:N) — salário/promoção/avaliação/férias/advertência/atestado/treinamento/falta/benefício, com período (data→data_fim) e valor; add/remove
 - [x] Documentos (contrato/identidade/outros, `tipo_referencia` `colaborador`) · lista com folha mensal dos ativos · app 👔 no dashboard + item no menu
-- [ ] ⚠️ Rodar `sql/migration_modulo_02_colaboradores.sql` no banco de **produção**
+- [x] ✅ Aplicada em **produção** (05/09 via `fix_producao_500_modulos_10_04_02.sql`)
 
 ### Módulo 03 — Empresas  🟢 *(implementado 12/08 — testado HTTP+banco)*
 - [x] Tabela `empresas` + CRUD completo (`Empresa` model, `EmpresasController`, views `empresas/{lista,novo,editar,_campos}.php`, rotas) · código EM-XXXX · `buscarDoCliente` sem IDOR
@@ -254,7 +324,7 @@
 - [x] Financeiro: banco, agência, conta, PIX (tipo + chave)
 - [x] Avaliação: nota 1–5 (★), SLA, observações
 - [x] Arquivos: contrato, NF, certidão (`tipo_referencia` `fornecedor`) · app 🤝 no dashboard + item no menu
-- [ ] ⚠️ Rodar `sql/migration_modulo_04_fornecedores.sql` no banco de **produção**
+- [x] ✅ Aplicada em **produção** (05/09 via `fix_producao_500_modulos_10_04_02.sql`)
 
 ### Módulo 05 — Imóveis  🟢 *(base implementada na F1)*
 - [x] Identificação: código, tipo, finalidade
@@ -318,7 +388,7 @@
 - [x] Documentos: proposta, regulamento, extrato (`tipo_referencia` `investimento` + categorias `proposta`/`regulamento`)
 - [x] **Integração:** `valor_atual` entra no **patrimônio consolidado** (Mód. 15 — dashboard + Gestão Geral, agora 5 categorias) · `data_vencimento` alimenta a **Agenda** (Mód. 14) · app 📈 no dashboard com badge + item no menu
 - [ ] Rentabilidade automática (mensal/anual/acumulada calculada) *(→ F3)*
-- [ ] ⚠️ Rodar `sql/migration_modulo_10_investimentos.sql` no banco de **produção**
+- [x] ✅ Aplicada em **produção** (05/09 via `fix_producao_500_modulos_10_04_02.sql`)
 
 ### Módulo 11 — Seguros  🟢 *(implementado 11/08 — testado HTTP+banco)*
 - [x] Tabela `seguros` + **vínculo polimórfico** (item_tipo+item_id) a imóvel/veículo/outro bem/pessoa · código SG-XXXX · `Seguro` model (INSERT/UPDATE genérico, `buscarDoCliente` sem IDOR, `itensSeguraveis`/`descreverVinculo`)
@@ -396,7 +466,7 @@
 - [ ] n8n vinculado a todos os módulos — só após finalizar os módulos
 
 ### R4 — Pendências de decisão / follow-up
-- [ ] ⚠️ **[Gilson] Rodar migrations novas no banco de PRODUÇÃO**: `sql/migration_modulo_10_investimentos.sql` + `sql/migration_modulo_04_fornecedores.sql` + `sql/migration_modulo_02_colaboradores.sql` (Módulos 10, 04 e 02 — tabelas novas). Selecionar `u250260449_cezar_db` e remover o `USE gestao_patrimonial;`. Local já aplicado.
+- [x] ✅ **Migrations dos Módulos 10, 04 e 02 aplicadas em PRODUÇÃO** (05/09/2026) via script consolidado `sql/fix_producao_500_modulos_10_04_02.sql` (idempotente) rodado no phpMyAdmin (`u250260449_cezar_db`). Resolve o erro 500 de Investimentos/Fornecedores/Colaboradores.
 - [x] ✅ **Migrations em produção (09/01/11/03)** — verificado em 12/08/2026 que o banco `u250260449_cezar_db` já está **sincronizado** (foi por dump completo do local, não migration a migration): tabelas `contas_financeiras`, `conta_saldos`, `pessoa_*`, `seguros`, `empresas`, `empresa_socios` presentes; enums de `documentos` com `seguro`/`empresa`/`contrato_social`. Nada pendente. *(Novas migrations futuras continuam sendo à mão no phpMyAdmin — deploy FTP não roda SQL.)*
 - [ ] César: testar cadastros (veículo, imóvel, joia — joia ainda sem dados reais) e devolver ajustes campo a campo
 - [ ] César: mandar referências de ícones + escolher fonte + definir nome do botão "Gestão Geral"
@@ -485,6 +555,8 @@
 
 | Data | O que foi feito |
 |------|----------------|
+| 05/09/2026 | **Plano de MVP definido a partir da reunião de 27/08.** Lida a transcrição da chamada (César + Gilson + Izarley) e separado o **combinado de entrega** do **documento de visão ("teto")**. Nova seção **"🎯 MVP DE ENTREGA"** no topo do `TAREFAS.md` + `tarefas.html`, com 6 blocos (M1 núcleo/testes · M2 segurança/arquivos · M3 automação n8n · M4 assistente WhatsApp/MCP · M5 visão do cliente · M6 entrega/logística) e lista explícita do que fica **fora do MVP** (SaaS multi-tenant, inteligência financeira profunda, LLM própria, concierge, app nativo). Migrations 10/04/02 marcadas como **aplicadas em produção** (fix consolidado rodado no phpMyAdmin). Alvo de apresentação: **08/09/2026**. |
+| 27/08/2026 | **Reunião com César (78 min · transcrição).** Comparativo contrato × visão × entregue: base em ~70% (cliente) / ~80% (interno), 15 módulos prontos = fundação a reaproveitar. Confirmado o **MVP single-tenant** (gerenciador de patrimônio + controle financeiro, preparado para IA via **n8n** agora, código depois). Combinados: finalizar/testar telas + revisar campos por categoria, auditoria de arquivos (segurança), n8n (tarefas + leitura de documentos + e-mail PF/PJ + cotação de moedas), assistente **WhatsApp via MCP** (consultas/lembretes/cadastro por foto-áudio, sem DELETE/DROP), liberar visão do cliente. Fora do MVP: SaaS multi-tenant, inteligência financeira granular, LLM própria, concierge/persona, app nativo. Entrega marcada p/ **08/09**; criar grupo de WhatsApp e César fornece número dedicado p/ o WhatsApp Business. |
 | 12/08/2026 | **Reunião com César (transcrição 16) — levantamento.** Decodificado o PDF (fonte subset com CMap próprio → texto via ToUnicode) e catalogadas as mudanças em 5 grupos: **R5.1** Pessoas — campos/nomenclaturas/lógica (nome completo vs apelido, obrigatoriedade flexível, CNH/passaporte com OCR, profissão→registro OAB/CREA/CRC, certidões por estado civil, filiação↔família/árvore genealógica, múltiplos endereços/telefones/e-mails, testamento estruturado, contato de emergência); **R5.2** documentos da pessoa (lista enviados×pendências, catálogo de tipos, tipo novo, upload padrão do imóvel, upload-first + OCR); **R5.3** layout humanizado + campos padronizados + WhatsApp só ícone (todas as telas); **R5.4** navegação (bug do nome do cliente no topo sem seleção, nomes do menu, CCR como cliente, painel de pendências na Gestão Geral, enviar dados bancários por WhatsApp, PJ); **R5.5** notificações por cliente + n8n + assistente WhatsApp/Claude no banco. Combinado: **arredondar campos primeiro, layout depois**. Registrado em `TAREFAS.md` (seção nova) e `tarefas.html` (5 cartões "Reunião 12/08"). |
 | 23/06/2026 | Leitura do PDF · Exclusão do HTML anterior · CLAUDE.md e TAREFAS.md criados · Estrutura de pastas definida |
 | 23/06/2026 | Banco criado (gestao_patrimonial) · schema.sql + seed.sql executados · Blocos A e B completos: db.php, auth.php, functions.php, header/footer, style.css, main.js, index.php, logout.php, dashboard.php |

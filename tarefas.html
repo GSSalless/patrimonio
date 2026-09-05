@@ -89,7 +89,8 @@
 <div class="topo">
   <div class="wrap">
     <h1>📋 Tarefas de Desenvolvimento — Gestão Patrimonial &amp; Family Office</h1>
-    <p>O que já construímos (páginas e tabelas) × os 15 módulos do ERP. Cada item é uma entrega de desenvolvimento.</p>
+    <p>O que já construímos (páginas e tabelas) × os 15 módulos do ERP. Cada item é uma entrega de desenvolvimento.
+       <strong>Foco atual: o 🎯 MVP acordado na reunião de 27/08 — apresentação 08/09/2026</strong> (cartões no topo).</p>
   </div>
 </div>
 
@@ -112,21 +113,21 @@
   <span class="legenda">Suas marcações ficam salvas neste navegador.</span>
 </div>
 
-<div class="alerta-prod">
-  <span style="font-size:1.4rem;line-height:1">⚠️</span>
+<div class="alerta-prod" style="background:#0f2e1a;border-color:#1c7a45">
+  <span style="font-size:1.4rem;line-height:1">🎯</span>
   <div>
-    <strong>3 migrations novas para rodar em PRODUÇÃO</strong> (Módulos 10, 04 e 02).
-    Os Módulos 01/03/09/11 já estão no ar (banco sincronizado por dump em 12/08). Já os
-    <strong>Módulos 10, 04 e 02</strong> criaram tabelas novas — rode estes SQL no phpMyAdmin, senão as telas
-    <strong>Investimentos</strong>, <strong>Fornecedores</strong> e <strong>Colaboradores</strong> dão <strong>erro 500</strong>:
-    <div style="margin-top:.45rem;line-height:1.9">
-      1. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_10_investimentos.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_10_investimentos.sql</code></a> ↗<br>
-      2. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_04_fornecedores.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_04_fornecedores.sql</code></a> ↗<br>
-      3. <a href="https://github.com/GSSalless/patrimonio/blob/main/sql/migration_modulo_02_colaboradores.sql" target="_blank" rel="noopener"><code>sql/migration_modulo_02_colaboradores.sql</code></a> ↗
+    <strong>MVP DE ENTREGA — combinado na reunião de 27/08/2026 · apresentação 08/09/2026.</strong>
+    O que vamos entregar é a fatia <strong>single-tenant</strong> (gerenciador de patrimônio + controle
+    financeiro), com o núcleo já pronto <strong>finalizado e testado</strong> e <strong>preparado para ligar a uma IA
+    via n8n</strong> (migração para código só quando virar SaaS). O documento de visão de 60 pontos é o
+    <strong>"teto"</strong> — fase posterior. Estado hoje: ~<strong>70%</strong> (cliente) / ~<strong>80%</strong> (interno).
+    <div style="margin-top:.5rem;line-height:1.7">
+      <strong>Blocos do MVP:</strong> M1 núcleo/testes · M2 segurança/arquivos · M3 automação n8n ·
+      M4 assistente WhatsApp (MCP) · M5 visão do cliente · M6 entrega/logística — cartões no topo da grade.
     </div>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
-      Lembrete: selecionar o banco <code>u250260449_cezar_db</code> e remover a linha
-      <code>USE gestao_patrimonial;</code> antes de rodar (local já está aplicado ✅).
+      ✅ Migrations dos Módulos 10/04/02 já aplicadas em produção (05/09, via
+      <code>fix_producao_500_modulos_10_04_02.sql</code> no phpMyAdmin — erro 500 resolvido).
     </div>
   </div>
 </div>
@@ -148,6 +149,53 @@
 
 <script>
 const DADOS = [
+  { id:'mvp1', nome:'🎯 MVP · M1 — Núcleo e testes', icone:'🧩', cor:'#166534', sub:'reunião 27/08 · entrega 08/09 · Gilson', itens:[
+    {t:'15 módulos base implementados (Pessoas…Dashboard)', done:true},
+    {t:'Revisar campos por categoria de ativo (imóvel, veículo, jet-ski, joia, obra) — enxugar excesso', done:false},
+    {t:'Rodar todas as telas por orquestrador (Claude) → mapear erros → corrigir', done:false},
+    {t:'Teste end-to-end de todas as telas (CRUD dos 15 módulos)', done:false},
+  ]},
+  { id:'mvp2', nome:'🎯 MVP · M2 — Segurança e arquivos', icone:'🔒', cor:'#7f1d1d', sub:'⚠️ lacuna herdada · Gilson', itens:[
+    {t:'Auditoria/controle de arquivos (onde ficam os uploads + trilha)', done:false},
+    {t:'Isolamento de uploads por cliente (/uploads/{cliente_id}/) + bloqueio de acesso indevido', done:false},
+    {t:'LGPD básico + HTTPS (criptografia em trânsito)', done:false},
+  ]},
+  { id:'mvp3', nome:'🎯 MVP · M3 — Automação n8n', icone:'🔗', cor:'#6d28d9', sub:'reunião 27/08 · Izarley (em paralelo)', itens:[
+    {t:'n8n acoplado às tarefas do sistema (não é Notion)', done:false},
+    {t:'Leitura de documentos: foto/PDF/áudio → IA extrai → cadastra/atualiza (CNH, condomínio, IPVA…)', done:false},
+    {t:'Recepção de contas por e-mail → identifica fornecedor/valor/vencimento → pendência (PF e PJ, troca do mês)', done:false},
+    {t:'Cotação de moedas no painel (dólar, euro) — "finalzinho"', done:false},
+  ]},
+  { id:'mvp4', nome:'🎯 MVP · M4 — Assistente WhatsApp (MCP)', icone:'💬', cor:'#065f46', sub:'reunião 27/08 · Izarley/Gilson', itens:[
+    {t:'Conectar WhatsApp Business (número dedicado do César) via MCP', done:false},
+    {t:'Consultas por áudio/texto ("quantos carros o Marcos tem?", "placas finais?") → IA consulta o banco', done:false},
+    {t:'Criar lembretes no sistema + Notion (ex.: 10 dias antes do IPVA)', done:false},
+    {t:'Cadastro por foto/PDF/áudio (leitura + insert) — SEM DELETE/DROP', done:false},
+    {t:'IA simula o dia a dia via WhatsApp para estressar/testar', done:false},
+  ]},
+  { id:'mvp5', nome:'🎯 MVP · M5 — Visão do cliente + acesso', icone:'👥', cor:'#1d4ed8', sub:'reunião 27/08 · base já preparada', itens:[
+    {t:'Dois níveis de acesso (gestor × cliente) — base no banco', done:true},
+    {t:'Liberar a visão do cliente (login próprio + telas restritas ao próprio patrimônio)', done:false},
+    {t:'⚠️ Trocar senhas seed (cesar123/marcos123) por senhas fortes', done:false},
+  ]},
+  { id:'mvp6', nome:'🎯 MVP · M6 — Entrega e logística', icone:'📦', cor:'#b45309', sub:'apresentação 08/09/2026', itens:[
+    {t:'Apresentação/entrega: 08/09/2026 (evitar feriado 07/09)', done:false},
+    {t:'Criar grupo de WhatsApp (César + Izarley + Gilson)', done:false},
+    {t:'César fornece número dedicado p/ o WhatsApp Business', done:false},
+    {t:'MVP roda no navegador do celular (app nativo = futuro)', done:false},
+    {t:'Período de validação do César (~25–30 dias) → ajustes campo a campo', done:false},
+  ]},
+  { id:'mvpfora', nome:'🚫 Fora do MVP — fase posterior ("teto")', icone:'🔭', cor:'#334155', sub:'documento de visão · NÃO entra na entrega 08/09', itens:[
+    {t:'Multi-tenant / SaaS (várias organizações × vários clientes) — servidor + investimento', done:false},
+    {t:'Migração n8n → código (quando escalar)', done:false},
+    {t:'Inteligência financeira profunda (kWh × tarifa × bandeira, previsão, histórico) + LLM própria', done:false},
+    {t:'LLM local em servidor dedicado', done:false},
+    {t:'Concierge / avatar-persona do cliente / inteligência de viagens', done:false},
+    {t:'App nativo (iOS/Android)', done:false},
+    {t:'Teia Patrimonial avançada (visual futurista)', done:false},
+    {t:'Marca própria / white label / internacionalização / multi-moeda / bancos internacionais', done:false},
+    {t:'Venda do código-fonte / captação', done:false},
+  ]},
   { id:'base', nome:'Base do Sistema', icone:'🧱', cor:'#1a3a5c', sub:'Infra · login · clientes', itens:[
     {t:'Banco gestao_patrimonial + schema.sql + seed.sql', done:true},
     {t:'Conexão PDO (includes/db.php)', done:true},
