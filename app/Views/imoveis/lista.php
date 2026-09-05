@@ -75,7 +75,7 @@ require APP_ROOT . '/includes/header.php';
     ?>
     <a href="<?= base_url('imoveis/ficha?id=' . $im['id']) ?>" class="ios-row">
       <span class="ios-icone" style="background:<?= $cor ?>">
-        <?php if ($im['foto_principal']): ?><img src="<?= base_url($im['foto_principal']) ?>" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px"><?php else: ?><?= $ic ?><?php endif; ?>
+        <?php if ($im['foto_principal']): ?><img src="<?= url_arquivo($im['foto_principal']) ?>" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px"><?php else: ?><?= $ic ?><?php endif; ?>
       </span>
       <span class="ios-corpo">
         <span class="ios-titulo"><?= h($im['nome_referencia']) ?></span>

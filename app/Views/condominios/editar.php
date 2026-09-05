@@ -30,7 +30,7 @@ $money = fn($k) => $d[$k] ? number_format((float)$d[$k], 2, ',', '.') : '';
       <?php if ($docs): ?>
       <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem">
         <?php foreach ($docs as $doc): ?>
-        <a href="<?= base_url($doc['caminho']) ?>" target="_blank" class="btn btn-secundario btn-sm">
+        <a href="<?= url_documento($doc) ?>" target="_blank" class="btn btn-secundario btn-sm">
           <i class="bi <?= $doc['categoria']==='cnpj' ? 'bi-card-text' : 'bi-file-earmark-text' ?>"></i>
           <?= h($doc['categoria']==='cnpj' ? 'Cartão CNPJ' : ($doc['categoria']==='contrato' ? 'Contrato' : $doc['categoria'])) ?> — <?= h($doc['nome_arquivo']) ?>
         </a>

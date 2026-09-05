@@ -63,7 +63,7 @@ require APP_ROOT . '/includes/header.php';
       <div class="form-secao"><div class="form-secao-titulo">5. Documentos Enviados</div></div>
       <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem">
         <?php foreach ($docs_list as $doc): ?>
-        <a href="<?= base_url($doc['caminho']) ?>" target="_blank" class="card"
+        <a href="<?= url_documento($doc) ?>" target="_blank" class="card"
            style="padding:.6rem .9rem;display:flex;align-items:center;gap:.5rem;text-decoration:none;font-size:.85rem;min-width:0">
           <?= in_array(pathinfo($doc['nome_arquivo'],PATHINFO_EXTENSION), ['jpg','jpeg','png','webp']) ? '🖼️' : '📄' ?>
           <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px"><?= h($doc['nome_arquivo']) ?></span>

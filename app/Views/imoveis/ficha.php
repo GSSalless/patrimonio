@@ -171,7 +171,7 @@ if (!function_exists('linha')) {
               <td><?= moeda((float)$f['valor']) ?></td>
               <td><?= h($f['descricao_extra'] ?? '—') ?></td>
               <td><span class="tag <?= $f['pago'] ? 'tag-verde' : 'tag-laranja' ?>"><?= $f['pago'] ? 'Pago' : 'Em aberto' ?></span></td>
-              <td><?php if ($f['arquivo_boleto']): ?><a href="<?= base_url($f['arquivo_boleto']) ?>" target="_blank" class="btn btn-secundario btn-sm">📄</a><?php else: ?>—<?php endif; ?></td>
+              <td><?php if ($f['arquivo_boleto']): ?><a href="<?= url_arquivo($f['arquivo_boleto']) ?>" target="_blank" class="btn btn-secundario btn-sm">📄</a><?php else: ?>—<?php endif; ?></td>
             </tr>
             <?php endforeach; ?>
           </tbody>
@@ -252,7 +252,7 @@ if (!function_exists('linha')) {
           if ($docs_ref): ?>
           <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
             <?php foreach ($docs_ref as $dref): ?>
-            <a href="<?= base_url($dref['caminho']) ?>" target="_blank" class="btn btn-secundario btn-sm">📎 <?= h($dref['nome_arquivo']) ?></a>
+            <a href="<?= url_documento($dref) ?>" target="_blank" class="btn btn-secundario btn-sm">📎 <?= h($dref['nome_arquivo']) ?></a>
             <?php endforeach; ?>
           </div>
           <?php endif; ?>
@@ -292,7 +292,7 @@ if (!function_exists('linha')) {
                 $docs_mt = db()->prepare('SELECT * FROM documentos WHERE tipo_referencia = "manutencao" AND referencia_id = ?');
                 $docs_mt->execute([$mt['id']]); $docs_mt = $docs_mt->fetchAll();
                 foreach ($docs_mt as $dmt): ?>
-                <a href="<?= base_url($dmt['caminho']) ?>" target="_blank" title="<?= h($dmt['nome_arquivo']) ?>" style="margin-left:.35rem">📎</a>
+                <a href="<?= url_documento($dmt) ?>" target="_blank" title="<?= h($dmt['nome_arquivo']) ?>" style="margin-left:.35rem">📎</a>
                 <?php endforeach; ?>
               </td>
               <td><?= h($mt['fornecedor'] ?? '—') ?></td>
@@ -400,7 +400,7 @@ if (!function_exists('linha')) {
               <td><?= data_br($doc['data_emissao']) ?></td>
               <td><?= $doc['data_validade'] ? data_br($doc['data_validade']) : '—' ?></td>
               <td><?= h($doc['descricao'] ?? '—') ?></td>
-              <td><a href="<?= base_url($doc['caminho']) ?>" target="_blank" class="btn btn-secundario btn-sm">Abrir</a></td>
+              <td><a href="<?= url_documento($doc) ?>" target="_blank" class="btn btn-secundario btn-sm">Abrir</a></td>
             </tr>
             <?php endforeach; ?>
           </tbody>
@@ -479,7 +479,7 @@ if (!function_exists('linha')) {
         <?php if ($cond_docs): ?>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem">
           <?php foreach ($cond_docs as $doc): ?>
-          <a href="<?= base_url($doc['caminho']) ?>" target="_blank" class="btn btn-secundario btn-sm">
+          <a href="<?= url_documento($doc) ?>" target="_blank" class="btn btn-secundario btn-sm">
             <i class="bi <?= $doc['categoria']==='cnpj' ? 'bi-card-text' : 'bi-file-earmark-text' ?>"></i>
             <?= h($doc['categoria']==='cnpj' ? 'Cartão CNPJ' : ($doc['categoria']==='contrato' ? 'Contrato' : $doc['categoria'])) ?>
           </a>

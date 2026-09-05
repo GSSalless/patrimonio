@@ -156,10 +156,12 @@ const DADOS = [
     {t:'Revisar campos por categoria (05/09): inventário em INVENTARIO_CAMPOS.md · removidos 7 campos mortos do imóvel (doc_status_* + pais); veículos/outros bens sem excesso', done:true},
     {t:'Teste end-to-end (CRUD real) — depende de MySQL (rodar em staging com as migrations novas)', done:false},
   ]},
-  { id:'mvp2', nome:'🎯 MVP · M2 — Segurança e arquivos', icone:'🔒', cor:'#7f1d1d', sub:'⚠️ lacuna herdada · Gilson', itens:[
-    {t:'Auditoria/controle de arquivos (onde ficam os uploads + trilha)', done:false},
-    {t:'Isolamento de uploads por cliente (/uploads/{cliente_id}/) + bloqueio de acesso indevido', done:false},
-    {t:'LGPD básico + HTTPS (criptografia em trânsito)', done:false},
+  { id:'mvp2', nome:'🎯 MVP · M2 — Segurança e arquivos', icone:'🔒', cor:'#7f1d1d', sub:'⚠️ lacuna herdada · corrigida 05/09', itens:[
+    {t:'🐞 Corrigido: uploads eram servidos direto (sem login). Agora uploads/.htaccess Require all denied + serviço autenticado /arquivo', done:true},
+    {t:'Isolamento por cliente: ArquivoController resolve o dono pela linha do banco e bloqueia acesso de outro cliente (sem IDOR) · path traversal testado', done:true},
+    {t:'Trilha de auditoria: todo acesso a arquivo logado (data, status, usuário, cliente, IP, arquivo)', done:true},
+    {t:'HTTPS em produção (redirect HTTP→HTTPS) — config da Hostinger, checar no painel', done:false},
+    {t:'LGPD: retenção/consentimento — fase posterior', done:false},
   ]},
   { id:'mvp3', nome:'🎯 MVP · M3 — Automação n8n', icone:'🔗', cor:'#6d28d9', sub:'reunião 27/08 · Izarley (em paralelo)', itens:[
     {t:'n8n acoplado às tarefas do sistema (não é Notion)', done:false},

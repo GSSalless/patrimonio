@@ -272,7 +272,7 @@ $del = fn($tipo, $itemId) => base_url("clientes/item-remover?tipo=$tipo&item=$it
             <td><span class="tag"><?= h($d['categoria']) ?></span></td>
             <td><?= h($d['nome_arquivo']) ?></td>
             <td><?= data_br($d['criado_em']) ?></td>
-            <td style="text-align:right"><a href="<?= base_url($d['caminho']) ?>" target="_blank" rel="noopener" class="btn btn-secundario btn-sm">Abrir</a></td>
+            <td style="text-align:right"><a href="<?= url_documento($d) ?>" target="_blank" rel="noopener" class="btn btn-secundario btn-sm">Abrir</a></td>
           </tr>
         <?php endforeach; ?>
         </tbody>

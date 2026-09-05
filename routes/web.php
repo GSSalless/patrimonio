@@ -17,6 +17,9 @@ $router->get('gestao-geral', [GestaoGeralController::class, 'index']);
 // Agenda e Alertas (Módulo 14)
 $router->get('agenda', [AgendaController::class, 'index']);
 
+// Arquivos enviados — serviço autenticado (M2: segurança de arquivos)
+$router->get('arquivo', [ArquivoController::class, 'servir']);
+
 // Clientes (admin)
 $router->get('clientes',         [ClientesController::class, 'index']);
 $router->get('clientes/novo',    [ClientesController::class, 'novo']);

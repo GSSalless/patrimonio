@@ -68,7 +68,7 @@ $ganho_pct = ($ganho !== null && $aplicado > 0) ? ($ganho / $aplicado * 100) : n
       <?php if ($docs_list): ?>
       <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
         <?php foreach ($docs_list as $doc): ?>
-        <a href="<?= base_url($doc['caminho']) ?>" target="_blank"
+        <a href="<?= url_documento($doc) ?>" target="_blank"
            style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:#fff;font-size:.85rem;text-decoration:none;color:inherit">
           <span><?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? '🖼️' : '📄' ?></span>
           <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= h($doc['nome_arquivo']) ?></span>

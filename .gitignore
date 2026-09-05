@@ -6,6 +6,7 @@
 # Uploads de clientes (fora do versionamento)
 /uploads/*
 !/uploads/.gitkeep
+!/uploads/.htaccess
 
 # Diversos
 *.log

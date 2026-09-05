@@ -41,7 +41,7 @@ require APP_ROOT . '/includes/header.php';
     <a href="<?= base_url('veiculos/editar?id=' . $ve['id']) ?>" class="imovel-card">
       <div class="imovel-card-foto">
         <?php if ($ve['foto_principal']): ?>
-          <img src="<?= base_url($ve['foto_principal']) ?>" alt="">
+          <img src="<?= url_arquivo($ve['foto_principal']) ?>" alt="">
         <?php else: ?>🚗<?php endif; ?>
       </div>
       <div class="imovel-card-body">

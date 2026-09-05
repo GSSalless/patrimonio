@@ -1,0 +1,6 @@
+# Segurança (M2): nenhum arquivo enviado é servido direto pelo Apache.
+# Todo acesso passa pelo serviço autenticado /arquivo (ArquivoController),
+# que verifica login + propriedade (cliente só vê o próprio patrimônio) e
+# registra auditoria. Bloquear aqui evita que documentos sensíveis
+# (matrícula, CNH, extratos, contratos) sejam baixados por URL sem login.
+Require all denied

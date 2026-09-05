@@ -53,7 +53,7 @@ $tipo_icone  = ['embarcacao'=>'🛥️','joia'=>'💎','obra_de_arte'=>'🖼️'
     <a href="<?= base_url('outros/editar?id=' . $ob['id']) ?>" class="imovel-card">
       <div class="imovel-card-foto">
         <?php if ($ob['foto_principal']): ?>
-          <img src="<?= base_url($ob['foto_principal']) ?>" alt="">
+          <img src="<?= url_arquivo($ob['foto_principal']) ?>" alt="">
         <?php else: ?><?= $tipo_icone[$ob['tipo']] ?? '📦' ?><?php endif; ?>
       </div>
       <div class="imovel-card-body">

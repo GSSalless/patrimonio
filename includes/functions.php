@@ -443,6 +443,20 @@ function salvar_upload_documentos(array $campos, string $tipo_ref, int $ref_id, 
     }
 }
 
+/**
+ * URL autenticada para abrir um documento (tabela `documentos`).
+ * Nunca link direto para /uploads/ — o acesso passa pelo ArquivoController,
+ * que verifica login + propriedade (sem IDOR).
+ */
+function url_documento(array $doc): string {
+    return base_url('arquivo?doc=' . (int) $doc['id']);
+}
+
+/** URL autenticada para um arquivo referenciado por caminho (foto, boleto…). */
+function url_arquivo(?string $caminho): string {
+    return base_url('arquivo?f=' . rawurlencode((string) $caminho));
+}
+
 /** Comodidades do condomínio: coluna => [rótulo, ícone bootstrap]. */
 function condominio_comodidades(): array {
     return [
