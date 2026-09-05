@@ -90,10 +90,23 @@ class ClientesController extends Controller
                     );
                     $this->redirect('clientes/editar?id=' . $id . '#dados');
                 }
+            } elseif ($secao === 'acesso') {
+                $erro = (string) $this->salvarAcesso($id, $cliente);
+                if ($erro === '') {
+                    $this->redirect('clientes/editar?id=' . $id . '#acesso');
+                }
             } else {
                 $this->salvarSubItem($secao, $id);
                 $this->redirect('clientes/editar?id=' . $id . '#' . $secao);
             }
+        }
+
+        // Status do acesso (login) do cliente, para a seção "Acesso do cliente".
+        $login = null;
+        if (!empty($cliente['usuario_id'])) {
+            $st = db()->prepare('SELECT id, email, nivel, ativo FROM usuarios WHERE id = ?');
+            $st->execute([$cliente['usuario_id']]);
+            $login = $st->fetch() ?: null;
         }
 
         $subs = Pessoa::subListas($id);
@@ -103,7 +116,35 @@ class ClientesController extends Controller
         $docs->execute([$id]);
         $documentos = $docs->fetchAll();
 
-        $this->view('clientes/editar', compact('cliente', 'erro', 'subs', 'documentos'));
+        $this->view('clientes/editar', compact('cliente', 'erro', 'subs', 'documentos', 'login'));
+    }
+
+    /**
+     * Cria ou atualiza o login (acesso do cliente à própria área).
+     * Retorna mensagem de erro ou null em caso de sucesso.
+     */
+    private function salvarAcesso(int $id, array $cliente): ?string
+    {
+        $email = trim($_POST['acesso_email'] ?? '');
+        $senha = trim($_POST['acesso_senha'] ?? '');
+        $uid   = $cliente['usuario_id'] ?? null;
+
+        if (!$uid) {
+            // Ainda não tem login → precisa de e-mail e senha para criar.
+            if (!$email || !$senha)        return 'Informe e-mail e senha para criar o acesso do cliente.';
+            if (strlen($senha) < 8)        return 'A senha deve ter ao menos 8 caracteres.';
+            if (Cliente::emailEmUso($email)) return 'Este e-mail já está em uso por outro usuário.';
+            $novoUid = Cliente::criarUsuarioLogin($cliente['nome'], $email, $senha);
+            Cliente::atualizar($id, ['usuario_id' => $novoUid]);
+            return null;
+        }
+
+        // Já tem login → atualizar e-mail e/ou redefinir senha.
+        if (!$email && !$senha)                     return 'Informe um novo e-mail ou uma nova senha.';
+        if ($email && Cliente::emailEmUso($email, (int) $uid)) return 'Este e-mail já está em uso por outro usuário.';
+        if ($senha && strlen($senha) < 8)           return 'A senha deve ter ao menos 8 caracteres.';
+        Cliente::atualizarLogin((int) $uid, $email ?: null, $senha ?: null);
+        return null;
     }
 
     /** GET clientes/item-remover?tipo=&item=&id= — exclui item de sub-tabela. */

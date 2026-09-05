@@ -33,6 +33,28 @@ class Cliente
         return (int) db()->lastInsertId();
     }
 
+    /** True se o e-mail já pertence a outro usuário (opcionalmente ignorando um id). */
+    public static function emailEmUso(string $email, ?int $exceto = null): bool
+    {
+        $sql = 'SELECT COUNT(*) FROM usuarios WHERE email = ?';
+        $par = [$email];
+        if ($exceto !== null) { $sql .= ' AND id <> ?'; $par[] = $exceto; }
+        $s = db()->prepare($sql);
+        $s->execute($par);
+        return (int) $s->fetchColumn() > 0;
+    }
+
+    /** Atualiza e-mail e/ou senha de um login existente (campos nulos são ignorados). */
+    public static function atualizarLogin(int $usuarioId, ?string $email, ?string $senha): void
+    {
+        $set = []; $par = [];
+        if ($email !== null && $email !== '') { $set[] = 'email = ?';      $par[] = $email; }
+        if ($senha !== null && $senha !== '') { $set[] = 'senha_hash = ?'; $par[] = password_hash($senha, PASSWORD_BCRYPT, ['cost' => 12]); }
+        if (!$set) return;
+        $par[] = $usuarioId;
+        db()->prepare('UPDATE usuarios SET ' . implode(', ', $set) . ' WHERE id = ?')->execute($par);
+    }
+
     /** INSERT genérico: recebe [coluna => valor]. */
     public static function criar(array $campos): int
     {

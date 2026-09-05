@@ -1,5 +1,10 @@
 -- ============================================================
 -- Dados de teste — cliente-piloto Marcos Borges
+--
+-- ⚠️ SEGURANÇA: as senhas abaixo (cesar123 / marcos123) são apenas para
+-- DESENVOLVIMENTO e são públicas (estão no git). Em PRODUÇÃO, troque-as
+-- imediatamente — veja `sql/atualizar_senhas_producao.sql` (admin) e a tela
+-- Clientes → editar → "Acesso do cliente" (clientes).
 -- ============================================================
 
 USE gestao_patrimonial;

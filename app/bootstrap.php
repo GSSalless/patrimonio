@@ -32,3 +32,12 @@ if (isset($_GET['cliente_id']) && ($u = usuario_logado()) && $u['nivel'] === 'ad
     header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
     exit;
 }
+
+// Usuário CLIENTE: a seleção fica travada no próprio registro em toda requisição
+// (segurança — não pode ver outro cliente — e navegação consistente). Um cliente
+// nunca troca de contexto via ?cliente_id (o bloco acima é só admin).
+if (($uc = usuario_logado()) && $uc['nivel'] === 'cliente') {
+    $sc = db()->prepare('SELECT id, nome, cpf_cnpj, tipo_pessoa FROM clientes WHERE usuario_id = ? AND ativo = 1');
+    $sc->execute([$uc['id']]);
+    $_SESSION['cliente_selecionado'] = $sc->fetch() ?: null;
+}

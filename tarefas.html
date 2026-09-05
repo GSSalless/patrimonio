@@ -174,10 +174,11 @@ const DADOS = [
     {t:'Cadastro por foto/PDF/áudio (leitura + insert) — SEM DELETE/DROP', done:false},
     {t:'IA simula o dia a dia via WhatsApp para estressar/testar', done:false},
   ]},
-  { id:'mvp5', nome:'🎯 MVP · M5 — Visão do cliente + acesso', icone:'👥', cor:'#1d4ed8', sub:'reunião 27/08 · base já preparada', itens:[
+  { id:'mvp5', nome:'🎯 MVP · M5 — Visão do cliente + acesso', icone:'👥', cor:'#1d4ed8', sub:'reunião 27/08 · implementado 05/09', itens:[
     {t:'Dois níveis de acesso (gestor × cliente) — base no banco', done:true},
-    {t:'Liberar a visão do cliente (login próprio + telas restritas ao próprio patrimônio)', done:false},
-    {t:'⚠️ Trocar senhas seed (cesar123/marcos123) por senhas fortes', done:false},
+    {t:'Visão do cliente liberada: navegação própria + IDOR verificado + seleção travada no bootstrap (somente leitura)', done:true},
+    {t:'Provisionamento de login: seção "Acesso do cliente" (criar/redefinir senha) em Clientes→editar', done:true},
+    {t:'⚠️ Senhas seed: aviso no seed.sql + template sql/atualizar_senhas_producao.sql (admin gera o próprio hash) — rodar em produção fica com o César', done:true},
   ]},
   { id:'mvp6', nome:'🎯 MVP · M6 — Entrega e logística', icone:'📦', cor:'#b45309', sub:'apresentação 08/09/2026', itens:[
     {t:'Apresentação/entrega: 08/09/2026 (evitar feriado 07/09)', done:false},

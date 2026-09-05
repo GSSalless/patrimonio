@@ -222,6 +222,44 @@ $del = fn($tipo, $itemId) => base_url("clientes/item-remover?tipo=$tipo&item=$it
     </form>
   </div>
 
+  <!-- ===== ACESSO DO CLIENTE ===== -->
+  <div class="card" id="acesso" style="margin-bottom:1.25rem">
+    <h3 style="margin-top:0"><i class="bi bi-key"></i> Acesso do cliente</h3>
+    <p style="color:var(--cor-secundario);margin-top:0">
+      Cria (ou redefine) o login para o cliente acessar a própria área — vê apenas o patrimônio dele,
+      em modo somente leitura. Endereço de login: <code><?= h(base_url('login')) ?></code>.
+    </p>
+    <?php if (!empty($login)): ?>
+      <p style="margin:.25rem 0 1rem">
+        <span class="tag" style="background:#0f2e1a;color:#7be0a3">Acesso ativo</span>
+        &nbsp;E-mail atual: <strong><?= h($login['email']) ?></strong>
+        <?php if (empty($login['ativo'])): ?><span class="tag" style="background:#5c1a1a;color:#f0a3a3">inativo</span><?php endif; ?>
+      </p>
+    <?php else: ?>
+      <p style="margin:.25rem 0 1rem">
+        <span class="tag" style="background:#4a3a10;color:#e6c15a">Sem acesso</span>
+        &nbsp;Este cliente ainda não tem login.
+      </p>
+    <?php endif; ?>
+    <form method="post" class="form-grid form-grid-2" style="align-items:end">
+      <input type="hidden" name="secao" value="acesso">
+      <div class="form-grupo">
+        <label>E-mail de acesso</label>
+        <input type="email" name="acesso_email" value="<?= h($login['email'] ?? $cliente['email'] ?? '') ?>"
+               placeholder="email@dominio.com" autocomplete="off">
+      </div>
+      <div class="form-grupo">
+        <label><?= !empty($login) ? 'Nova senha (deixe em branco p/ manter)' : 'Senha (mín. 8 caracteres)' ?></label>
+        <input type="text" name="acesso_senha" placeholder="mín. 8 caracteres" autocomplete="off">
+      </div>
+      <div class="form-grupo">
+        <button type="submit" class="btn btn-primario">
+          <?= !empty($login) ? 'Salvar / Redefinir senha' : 'Criar acesso' ?>
+        </button>
+      </div>
+    </form>
+  </div>
+
   <!-- ===== DOCUMENTOS ===== -->
   <div class="card" id="documentos" style="margin-bottom:2rem">
     <h3 style="margin-top:0"><i class="bi bi-folder2-open"></i> Documentos da pessoa</h3>
