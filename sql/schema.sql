@@ -195,15 +195,41 @@ CREATE TABLE IF NOT EXISTS imoveis (
   cidade                VARCHAR(100) NULL,
   estado                CHAR(2)      NULL,
   pais                  VARCHAR(60)  NOT NULL DEFAULT 'Brasil',
+  link_maps             VARCHAR(800) NULL,           -- link do Google Maps (gerado pelo endereço)
+  link_street_view      VARCHAR(800) NULL,           -- link do Street View
 
-  -- Bloco 3: Matrícula (parcial F1)
+  -- Bloco 3: Matrícula / cartório
   inscricao_municipal   VARCHAR(60)  NULL,           -- nº IPTU / inscrição (exibido no Bloco 1)
+  numero_matricula      VARCHAR(60)  NULL,
+  cartorio              VARCHAR(180) NULL,
   site_cartorio         VARCHAR(255) NULL,           -- link do site do cartório
+  comarca               VARCHAR(120) NULL,
+  livro                 VARCHAR(40)  NULL,
+  folha                 VARCHAR(40)  NULL,
+  data_matricula        DATE         NULL,
 
   -- Bloco 4: Titularidade
   data_aquisicao        DATE         NULL,
   forma_aquisicao       ENUM('compra','heranca','doacao','permuta','integralizacao','outro') NULL,
+  percentual_participacao DECIMAL(5,2) NULL,         -- % de participação do proprietário
   outros_proprietarios  VARCHAR(500) NULL,           -- nomes dos coproprietários (quando participação < 100%)
+
+  -- Bloco 5: Características físicas
+  area_privativa        DECIMAL(10,2) NULL,          -- m²
+  area_total            DECIMAL(10,2) NULL,          -- m²
+  area_construida       DECIMAL(10,2) NULL,          -- m²
+  area_comum            DECIMAL(10,2) NULL,          -- m²
+  area_terreno          DECIMAL(10,2) NULL,          -- m²
+  quartos               INT          NULL,
+  suites                INT          NULL,
+  banheiros             INT          NULL,
+  lavabos               INT          NULL,
+  vagas_garagem         INT          NULL,
+  andar                 INT          NULL,
+  numero_unidade        VARCHAR(30)  NULL,
+  face_solar            VARCHAR(30)  NULL,           -- norte, sul, leste, oeste…
+  posicao_imovel        VARCHAR(60)  NULL,           -- frente, fundos, meio…
+  vista                 VARCHAR(120) NULL,
 
   -- Bloco 6: Financeiro
   valor_compra          DECIMAL(15,2) NULL,
@@ -214,6 +240,9 @@ CREATE TABLE IF NOT EXISTS imoveis (
   taxa_juros_anual      DECIMAL(6,4)  NULL,          -- ex: 0.0899 = 8,99%
   valor_mercado         DECIMAL(15,2) NULL,
   data_avaliacao_mercado DATE          NULL,
+  valor_contabil        DECIMAL(15,2) NULL,          -- valor contábil/declarado
+  empresa_avaliadora    VARCHAR(180)  NULL,
+  valor_m2              DECIMAL(15,2) NULL,          -- valor_compra ÷ area_total (calculado pela app)
 
   -- Custos mensais recorrentes (referência — lançamentos gerados separado)
   custo_condominio      DECIMAL(10,2) NULL,
@@ -221,7 +250,16 @@ CREATE TABLE IF NOT EXISTS imoveis (
   custo_energia         DECIMAL(10,2) NULL,
   custo_agua            DECIMAL(10,2) NULL,
   custo_internet        DECIMAL(10,2) NULL,
+  custo_seguro          DECIMAL(10,2) NULL,
   custo_outros          DECIMAL(10,2) NULL,
+
+  -- Status documental (checklist marcado no cadastro)
+  doc_status_matricula_atualizada TINYINT(1) NOT NULL DEFAULT 0,
+  doc_status_certidao_negativa    TINYINT(1) NOT NULL DEFAULT 0,
+  doc_status_habite_se            TINYINT(1) NOT NULL DEFAULT 0,
+  doc_status_convencao_condominio TINYINT(1) NOT NULL DEFAULT 0,
+  doc_status_planta_aprovada      TINYINT(1) NOT NULL DEFAULT 0,
+  doc_status_alvara               TINYINT(1) NOT NULL DEFAULT 0,
 
   foto_principal        VARCHAR(300) NULL,           -- caminho relativo do arquivo
   observacoes           TEXT         NULL,
