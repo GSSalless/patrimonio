@@ -153,8 +153,8 @@ const DADOS = [
     {t:'15 módulos base implementados (Pessoas…Dashboard)', done:true},
     {t:'Varredura estática (05/09): php -l nos 125 arquivos (0 erro) + auditoria form↔Model↔schema (11 módulos)', done:true},
     {t:'🐞 Corrigido: schema.sql da tabela imoveis estava defasado (~28 colunas) → schema atualizado (40→74) + migration_imoveis_caracteristicas.sql', done:true},
-    {t:'Revisar campos por categoria de ativo (imóvel, veículo, jet-ski, joia, obra) — decisão do que cortar depende do César', done:false},
-    {t:'Teste end-to-end (CRUD real) — depende de MySQL (rodar em staging com a migration nova)', done:false},
+    {t:'Revisar campos por categoria (05/09): inventário em INVENTARIO_CAMPOS.md · removidos 7 campos mortos do imóvel (doc_status_* + pais); veículos/outros bens sem excesso', done:true},
+    {t:'Teste end-to-end (CRUD real) — depende de MySQL (rodar em staging com as migrations novas)', done:false},
   ]},
   { id:'mvp2', nome:'🎯 MVP · M2 — Segurança e arquivos', icone:'🔒', cor:'#7f1d1d', sub:'⚠️ lacuna herdada · Gilson', itens:[
     {t:'Auditoria/controle de arquivos (onde ficam os uploads + trilha)', done:false},

@@ -19,7 +19,7 @@
 
 ALTER TABLE imoveis
   -- Localização (links de mapa)
-  ADD COLUMN IF NOT EXISTS link_maps        VARCHAR(800) NULL AFTER pais,
+  ADD COLUMN IF NOT EXISTS link_maps        VARCHAR(800) NULL AFTER estado,
   ADD COLUMN IF NOT EXISTS link_street_view VARCHAR(800) NULL AFTER link_maps,
 
   -- Matrícula / cartório
@@ -54,12 +54,4 @@ ALTER TABLE imoveis
   ADD COLUMN IF NOT EXISTS valor_contabil   DECIMAL(15,2) NULL AFTER data_avaliacao_mercado,
   ADD COLUMN IF NOT EXISTS empresa_avaliadora VARCHAR(180) NULL AFTER valor_contabil,
   ADD COLUMN IF NOT EXISTS valor_m2         DECIMAL(15,2) NULL AFTER empresa_avaliadora,
-  ADD COLUMN IF NOT EXISTS custo_seguro     DECIMAL(10,2) NULL AFTER custo_internet,
-
-  -- Status documental (checklist do cadastro)
-  ADD COLUMN IF NOT EXISTS doc_status_matricula_atualizada TINYINT(1) NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS doc_status_certidao_negativa    TINYINT(1) NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS doc_status_habite_se            TINYINT(1) NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS doc_status_convencao_condominio TINYINT(1) NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS doc_status_planta_aprovada      TINYINT(1) NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS doc_status_alvara               TINYINT(1) NOT NULL DEFAULT 0;
+  ADD COLUMN IF NOT EXISTS custo_seguro     DECIMAL(10,2) NULL AFTER custo_internet;

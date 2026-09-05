@@ -194,7 +194,6 @@ CREATE TABLE IF NOT EXISTS imoveis (
   bairro                VARCHAR(100) NULL,
   cidade                VARCHAR(100) NULL,
   estado                CHAR(2)      NULL,
-  pais                  VARCHAR(60)  NOT NULL DEFAULT 'Brasil',
   link_maps             VARCHAR(800) NULL,           -- link do Google Maps (gerado pelo endereço)
   link_street_view      VARCHAR(800) NULL,           -- link do Street View
 
@@ -252,14 +251,6 @@ CREATE TABLE IF NOT EXISTS imoveis (
   custo_internet        DECIMAL(10,2) NULL,
   custo_seguro          DECIMAL(10,2) NULL,
   custo_outros          DECIMAL(10,2) NULL,
-
-  -- Status documental (checklist marcado no cadastro)
-  doc_status_matricula_atualizada TINYINT(1) NOT NULL DEFAULT 0,
-  doc_status_certidao_negativa    TINYINT(1) NOT NULL DEFAULT 0,
-  doc_status_habite_se            TINYINT(1) NOT NULL DEFAULT 0,
-  doc_status_convencao_condominio TINYINT(1) NOT NULL DEFAULT 0,
-  doc_status_planta_aprovada      TINYINT(1) NOT NULL DEFAULT 0,
-  doc_status_alvara               TINYINT(1) NOT NULL DEFAULT 0,
 
   foto_principal        VARCHAR(300) NULL,           -- caminho relativo do arquivo
   observacoes           TEXT         NULL,

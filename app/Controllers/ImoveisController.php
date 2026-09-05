@@ -124,19 +124,6 @@ class ImoveisController extends Controller
         ];
     }
 
-    /** Flags de status documental (só no cadastro). */
-    private function docStatus(): array
-    {
-        $out = [];
-        foreach ([
-            'doc_status_matricula_atualizada', 'doc_status_certidao_negativa', 'doc_status_habite_se',
-            'doc_status_convencao_condominio', 'doc_status_planta_aprovada', 'doc_status_alvara',
-        ] as $k) {
-            $out[$k] = isset($_POST[$k]) ? 1 : 0;
-        }
-        return $out;
-    }
-
     /** Move uploads do Bloco 7 e registra em `documentos`. */
     private function processarUploads(int $clienteId, int $imovelId): void
     {
@@ -222,8 +209,7 @@ class ImoveisController extends Controller
             } else {
                 $campos = array_merge(
                     ['cliente_id' => $cli['id'], 'codigo' => proximo_codigo_imovel()],
-                    $this->camposComuns(),
-                    $this->docStatus()
+                    $this->camposComuns()
                 );
                 $imovelId = Imovel::criar($campos);
 
