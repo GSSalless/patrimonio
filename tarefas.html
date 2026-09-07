@@ -89,20 +89,21 @@
 <div class="topo">
   <div class="wrap">
     <h1>📋 Tarefas de Desenvolvimento — Gestão Patrimonial &amp; Family Office</h1>
-    <p>O que já construímos (páginas e tabelas) × os 15 módulos do ERP. Cada item é uma entrega de desenvolvimento.
-       <strong>Foco atual: o 🎯 MVP acordado na reunião de 27/08 — apresentação 08/09/2026</strong> (cartões no topo).</p>
+    <p>Acompanhamento do <strong>🎯 MVP de entrega</strong> (reunião 27/08 · apresentação 08/09/2026).
+       A barra de progresso conta <strong>apenas o que entra no MVP agora</strong> — os cartões de
+       <strong>fase posterior</strong> ("teto", reuniões, testes, logística) ficam no fim, esmaecidos, e não contam.</p>
   </div>
 </div>
 
 <div class="resumo">
-  <div class="card-num"><div class="n" id="r-total">0</div><div class="l">Tarefas no total</div></div>
+  <div class="card-num"><div class="n" id="r-total">0</div><div class="l">Tarefas do MVP</div></div>
   <div class="card-num"><div class="n" id="r-feitas" style="color:var(--verde)">0</div><div class="l">Concluídas</div></div>
-  <div class="card-num"><div class="n" id="r-pendentes" style="color:#b3700f">0</div><div class="l">Pendentes</div></div>
-  <div class="card-num"><div class="n" id="r-modulos">0</div><div class="l">Módulos / blocos</div></div>
+  <div class="card-num"><div class="n" id="r-pendentes" style="color:#b3700f">0</div><div class="l">Pendentes (MVP)</div></div>
+  <div class="card-num"><div class="n" id="r-modulos">0</div><div class="l">Blocos contados</div></div>
 </div>
 
 <div class="barra-geral">
-  <div class="txt"><span>Progresso geral</span><span id="g-pct">0%</span></div>
+  <div class="txt"><span>Progresso do MVP de entrega <small style="opacity:.7">(cards de fase posterior não contam)</small></span><span id="g-pct">0%</span></div>
   <div class="trilho"><div class="fill" id="g-fill"></div></div>
 </div>
 
@@ -120,28 +121,30 @@
     O que vamos entregar é a fatia <strong>single-tenant</strong> (gerenciador de patrimônio + controle
     financeiro), com o núcleo já pronto <strong>finalizado e testado</strong> e <strong>preparado para ligar a uma IA
     via n8n</strong> (migração para código só quando virar SaaS). O documento de visão de 60 pontos é o
-    <strong>"teto"</strong> — fase posterior. Estado hoje: ~<strong>70%</strong> (cliente) / ~<strong>80%</strong> (interno).
+    <strong>"teto"</strong> — fase posterior.
     <div style="margin-top:.5rem;line-height:1.7">
-      <strong>Andamento (06/09):</strong> M1 núcleo 🟢 (falta teste e2e) · M2 segurança/arquivos ✅ ·
-      M3 n8n ⏳ · M4 WhatsApp/MCP ⏳ · M5 visão do cliente ✅ · M6 entrega ⏳ (08/09) —
-      <strong>3 de 6 blocos concluídos</strong>. Cartões detalhados no topo da grade.
+      <strong>A barra acima conta SÓ o MVP de entrega.</strong> Reuniões (21/07 e 12/08), o card "teto",
+      testes com dados reais (Bloco K) e a logística (M6) ficam no fim da página, <strong>esmaecidos</strong>,
+      e <strong>não puxam o percentual</strong> — são fase posterior.
+      <div style="margin-top:.35rem">
+        Blocos: M1 núcleo 🟢 (falta teste e2e) · M2 segurança/arquivos ✅ · M5 visão do cliente ✅ ·
+        M3 n8n ⏳ · M4 WhatsApp/MCP ⏳ <em>(izarley · infra externa)</em>.
+      </div>
     </div>
     <div style="margin-top:.5rem;font-size:.92em;opacity:.85">
-      ✅ Migrations dos Módulos 10/04/02 já aplicadas em produção (05/09, via
-      <code>fix_producao_500_modulos_10_04_02.sql</code> no phpMyAdmin — erro 500 resolvido).
+      ✅ Migrations agora se aplicam <strong>sozinhas no deploy</strong> (runner + <code>sql/migrations/</code>) —
+      sem phpMyAdmin. Módulos 10/04/02 e as colunas do imóvel já aplicados em produção.
     </div>
   </div>
 </div>
 
 <div class="nota-rel">
-  💡 <strong>Como ler:</strong> cada cartão é um módulo do sistema. Os itens marcados em verde já estão
-  <strong>codificados no projeto</strong> (com o arquivo/tabela ao lado); os demais são o que falta desenvolver.
-  Módulos <strong>05 · 06 · 07 · 09</strong> implementados e testados. Os cartões <strong>"Reunião 21/07"</strong>
-  concentram o que saiu das 2 chamadas com o César (navegação, visual, IA/n8n e pendências de decisão) —
-  o Módulo <strong>01 — Pessoas</strong> virou prioridade. Os cartões <strong>"Reunião 12/08"</strong> (5 cartões)
-  são o levantamento da última chamada: revisão profunda do <strong>cadastro de Pessoas</strong> (campos,
-  nomenclaturas, documentos/OCR/pendências, upload-first), <strong>padrão de layout</strong> e ajustes de
-  <strong>navegação/Gestão Geral</strong>. Combinado: <strong>arredondar os campos primeiro</strong>, layout depois.
+  💡 <strong>Como ler:</strong> os cartões <strong>coloridos no topo</strong> são o <strong>MVP de entrega</strong>
+  (blocos M1–M5 + a base do sistema e os 15 módulos já construídos) — <strong>é o que a barra conta</strong>.
+  Os cartões <strong>esmaecidos no fim</strong> (selo "Fase posterior") são o que <strong>não entra agora</strong>:
+  reuniões 21/07 e 12/08 (rework de Pessoas/layout/OCR), card "teto", testes com dados reais (Bloco K) e a
+  logística de entrega (M6). Eles continuam visíveis para não perder o registro, mas <strong>não puxam o
+  percentual</strong>. Itens em verde já estão codificados; os demais são o que falta.
 </div>
 
 <div class="grid" id="grid"></div>
@@ -183,14 +186,14 @@ const DADOS = [
     {t:'Provisionamento de login: seção "Acesso do cliente" (criar/redefinir senha) em Clientes→editar', done:true},
     {t:'⚠️ Senhas seed: aviso no seed.sql + template sql/atualizar_senhas_producao.sql (admin gera o próprio hash) — rodar em produção fica com o César', done:true},
   ]},
-  { id:'mvp6', nome:'🎯 MVP · M6 — Entrega e logística', icone:'📦', cor:'#b45309', sub:'apresentação 08/09/2026', itens:[
+  { id:'mvp6', fora:true, nome:'🎯 MVP · M6 — Entrega e logística', icone:'📦', cor:'#b45309', sub:'apresentação 08/09/2026', itens:[
     {t:'Apresentação/entrega: 08/09/2026 (evitar feriado 07/09)', done:false},
     {t:'Criar grupo de WhatsApp (César + Izarley + Gilson)', done:false},
     {t:'César fornece número dedicado p/ o WhatsApp Business', done:false},
     {t:'MVP roda no navegador do celular (app nativo = futuro)', done:false},
     {t:'Período de validação do César (~25–30 dias) → ajustes campo a campo', done:false},
   ]},
-  { id:'mvpfora', nome:'🚫 Fora do MVP — fase posterior ("teto")', icone:'🔭', cor:'#334155', sub:'documento de visão · NÃO entra na entrega 08/09', itens:[
+  { id:'mvpfora', fora:true, nome:'🚫 Fora do MVP — fase posterior ("teto")', icone:'🔭', cor:'#334155', sub:'documento de visão · NÃO entra na entrega 08/09', itens:[
     {t:'Multi-tenant / SaaS (várias organizações × vários clientes) — servidor + investimento', done:false},
     {t:'Migração n8n → código (quando escalar)', done:false},
     {t:'Inteligência financeira profunda (kWh × tarifa × bandeira, previsão, histórico) + LLM própria', done:false},
@@ -382,7 +385,7 @@ const DADOS = [
     {t:'Deploy automático GitHub Actions → FTP', done:true},
     {t:'uploads/ com permissão de escrita p/ Apache (causa dos 500 + duplicados)', done:true},
   ]},
-  { id:'r1', nome:'Reunião 21/07 — Navegação e Estrutura', icone:'🧭', cor:'#b45309', sub:'chassi de navegação implementado 28/07', itens:[
+  { id:'r1', fora:true, nome:'Reunião 21/07 — Navegação e Estrutura', icone:'🧭', cor:'#b45309', sub:'chassi de navegação implementado 28/07', itens:[
     {t:'Menu lateral como navegação principal, em grupos (Geral: Gestão Geral + Clientes · [Cliente]: Dashboard/Patrimônios/Contas) — 28/07', done:true},
     {t:'Remover seletor de cliente do topo (duplicidade) → chip do cliente + seleção pela lista de Clientes — 28/07', done:true},
     {t:'Menu lateral fixo no desktop (≥1024px) e drawer no mobile — 28/07', done:true},
@@ -393,7 +396,7 @@ const DADOS = [
     {t:'Dashboard do cliente com dados reais (hoje é hub de categorias; César escolhe o que aparece)', done:false},
     {t:'Testar hover/animação dos cards no celular', done:false},
   ]},
-  { id:'r2', nome:'Reunião 21/07 — Identidade Visual', icone:'🎨', cor:'#be185d', sub:'emoji padronizado 28/07 · ícones customizados aguardam refs do César', itens:[
+  { id:'r2', fora:true, nome:'Reunião 21/07 — Identidade Visual', icone:'🎨', cor:'#be185d', sub:'emoji padronizado 28/07 · ícones customizados aguardam refs do César', itens:[
     {t:'Padronizar ícones em emoji realista: hub da ficha do imóvel (7 nós: 📋💰🔨🛠️🏢🔑📁) igual ao dashboard — 28/07', done:true},
     {t:'Alinhar /patrimonio ao dashboard (Imóveis 🏠 → 🏛️) — 28/07', done:true},
     {t:'Animação "segundo cérebro" (estilo grafo do Obsidian): hub da ficha do imóvel virou grafo d3-force — arrastar reage entre nós, segurar/hover realça em lilás os conectados; clique abre o modal — 28/07', done:true},
@@ -402,7 +405,7 @@ const DADOS = [
     {t:'Sons de interface (clique/transição) + botão para desligar o som', done:false},
     {t:'Replicar o grafo "segundo cérebro" no dashboard/hub principal (hoje só na ficha do imóvel)', done:false},
   ]},
-  { id:'r3', nome:'Reunião 21/07 — Automação e IA', icone:'🤖', cor:'#6d28d9', sub:'após validação manual · redundância sempre', itens:[
+  { id:'r3', fora:true, nome:'Reunião 21/07 — Automação e IA', icone:'🤖', cor:'#6d28d9', sub:'após validação manual · redundância sempre', itens:[
     {t:'Cadastro assistido por IA: colar texto/print/PDF → pré-preenche o formulário → conferência manual', done:false},
     {t:'Módulo Contas a Pagar/Receber: vencimento, status, comprovante, origem (manual/e-mail/n8n)', done:false},
     {t:'E-mail → n8n: identificar conta (ex.: luz) → criar pendência com vencimento + alerta', done:false},
@@ -410,7 +413,7 @@ const DADOS = [
     {t:'Integração Conta Azul e/ou Asaas: extrato/saldo sob demanda ou diário + baixa', done:false},
     {t:'n8n vinculado a todos os módulos (só após finalizar os módulos)', done:false},
   ]},
-  { id:'r4', nome:'Reunião 21/07 — Decisões e Follow-up', icone:'📌', cor:'#0f766e', sub:'pendências de definição', itens:[
+  { id:'r4', fora:true, nome:'Reunião 21/07 — Decisões e Follow-up', icone:'📌', cor:'#0f766e', sub:'pendências de definição', itens:[
     {t:'✅ Migrations em PRODUÇÃO (09/01/11/03): banco já sincronizado por dump completo — verificado 12/08 (tabelas + enums de documentos presentes). Nada pendente.', done:true},
     {t:'⚠️ Trocar as senhas seed de PRODUÇÃO (cesar123/marcos123) por senhas fortes', done:false},
     {t:'César: testar cadastros (veículo, imóvel, joia) e devolver ajustes campo a campo', done:false},
@@ -418,7 +421,7 @@ const DADOS = [
     {t:'César: definir o nome do botão "Gestão Geral"', done:false},
     {t:'Avaliar vínculo das tarefas do César com o Notion (sem decisão)', done:false},
   ]},
-  { id:'r5a', nome:'Reunião 12/08 — Pessoas: campos, nomes e lógica', icone:'🧾', cor:'#0369a1', sub:'levantamento da transcrição 16 · revisa parte do Módulo 01', itens:[
+  { id:'r5a', fora:true, nome:'Reunião 12/08 — Pessoas: campos, nomes e lógica', icone:'🧾', cor:'#0369a1', sub:'levantamento da transcrição 16 · revisa parte do Módulo 01', itens:[
     {t:'Renomear/simplificar seções repetitivas (Identificação / Dados pessoais / Filiação) — avaliar cadastro mais contínuo', done:false},
     {t:'Rótulo "Nome (como é chamado)" → "Nome completo" (nome civil); Apelido = campo à parte, não obrigatório', done:false},
     {t:'Obrigatoriedade flexível: cadastro rápido só com nome (ou só CNH); resto vira pendência (não bloqueia). Revisar asteriscos (CPF/RG opcionais)', done:false},
@@ -438,7 +441,7 @@ const DADOS = [
     {t:'Família e Sucessão / árvore genealógica: cadastrar familiares (cônjuge, filhos, pais, avós, bisavós) tipo organograma; cada um com documentos anexos', done:false},
     {t:'(F3) Item de menu "Árvore Genealógica" com visualização em organograma/árvore', done:false},
   ]},
-  { id:'r5b', nome:'Reunião 12/08 — Documentos da Pessoa (lista, OCR, upload-first)', icone:'🗂️', cor:'#1d4ed8', sub:'levantamento da transcrição 16', itens:[
+  { id:'r5b', fora:true, nome:'Reunião 12/08 — Documentos da Pessoa (lista, OCR, upload-first)', icone:'🗂️', cor:'#1d4ed8', sub:'levantamento da transcrição 16', itens:[
     {t:'Renomear "Documentos da pessoa" → "Lista de documentos" com 2 blocos: (a) enviados; (b) pendências (o que falta pelo cadastro)', done:false},
     {t:'Catálogo de tipos de documento pré-cadastrados (CNH, passaporte, porte de arma/PDA, motonauta, certidões…), cada um com seus campos', done:false},
     {t:'Permitir cadastrar tipo de documento novo (cria coluna/estrutura no banco) — caminho para o César criar', done:false},
@@ -446,13 +449,13 @@ const DADOS = [
     {t:'Fluxo upload-first: pop-up "tem o documento em mãos?" → sobe → OCR preenche; senão, manual. Ao salvar, painel com todas as pendências', done:false},
     {t:'OCR genérico: subiu documento → lê os campos e marca como salvo (sai da pendência)', done:false},
   ]},
-  { id:'r5c', nome:'Reunião 12/08 — Layout e Padrão Visual', icone:'🎨', cor:'#9333ea', sub:'levantamento da transcrição 16 · aplicar a TODAS as telas', itens:[
+  { id:'r5c', fora:true, nome:'Reunião 12/08 — Layout e Padrão Visual', icone:'🎨', cor:'#9333ea', sub:'levantamento da transcrição 16 · aplicar a TODAS as telas', itens:[
     {t:'Trocar blocos colapsáveis pelo layout novo "humanizado/limpo" (referência que o Gilson mostrou) — todas as telas de cadastro', done:false},
     {t:'Padronizar tamanho/alinhamento dos campos (grid consistente — hoje CPF muda de largura); manter responsivo (celular/iPad)', done:false},
     {t:'Botão WhatsApp = só o ícone (remover a palavra "WhatsApp") em todos os lugares', done:false},
     {t:'Propagar novo layout + anexos + upload-first + painel de pendências a todas as telas (imóveis, veículos, outros, empresas, colaboradores, fornecedores, investimentos, contas, seguros, PJ)', done:false},
   ]},
-  { id:'r5d', nome:'Reunião 12/08 — Navegação, Gestão Geral e PJ', icone:'🧭', cor:'#b45309', sub:'levantamento da transcrição 16', itens:[
+  { id:'r5d', fora:true, nome:'Reunião 12/08 — Navegação, Gestão Geral e PJ', icone:'🧭', cor:'#b45309', sub:'levantamento da transcrição 16', itens:[
     {t:'BUG: não exibir o nome do cliente no topo enquanto nenhum cliente estiver selecionado (visão Gestão Geral); só após seleção', done:false},
     {t:'Revisar nomenclaturas do menu ("Gestão Geral" → nome definitivo; avaliar "Clientes"→"Contas" + item "Banco")', done:false},
     {t:'Decisão: César/CCR usa o sistema como um cliente (cadastrar a CCR como cliente + login próprio na futura área do cliente) — sem área privilegiada/duplicada', done:false},
@@ -460,14 +463,14 @@ const DADOS = [
     {t:'Botão "Enviar dados" do cliente (PF + dados bancários) via WhatsApp: escolher banco, quais dados e destinatário', done:false},
     {t:'PJ: replicar toda a lógica (upload-first, OCR, pendências, layout) no cadastro de Pessoa Jurídica — muda classificação e documentos (cartão CNPJ, certidões negativas, contrato social)', done:false},
   ]},
-  { id:'r5e', nome:'Reunião 12/08 — Notificações & IA/WhatsApp', icone:'📣', cor:'#6d28d9', sub:'estágio posterior · complementa o card "Automação e IA"', itens:[
+  { id:'r5e', fora:true, nome:'Reunião 12/08 — Notificações & IA/WhatsApp', icone:'📣', cor:'#6d28d9', sub:'estágio posterior · complementa o card "Automação e IA"', itens:[
     {t:'Área de notificações por cliente: ligar/desligar se cada cliente recebe notificações (e-mail/WhatsApp) de pendências', done:false},
     {t:'n8n dispara e-mail/WhatsApp ao cliente com pendências periódicas (ex.: 1x/mês) — só depois de fechar os campos', done:false},
     {t:'Pendências consolidadas no WhatsApp do César (manhã/meio-dia/noite) + integração Notion', done:false},
     {t:'Assistente WhatsApp/Claude conectado ao banco (leitura + insert por foto/áudio; criar/ver tarefas; sem DELETE/DROP) — fluxo por tipo de documento', done:false},
     {t:'Nota de dependência: mexer em campo agora impacta banco + automações → "arredondar" todos os campos antes de automatizar', done:false},
   ]},
-  { id:'testes', nome:'Testes com dados reais (Bloco K)', icone:'🧪', cor:'#b91c1c', sub:'⭐ SUAS tarefas — validar com dados/Cliente reais antes de avançar', itens:[
+  { id:'testes', fora:true, nome:'Testes com dados reais (Bloco K)', icone:'🧪', cor:'#b91c1c', sub:'⭐ SUAS tarefas — validar com dados/Cliente reais antes de avançar', itens:[
     {t:'[Gilson] Cadastro completo do imóvel "4D Complex – unid. 321" (Marcos Borges) — todos os blocos', done:false},
     {t:'[Gilson] IPTU + condomínio com boleto (upload + competência + vencimento)', done:false},
     {t:'[Gilson] Reforma (custo previsto × realizado + upload de NF)', done:false},
@@ -488,23 +491,27 @@ function estaFeito(mod, i, padrao){
 function render(){
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  DADOS.forEach(mod => {
+  // MVP primeiro; cards de fase posterior (`fora`) vão para o fim, esmaecidos.
+  const ordenados = [...DADOS].sort((a,b)=>(a.fora?1:0)-(b.fora?1:0));
+  ordenados.forEach(mod => {
     const total = mod.itens.length;
     const feitos = mod.itens.filter((it,i)=>estaFeito(mod.id,i,it.done)).length;
     const pct = total ? Math.round(feitos/total*100) : 0;
     let selo = 'todo', seloTxt = 'A fazer';
-    if (pct === 100){ selo='ok'; seloTxt='Concluído'; }
+    if (mod.fora){ selo='todo'; seloTxt='Fase posterior'; }
+    else if (pct === 100){ selo='ok'; seloTxt='Concluído'; }
     else if (pct > 0){ selo='andamento'; seloTxt='Em andamento'; }
 
     const card = document.createElement('div');
-    card.className = 'modulo';
+    card.className = 'modulo' + (mod.fora ? ' fora-mvp' : '');
     card.style.borderTopColor = mod.cor;
+    if (mod.fora) card.style.opacity = '.55';
     card.innerHTML = `
       <div class="modulo-head">
         <div class="modulo-icone" style="background:${mod.cor}">${mod.icone}</div>
         <div style="flex:1;min-width:0">
           <div class="modulo-titulo">${mod.nome}</div>
-          <div class="modulo-sub">${mod.sub||''}</div>
+          <div class="modulo-sub">${mod.fora ? '⏭️ não entra no MVP agora · ' : ''}${mod.sub||''}</div>
         </div>
         <span class="selo ${selo}">${seloTxt}</span>
       </div>
@@ -533,13 +540,15 @@ function render(){
 }
 
 function resumo(){
+  // O percentual conta APENAS o que entra no MVP de entrega (cards sem `fora`).
+  // Os cards de fase posterior aparecem na tela, mas não puxam o número.
   let total=0, feitos=0;
-  DADOS.forEach(mod=>mod.itens.forEach((it,i)=>{ total++; if(estaFeito(mod.id,i,it.done)) feitos++; }));
+  DADOS.filter(mod=>!mod.fora).forEach(mod=>mod.itens.forEach((it,i)=>{ total++; if(estaFeito(mod.id,i,it.done)) feitos++; }));
   const pct = total ? Math.round(feitos/total*100) : 0;
   document.getElementById('r-total').textContent = total;
   document.getElementById('r-feitas').textContent = feitos;
   document.getElementById('r-pendentes').textContent = total-feitos;
-  document.getElementById('r-modulos').textContent = DADOS.length;
+  document.getElementById('r-modulos').textContent = DADOS.filter(mod=>!mod.fora).length;
   document.getElementById('g-pct').textContent = pct+'%';
   document.getElementById('g-fill').style.width = pct+'%';
 }
