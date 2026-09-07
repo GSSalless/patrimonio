@@ -8,7 +8,14 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Arquivos/pastas reais (assets/, uploads/) servidos diretamente
+    # Segurança (M2): acesso web direto aos arquivos enviados é PROIBIDO.
+    # Documentos sensíveis (matrícula, CNH, extratos, contratos) só saem pelo
+    # serviço autenticado /arquivo (ArquivoController), que verifica login +
+    # propriedade. Precisa ficar aqui (raiz) porque o deploy exclui uploads/**,
+    # então o uploads/.htaccess não chega em produção.
+    RewriteRule ^uploads/ - [F,L]
+
+    # Arquivos/pastas reais (assets/) servidos diretamente
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
