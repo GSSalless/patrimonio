@@ -9,7 +9,7 @@
 
 | Fase | Status | Progresso |
 |------|--------|-----------|
-| **🎯 MVP de entrega (reunião 27/08)** | 🟡 Em finalização | ~70% cliente / ~80% interno · **apresentação 08/09/2026** · ver seção abaixo |
+| **🎯 MVP de entrega (reunião 27/08)** | 🟡 Em finalização | **3 de 6 blocos concluídos** (M1 quase · M2 ✅ · M5 ✅) · **apresentação 08/09/2026** · ver seção abaixo |
 | F1 — MVP (substituir Excel) | 🟢 Base concluída | Blocos A–J concluídos · falta K: testes com César |
 | F2 — Cadastro completo | 🟡 Iniciada | Matrícula+site cartório, características físicas, co-propriedade já adiantados no módulo Imóveis |
 | F3 — Family Office | ⏳ Aguardando F2 | — |
@@ -40,6 +40,22 @@
 >
 > **Princípio (César):** *"não construir agora nada que impeça a evolução futura"* — decisões de
 > arquitetura já pensam em multi-tenant/IA/escala, mesmo entregando single-tenant.
+
+### 📊 Andamento por bloco (atualizado 06/09/2026)
+
+| Bloco | Status | Falta |
+|-------|--------|-------|
+| **M1** Núcleo e testes | 🟢 Quase | só o **teste end-to-end** (depende de MySQL/acesso ao banco) |
+| **M2** Segurança e arquivos | ✅ **Concluído** | HTTPS no painel da Hostinger (fora do código) |
+| **M3** Automação n8n | ⏳ A fazer | território do izarley (infra externa: n8n) |
+| **M4** Assistente WhatsApp (MCP) | ⏳ A fazer | território do izarley (número + MCP) |
+| **M5** Visão do cliente | ✅ **Concluído** | rodar em produção + trocar senhas |
+| **M6** Entrega e logística | ⏳ Em aberto | apresentação **08/09** · grupo WhatsApp · número do César |
+
+> **Pendências que dependem do César/Gilson (fora do código):** rodar os SQLs gerados
+> (`migration_imoveis_caracteristicas.sql`, `migration_imoveis_remover_campos_mortos.sql`),
+> trocar as senhas seed em produção (`atualizar_senhas_producao.sql`), ligar HTTPS, e me dar
+> acesso ao banco para o teste end-to-end.
 
 ### Bloco M1 — Finalização e testes do núcleo *(Gilson)*
 - [x] 15 módulos base implementados (Pessoas, Colaboradores, Empresas, Fornecedores, Imóveis, Veículos, Outros Bens, Contas, Investimentos, Seguros, Agenda, Manutenções, Condomínios, Patrimônio consolidado, Dashboard)
