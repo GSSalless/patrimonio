@@ -420,10 +420,13 @@
 - [x] **Integração:** alimenta a **Agenda** (Mód. 14) pela `vigencia_fim` (status vigente) · app 🛡️ no dashboard com badge · item "Seguros" no menu lateral · lista com filtros + prêmio total (vigentes)
 - [x] ✅ `sql/migration_modulo_11_seguros.sql` já aplicada em produção (verificado 12/08)
 
-### Módulo 12 — Contratos
-- [ ] Cadastro: número, tipo
-- [ ] Relacionamentos: imóvel, veículo, fornecedor, colaborador, empresa
-- [ ] Controle: início, término, renovação, reajuste
+### Módulo 12 — Contratos  🟢 *(implementado 07/09 — migração automática)*
+- [x] Tabela `contratos` + CRUD completo (`Contrato` model, `ContratosController`, views `contratos/{lista,novo,editar,_campos}.php`, rotas) · código CT-XXXX · `buscarDoCliente` sem IDOR
+- [x] Cadastro: número, tipo (locação/prestação/fornecimento/compra-venda/sociedade/empréstimo/financiamento/seguro/trabalho/outro), objeto, contraparte (nome + CPF/CNPJ)
+- [x] **Relacionamento polimórfico** (`vinculo_tipo`+`vinculo_id`): imóvel, veículo, outro bem, fornecedor, colaborador, empresa · `itensVinculaveis`/`descreverVinculo`
+- [x] Controle: início, término, renovação automática + prazo, valor + periodicidade, índice de reajuste, situação (ativo/encerrado/suspenso/em negociação/rescindido)
+- [x] Documentos (contrato/aditivo/outros, `tipo_referencia` `contrato`) · **`data_fim` (ativos) alimenta a Agenda** (novo UNION branch) · app 📜 no dashboard + item no menu
+- [x] Migração `sql/migrations/003_contratos.sql` (cria `contratos` + `documentos.tipo_referencia`→VARCHAR) **aplicada automaticamente pelo runner** · `schema.sql` sincronizado
 
 ### Módulo 13 — Documentos (repositório central)  🟡 *(parcial)*
 - [x] Upload polimórfico (tipo_referencia + referencia_id) + categorias
@@ -576,6 +579,7 @@
 
 | Data | O que foi feito |
 |------|----------------|
+| 07/09/2026 | **Módulo 12 — Contratos implementado (primeira feature 100% pelo pipeline autônomo).** Cadastro central de contratos: `Contrato` model + `ContratosController` (index/novo/editar, escopo por cliente sem IDOR) + views `contratos/{lista,novo,editar,_campos}.php` + rotas + `proximo_codigo_contrato()` (CT-XXXX) + `contrato_tipo_label()`. Tipos (10), vínculo polimórfico (imóvel/veículo/outro bem/fornecedor/colaborador/empresa), contraparte, vigência+renovação, valor+periodicidade+índice, situação, upload de documentos. **`data_fim` alimenta a Agenda** (novo branch no UNION). App 📜 no dashboard (badge de ativos) + item no menu. **Migração `003_contratos.sql` criada em `sql/migrations/` — aplica sozinha no deploy** (cria a tabela + troca `documentos.tipo_referencia` de ENUM para VARCHAR, acabando com o ALTER de enum a cada módulo). `schema.sql` sincronizado. Lint OK. |
 | 07/09/2026 | **Reorganização do acompanhamento por escopo do MVP.** O `tarefas.html` passou a contar **só o MVP de entrega**: cards de fase posterior ganharam `fora:true` e saem do percentual (aparecem esmaecidos, selo "Fase posterior", no fim da página). Marcados como fase posterior: **M6** (logística/entrega), **"Fora do MVP — teto"**, **Reuniões 21/07** (r1–r4) e **12/08** (r5a–e, rework de Pessoas/layout/OCR) e **Bloco K** (testes com dados reais). Resultado: o número saiu de ~60% (enganoso, contava tudo) para **~79% do MVP** (132/168), refletindo o que de fato entra na entrega de 08/09. Banner e notas atualizados; migrations agora descritas como automáticas (runner). |
 | 07/09/2026 | **Runner de migração automática + pipeline de deploy corrigido.** (1) Descoberto que o deploy FTP caía numa pasta errada (`FTP_SERVER_DIR` apontava para uma pasta aninhada; a conta FTP do domínio já é chroot no `public_html`) → corrigido para `/`; teste ponta a ponta confirmado no ar (faixa "teste 7/9/26"). Bloqueio de `/uploads/` movido para o `.htaccess` da raiz (o deploy exclui `uploads/**`). (2) **`app/Core/Migrator.php`**: aplica sozinho os `.sql` de `sql/migrations/` na primeira requisição após o deploy (tabela `schema_migrations`, trava `GET_LOCK`, guarda por assinatura em `uploads/.migrations.sig`, log `[MIGRATE]`, para na 1ª falha). Ligado no `app/bootstrap.php`. Migrações `001_imoveis_caracteristicas` e `002_imoveis_remover_campos_mortos` agora se aplicam automaticamente — **fim do passo manual no phpMyAdmin**. |
 | 05/09/2026 | **M2 — Segurança e controle de arquivos.** Corrigida a lacuna crítica: `/uploads/` era servido direto pelo Apache (sem login) → documentos sensíveis baixáveis por URL. Agora `uploads/.htaccess` (`Require all denied`) + **`ArquivoController`** (rota `/arquivo?doc=<id>` ou `?f=<path>`): exige login, resolve o dono do arquivo pela linha do banco (`documentos.cliente_id` / `*.foto_principal` / `condominio_faturas→imovel→cliente`) e autoriza (admin tudo; cliente só o próprio — sem IDOR). Helpers `url_documento()`/`url_arquivo()` em `functions.php`; **13 views** migradas dos links diretos. Proteção contra path traversal testada (8 casos). **Trilha de auditoria** via `error_log` (data/status/usuário/cliente/IP/arquivo). `.gitignore` libera `uploads/.htaccess`. Pendente (fora do código): HTTPS/redirect no painel da Hostinger; LGPD retenção/consentimento (fase posterior). |

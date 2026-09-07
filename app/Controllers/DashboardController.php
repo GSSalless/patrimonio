@@ -57,7 +57,13 @@ class DashboardController extends Controller
         $stmt = db()->prepare("SELECT COUNT(*) FROM colaboradores WHERE cliente_id = ? AND ativo = 1 AND status <> 'desligado'");
         $stmt->execute([$cli['id']]);
         $qtd_colaboradores = (int) $stmt->fetchColumn();
+        // Contagem de contratos ativos (Módulo 12) para o badge do app.
+        try {
+            $stmt = db()->prepare("SELECT COUNT(*) FROM contratos WHERE cliente_id = ? AND ativo = 1 AND status = 'ativo'");
+            $stmt->execute([$cli['id']]);
+            $qtd_contratos = (int) $stmt->fetchColumn();
+        } catch (\Throwable $e) { $qtd_contratos = 0; } // tabela pode não existir até a migração rodar
 
-        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros', 'qtd_empresas', 'qtd_investimentos', 'qtd_fornecedores', 'qtd_colaboradores'));
+        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros', 'qtd_empresas', 'qtd_investimentos', 'qtd_fornecedores', 'qtd_colaboradores', 'qtd_contratos'));
     }
 }

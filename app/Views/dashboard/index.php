@@ -99,6 +99,14 @@ $linhas = [
       <span class="app-icon-label">Seguros</span>
     </a>
 
+    <a href="<?= base_url('contratos') ?>" class="app-icon">
+      <span class="app-icon-tile app-tile-roxo">
+        📜
+        <?php if (($qtd_contratos ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_contratos ?></span><?php endif; ?>
+      </span>
+      <span class="app-icon-label">Contratos</span>
+    </a>
+
     <a href="<?= base_url('fornecedores') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-laranja">
         🤝

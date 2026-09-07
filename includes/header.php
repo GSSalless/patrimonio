@@ -86,6 +86,7 @@ if ($usuario):
           ['contas',     'Contas',      'bi-bank',         true],
           ['investimentos','Investimentos','bi-graph-up-arrow', true],
           ['seguros',    'Seguros',     'bi-shield-check', true],
+          ['contratos',  'Contratos',   'bi-file-earmark-text', true],
           ['fornecedores','Fornecedores','bi-people-fill',  true],
           ['colaboradores','Colaboradores','bi-person-badge', true],
         ]];
@@ -99,6 +100,7 @@ if ($usuario):
           ['contas',     'Contas',      'bi-bank',           true],
           ['investimentos','Investimentos','bi-graph-up-arrow', true],
           ['seguros',    'Seguros',     'bi-shield-check',   true],
+          ['contratos',  'Contratos',   'bi-file-earmark-text', true],
           ['fornecedores','Fornecedores','bi-people-fill',    true],
           ['colaboradores','Colaboradores','bi-person-badge', true],
           ['agenda',     'Agenda',      'bi-calendar-check', true],

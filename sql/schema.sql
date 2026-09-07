@@ -362,7 +362,7 @@ CREATE TABLE IF NOT EXISTS lancamentos_financeiros (
 CREATE TABLE IF NOT EXISTS documentos (
   id               INT AUTO_INCREMENT PRIMARY KEY,
   cliente_id       INT NOT NULL,
-  tipo_referencia  ENUM('imovel','reforma','contrato_locacao','cliente') NOT NULL,
+  tipo_referencia  VARCHAR(30) NOT NULL,            -- imovel/veiculo/seguro/contrato/… (VARCHAR: sem ALTER de enum a cada módulo)
   referencia_id    INT NOT NULL,
   categoria        ENUM('escritura','matricula','iptu','contrato_compra','habite_se','laudo','foto','boleto','nf','crlv','apolice','manutencao','cnpj','contrato','conta_financeira','extrato','testamento','identidade','comprovante_residencia','certidao','procuracao','outro') NOT NULL DEFAULT 'outro',
   nome_arquivo     VARCHAR(300) NOT NULL,           -- nome original
@@ -925,3 +925,33 @@ CREATE TABLE IF NOT EXISTS colaborador_historico (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Nota: ENUM tipo_referencia de `documentos` += 'colaborador'.
+
+-- ------------------------------------------------------------
+-- Módulo 12 — Contratos (cadastro central de contratos do cliente)
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS contratos (
+  id                   INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id           INT NOT NULL,
+  codigo               VARCHAR(20)  NOT NULL,              -- CT-0001
+  numero               VARCHAR(80)  NULL,
+  tipo                 ENUM('locacao','prestacao_servico','fornecimento','compra_venda','sociedade','emprestimo','financiamento','seguro','trabalho','outro') NOT NULL DEFAULT 'outro',
+  objeto               VARCHAR(255) NULL,
+  contraparte_nome     VARCHAR(180) NULL,
+  contraparte_doc      VARCHAR(30)  NULL,
+  vinculo_tipo         ENUM('nenhum','imovel','veiculo','outro_bem','fornecedor','colaborador','empresa') NOT NULL DEFAULT 'nenhum',
+  vinculo_id           INT NULL,
+  data_inicio          DATE NULL,
+  data_fim             DATE NULL,
+  renovacao_automatica TINYINT(1) NOT NULL DEFAULT 0,
+  prazo_renovacao      VARCHAR(60) NULL,
+  valor                DECIMAL(15,2) NULL,
+  periodicidade        ENUM('unico','mensal','trimestral','semestral','anual','outro') NULL,
+  indice_reajuste      VARCHAR(40) NULL,
+  status               ENUM('ativo','encerrado','suspenso','em_negociacao','rescindido') NOT NULL DEFAULT 'ativo',
+  observacoes          TEXT NULL,
+  ativo                TINYINT(1) NOT NULL DEFAULT 1,
+  criado_em            DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY (cliente_id),
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -337,11 +337,13 @@ const DADOS = [
     {t:'Integração: alimenta a Agenda pela vigência · app 🛡️ no dashboard com badge · item no menu lateral', done:true},
     {t:'✅ migration_modulo_11_seguros.sql já aplicada em produção (verificado 12/08)', done:true},
   ]},
-  { id:'m12', nome:'Módulo 12 — Contratos', icone:'📜', cor:'#9333ea', sub:'parcial (só locação)', itens:[
-    {t:'Contrato de locação (contratos_locacao) — feito', done:true},
-    {t:'Tabela `contratos` central (número, tipo)', done:false},
-    {t:'Relacionamentos: imóvel, veículo, fornecedor, colaborador, empresa', done:false},
-    {t:'Controle: início, término, renovação, reajuste', done:false},
+  { id:'m12', nome:'Módulo 12 — Contratos', icone:'📜', cor:'#9333ea', sub:'implementado 07/09 · migração automática', itens:[
+    {t:'Tabela `contratos` central + CRUD completo (Contrato model, ContratosController, views lista/novo/editar/_campos) · código CT-XXXX · buscarDoCliente sem IDOR', done:true},
+    {t:'Tipos: locação, prestação de serviço, fornecimento, compra e venda, sociedade, empréstimo, financiamento, seguro, trabalho, outro', done:true},
+    {t:'Relacionamento polimórfico: imóvel, veículo, outro bem, fornecedor, colaborador, empresa', done:true},
+    {t:'Controle: nº, objeto, contraparte (nome+CPF/CNPJ), início/término, renovação automática + prazo, valor + periodicidade, índice de reajuste, situação', done:true},
+    {t:'Documentos (contrato/aditivo/outros, tipo_referencia `contrato`) · vencimento (data_fim, ativos) alimenta a Agenda · item no menu', done:true},
+    {t:'Migração 003_contratos.sql (cria tabela + tipo_referencia→VARCHAR) aplicada automaticamente pelo runner', done:true},
   ]},
   { id:'m13', nome:'Módulo 13 — Documentos', icone:'🗂️', cor:'#2563eb', sub:'parcial', itens:[
     {t:'Tabela `documentos` polimórfica + upload (documentos/upload.php)', done:true},

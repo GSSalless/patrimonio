@@ -20,6 +20,13 @@ $router->get('agenda', [AgendaController::class, 'index']);
 // Arquivos enviados — serviço autenticado (M2: segurança de arquivos)
 $router->get('arquivo', [ArquivoController::class, 'servir']);
 
+// Contratos (Módulo 12)
+$router->get('contratos',        [ContratosController::class, 'index']);
+$router->get('contratos/novo',   [ContratosController::class, 'novo']);
+$router->post('contratos/novo',  [ContratosController::class, 'novo']);
+$router->get('contratos/editar', [ContratosController::class, 'editar']);
+$router->post('contratos/editar',[ContratosController::class, 'editar']);
+
 // Clientes (admin)
 $router->get('clientes',         [ClientesController::class, 'index']);
 $router->get('clientes/novo',    [ClientesController::class, 'novo']);

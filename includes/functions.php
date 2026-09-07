@@ -203,6 +203,13 @@ function proximo_codigo_investimento(): string {
     return 'IV-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
 }
 
+function proximo_codigo_contrato(): string {
+    $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM contratos");
+    $row = $stmt->fetch();
+    $proximo = ($row['ultimo'] ?? 0) + 1;
+    return 'CT-' . str_pad($proximo, 4, '0', STR_PAD_LEFT);
+}
+
 /** Rótulos do Módulo 10 — Investimentos. */
 function investimento_classe_label(string $c): string {
     return [
@@ -244,6 +251,16 @@ function seguro_tipo_label(string $t): string {
         'vida' => 'Vida', 'saude' => 'Saúde', 'veiculo' => 'Veículo',
         'residencial' => 'Residencial', 'imovel' => 'Imóvel', 'embarcacao' => 'Embarcação',
         'empresarial' => 'Empresarial', 'viagem' => 'Viagem', 'outro' => 'Outro',
+    ][$t] ?? ucfirst($t);
+}
+
+/** Rótulos do Módulo 12 — Contratos. */
+function contrato_tipo_label(string $t): string {
+    return [
+        'locacao' => 'Locação', 'prestacao_servico' => 'Prestação de serviço',
+        'fornecimento' => 'Fornecimento', 'compra_venda' => 'Compra e venda',
+        'sociedade' => 'Sociedade', 'emprestimo' => 'Empréstimo', 'financiamento' => 'Financiamento',
+        'seguro' => 'Seguro', 'trabalho' => 'Trabalho', 'outro' => 'Outro',
     ][$t] ?? ucfirst($t);
 }
 
@@ -337,6 +354,14 @@ function alertas_consolidado(?int $cliente_id = null): array {
                f.contrato_fim, CONCAT('fornecedores/editar?id=', f.id)$C
           FROM fornecedores f
          WHERE f.ativo = 1 AND f.contrato_fim IS NOT NULL
+
+        UNION ALL
+        -- Vencimento de contrato (Módulo 12, ativos)
+        SELECT ct.cliente_id, 'contrato'$C, CONCAT('Vencimento do contrato · ', ct.tipo)$C,
+               COALESCE(NULLIF(ct.contraparte_nome, ''), NULLIF(ct.objeto, ''), ct.numero, ct.codigo)$C,
+               ct.data_fim, CONCAT('contratos/editar?id=', ct.id)$C
+          FROM contratos ct
+         WHERE ct.ativo = 1 AND ct.status = 'ativo' AND ct.data_fim IS NOT NULL
 
         UNION ALL
         -- Vencimento de investimento (renda fixa ativa)
