@@ -25,7 +25,7 @@ jobs:
           # Novo arquivo de estado → força um reenvio COMPLETO de todos os
           # arquivos do repositório (reescreve o que estiver antigo no servidor).
           # A partir daqui a Action volta a ser incremental sob este nome.
-          state-name: .ftp-deploy-sync-state-v2.json
+          state-name: .ftp-deploy-sync-state-v3.json
           # Nunca enviar estes para o servidor:
           exclude: |
             **/.git*
