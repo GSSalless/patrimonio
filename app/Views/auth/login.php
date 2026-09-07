@@ -143,10 +143,6 @@
     <h2>Bem-vindo de volta</h2>
     <p>Faça login para acessar o sistema</p>
 
-    <div style="background:#eef7f0;border:1px solid #bfe3c9;color:#1c7a45;border-radius:7px;padding:9px 13px;font-size:13px;font-weight:600;margin-bottom:16px;text-align:center">
-      ✅ teste 7/9/26 — deploy chegou na web
-    </div>
-
     <?php if (!empty($erro)): ?>
       <div class="error-msg"><?= h($erro) ?></div>
     <?php endif; ?>
