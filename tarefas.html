@@ -234,7 +234,7 @@ const DADOS = [
     {t:'Uniformes (camiseta/camisa/calça/calçado) + Benefícios (VA, plano de saúde, seguro de vida)', done:true},
     {t:'Histórico unificado `colaborador_historico` (salário/promoção/avaliação/férias/advertência/atestado/treinamento/falta) com add/remove', done:true},
     {t:'Documentos (contrato/identidade/outros) · app 👔 no dashboard + menu', done:true},
-    {t:'⚠️ Rodar migration_modulo_02_colaboradores.sql no banco de PRODUÇÃO', done:false},
+    {t:'✅ migration_modulo_02 aplicada em produção (05/09 via fix_producao_500)', done:true},
   ]},
   { id:'m03', nome:'Módulo 03 — Empresas', icone:'🏢', cor:'#1f6fe0', sub:'implementado 12/08 · testado HTTP+banco', itens:[
     {t:'Tabela `empresas` dedicada + CRUD completo (lista com filtros/capital somado, novo, editar, _campos) · código EM-XXXX', done:true},
@@ -253,7 +253,7 @@ const DADOS = [
     {t:'Financeiro: banco, agência, conta, PIX', done:true},
     {t:'Avaliação: nota 1–5 (★), SLA, observações', done:true},
     {t:'Arquivos: contrato, NF, certidão (tipo_referencia `fornecedor`) · app 🤝 + menu', done:true},
-    {t:'⚠️ Rodar migration_modulo_04_fornecedores.sql no banco de PRODUÇÃO', done:false},
+    {t:'✅ migration_modulo_04 aplicada em produção (05/09 via fix_producao_500)', done:true},
   ]},
   { id:'m05', nome:'Módulo 05 — Imóveis', icone:'🏛️', cor:'#1a7a45', sub:'implementado (F1)', itens:[
     {t:'Tabelas `imoveis` + `avaliacoes`', done:true},
@@ -300,7 +300,7 @@ const DADOS = [
     {t:'Manutenções de embarcação (bem_manutencoes + seção no editar.php) — testado 21/07', done:true},
     {t:'Avaliações periódicas / histórico de valor (atualiza valor_mercado) — testado 21/07', done:true},
   ]},
-  { id:'m08', nome:'Módulo 08 — Bancos e Instituições', icone:'🏦', cor:'#475569', sub:'não iniciado', itens:[
+  { id:'m08', fora:true, nome:'Módulo 08 — Bancos e Instituições', icone:'🏦', cor:'#475569', sub:'não iniciado · o Módulo 09 (Contas) já cobre o financeiro do MVP', itens:[
     {t:'Tabela `instituicoes` + cadastro (banco, corretora, gestora)', done:false},
     {t:'Dados: país, moeda', done:false},
     {t:'Contatos: gerente, banker, assessor', done:false},
@@ -326,7 +326,7 @@ const DADOS = [
     {t:'Histórico de movimentos (aplicações, resgates, rendimentos) na edição', done:true},
     {t:'Documentos: proposta, regulamento, extrato (tipo_referencia `investimento` + categorias proposta/regulamento)', done:true},
     {t:'Integração: entra no PATRIMÔNIO CONSOLIDADO (dashboard + Gestão Geral) · vencimento alimenta a Agenda · app 📈 + menu', done:true},
-    {t:'⚠️ Rodar migration_modulo_10_investimentos.sql no banco de PRODUÇÃO', done:false},
+    {t:'✅ migration_modulo_10 aplicada em produção (05/09 via fix_producao_500)', done:true},
   ]},
   { id:'m11', nome:'Módulo 11 — Seguros', icone:'🛡️', cor:'#ca8a04', sub:'implementado 11/08 · testado HTTP+banco', itens:[
     {t:'Tabela `seguros` + vínculo polimórfico (item_tipo+item_id) a imóvel/veículo/outro bem/pessoa · código SG-XXXX', done:true},
