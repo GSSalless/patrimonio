@@ -21,6 +21,10 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
+// Migrações automáticas: aplica os .sql pendentes de sql/migrations/ (barato
+// quando não há nada novo). Roda no servidor via .env — sem phpMyAdmin.
+Migrator::maybeRun();
+
 session_init();
 
 // Seleção de cliente (admin) via ?cliente_id — tratada aqui, ANTES dos
