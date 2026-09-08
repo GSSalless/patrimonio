@@ -433,7 +433,7 @@
 - [ ] Categorias completas: pessoais, imóveis, veículos, empresas, investimentos, contratos, seguros
 - [ ] Campos: arquivo, categoria, data emissão, data vencimento, observações
 
-### Módulo 14 — Agenda e Alertas  🟢 *(implementado 11/08 — testado HTTP+navegador)*
+### Módulo 14 — Agenda e Alertas  🟢 *(implementado 11/08 · finalizado 08/09 — todas as fontes de vencimento ligadas)*
 - [x] **Motor de alertas** — helper `alertas_consolidado(?cliente_id)` em `functions.php` (UNION varrendo todas as datas de vencimento) + `dias_ate()`, `alerta_status()`, `alertas_resumo()`. `AgendaController` + rota `agenda` + view `agenda/index.php` em baldes (Vencidos / 7 dias / 30 dias / Mais adiante) com cor por urgência e chips de resumo. Escopo: admin com cliente = agenda do cliente; admin sem cliente = agenda geral (todos); cliente = a própria.
 - [x] Imóveis: **IPTU em aberto** (pago=0) · **fim de contrato de locação** (ativo)
 - [x] Veículos: **licenciamento**, **seguro**, **revisão prevista** (próxima_data futura)
@@ -441,9 +441,9 @@
 - [x] **Documentos com validade**
 - [x] Integração: item "Agenda" no menu lateral · app "Agenda" 📅 no dashboard com **badge de urgentes** · **faixa de alertas** clicável na Gestão Geral
 - [x] Fix de collation: `veiculos` é `utf8mb4_general_ci` e as demais `_unicode_ci` → `COLLATE utf8mb4_unicode_ci` nas colunas de texto do UNION (sem ALTER, funciona em produção)
-- [ ] Pessoas: CNH/passaporte vencendo *(depende de campos de validade no Módulo 01)*
-- [ ] Colaboradores: férias, cursos vencendo *(depende do Módulo 02)*
-- [ ] Investimentos: vencimento, carência *(depende do Módulo 10)*
+- [x] Colaboradores: **férias e treinamentos programados** — novo ramo no UNION lendo `colaborador_historico` (tipos `ferias`/`treinamento`, `data >= CURDATE()`, colaborador ativo), categoria `colaborador` 👔, link para `colaboradores/editar`. Testado E2E contra o banco (férias + treinamento aparecem na agenda).
+- [x] Investimentos: **vencimento** (renda fixa ativa) — ramo `data_vencimento` no UNION (categoria `investimento` 📈)
+- [x] Pessoas: CNH/passaporte vencendo — **coberto** hoje pelo ramo genérico "Documentos com validade" (basta anexar o doc com `data_validade`). Campos estruturados de validade na pessoa ficam para F3/R5.
 
 ### Módulo 15 — Dashboard Executivo  🟡 *(parcial — patrimônio consolidado feito 11/08)*
 - [x] Hub de módulos no dashboard (menu estilo apps)
@@ -579,6 +579,7 @@
 
 | Data | O que foi feito |
 |------|----------------|
+| 08/09/2026 | **Módulo 14 — Agenda e Alertas finalizado.** Ligadas as três fontes de vencimento que faltavam no motor `alertas_consolidado()`: **colaboradores** (novo ramo no UNION lendo `colaborador_historico` — férias e treinamentos com `data >= CURDATE()` de colaborador ativo, categoria `colaborador` 👔 com link para `colaboradores/editar`), **investimentos** (vencimento de renda fixa ativa já no UNION, categoria `investimento` 📈) e **CNH/passaporte** (coberto pelo ramo genérico "Documentos com validade" — campos estruturados de validade na pessoa ficam p/ F3). Ícone `colaborador` adicionado ao mapa da view `agenda/index.php`. Testado E2E contra o MariaDB do sandbox (colaborador + histórico de férias/treinamento futuros → 2 eventos `colaborador` na agenda com data/título/link corretos). Verificado que M01/M03 têm só "Relacionamentos" em aberto (→ F3, Teia Patrimonial), fora do MVP. |
 | 07/09/2026 | **Módulo 12 — Contratos implementado (primeira feature 100% pelo pipeline autônomo).** Cadastro central de contratos: `Contrato` model + `ContratosController` (index/novo/editar, escopo por cliente sem IDOR) + views `contratos/{lista,novo,editar,_campos}.php` + rotas + `proximo_codigo_contrato()` (CT-XXXX) + `contrato_tipo_label()`. Tipos (10), vínculo polimórfico (imóvel/veículo/outro bem/fornecedor/colaborador/empresa), contraparte, vigência+renovação, valor+periodicidade+índice, situação, upload de documentos. **`data_fim` alimenta a Agenda** (novo branch no UNION). App 📜 no dashboard (badge de ativos) + item no menu. **Migração `003_contratos.sql` criada em `sql/migrations/` — aplica sozinha no deploy** (cria a tabela + troca `documentos.tipo_referencia` de ENUM para VARCHAR, acabando com o ALTER de enum a cada módulo). `schema.sql` sincronizado. Lint OK. |
 | 07/09/2026 | **Reorganização do acompanhamento por escopo do MVP.** O `tarefas.html` passou a contar **só o MVP de entrega**: cards de fase posterior ganharam `fora:true` e saem do percentual (aparecem esmaecidos, selo "Fase posterior", no fim da página). Marcados como fase posterior: **M6** (logística/entrega), **"Fora do MVP — teto"**, **Reuniões 21/07** (r1–r4) e **12/08** (r5a–e, rework de Pessoas/layout/OCR) e **Bloco K** (testes com dados reais). Resultado: o número saiu de ~60% (enganoso, contava tudo) para **~79% do MVP** (132/168), refletindo o que de fato entra na entrega de 08/09. Banner e notas atualizados; migrations agora descritas como automáticas (runner). |
 | 07/09/2026 | **Runner de migração automática + pipeline de deploy corrigido.** (1) Descoberto que o deploy FTP caía numa pasta errada (`FTP_SERVER_DIR` apontava para uma pasta aninhada; a conta FTP do domínio já é chroot no `public_html`) → corrigido para `/`; teste ponta a ponta confirmado no ar (faixa "teste 7/9/26"). Bloqueio de `/uploads/` movido para o `.htaccess` da raiz (o deploy exclui `uploads/**`). (2) **`app/Core/Migrator.php`**: aplica sozinho os `.sql` de `sql/migrations/` na primeira requisição após o deploy (tabela `schema_migrations`, trava `GET_LOCK`, guarda por assinatura em `uploads/.migrations.sig`, log `[MIGRATE]`, para na 1ª falha). Ligado no `app/bootstrap.php`. Migrações `001_imoveis_caracteristicas` e `002_imoveis_remover_campos_mortos` agora se aplicam automaticamente — **fim do passo manual no phpMyAdmin**. |

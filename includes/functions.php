@@ -372,6 +372,16 @@ function alertas_consolidado(?int $cliente_id = null): array {
          WHERE iv.ativo = 1 AND iv.status = 'ativo' AND iv.data_vencimento IS NOT NULL
 
         UNION ALL
+        -- Colaboradores: férias e treinamentos programados (próximos)
+        SELECT co.cliente_id, 'colaborador'$C,
+               CONCAT(CASE ch.tipo WHEN 'ferias' THEN 'Férias' ELSE 'Treinamento' END, ' · ', co.nome)$C,
+               COALESCE(NULLIF(ch.descricao, ''), co.cargo)$C,
+               ch.data, CONCAT('colaboradores/editar?id=', co.id)$C
+          FROM colaborador_historico ch
+          JOIN colaboradores co ON co.id = ch.colaborador_id AND co.ativo = 1
+         WHERE ch.tipo IN ('ferias','treinamento') AND ch.data IS NOT NULL AND ch.data >= CURDATE()
+
+        UNION ALL
         -- Documentos com validade
         SELECT d.cliente_id, 'documento'$C, CONCAT('Documento: ', d.categoria)$C,
                d.nome_arquivo$C, d.data_validade, ''$C

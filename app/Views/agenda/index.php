@@ -17,6 +17,7 @@ $icones = [
     'contrato'      => '📜',
     'revisao'       => '🛠️',
     'investimento'  => '📈',
+    'colaborador'   => '👔',
     'documento'     => '🗂️',
 ];
 $geral = ($escopo_nome === null);
