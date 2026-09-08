@@ -1,9 +1,69 @@
 <?php
 /**
- * Controller de documentos — upload avulso vinculado a um imóvel (via ficha).
+ * Controller de documentos.
+ *  - index():   repositório central (Módulo 13) — todos os arquivos do cliente
+ *  - upload():  upload avulso vinculado a um imóvel (via ficha)
+ *  - excluir(): remoção pelo repositório (admin, com escopo)
  */
 class DocumentosController extends Controller
 {
+    /** GET documentos — repositório central com filtros. */
+    public function index(): void
+    {
+        exige_login();
+        $usuario = usuario_logado();
+
+        // Escopo: admin usa o cliente selecionado (ou todos); cliente vê o próprio.
+        $cli = ($usuario['nivel'] === 'admin') ? cliente_selecionado() : null;
+        if ($usuario['nivel'] === 'cliente') {
+            $stmt = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
+            $stmt->execute([$usuario['id']]);
+            $cli = $stmt->fetch() ?: null;
+        }
+        $cliente_id = $cli['id'] ?? null;
+
+        $filtros = [
+            'categoria' => $_GET['categoria'] ?? '',
+            'tipo'      => $_GET['tipo'] ?? '',
+            'q'         => trim($_GET['q'] ?? ''),
+            'validade'  => $_GET['validade'] ?? '',
+        ];
+
+        $docs     = Documento::listar($cliente_id, $filtros);
+        $vinculos = Documento::resolverVinculos($docs);
+
+        $this->view('documentos/index', [
+            'docs'        => $docs,
+            'vinculos'    => $vinculos,
+            'filtros'     => $filtros,
+            'categorias'  => Documento::categorias(),
+            'tipos'       => Documento::tiposLabel(),
+            'escopo_nome' => $cli['nome'] ?? null,
+            'is_admin'    => $usuario['nivel'] === 'admin',
+        ]);
+    }
+
+    /** POST documentos/excluir?id= — remove registro + arquivo (admin, com escopo). */
+    public function excluir(): void
+    {
+        exige_admin();
+        $id  = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
+        $doc = Documento::buscar($id);
+
+        if ($doc) {
+            // Escopo: se há cliente selecionado, só apaga documento dele.
+            $sel = cliente_selecionado();
+            if (!$sel || (int) $sel['id'] === (int) $doc['cliente_id']) {
+                $abs = APP_ROOT . '/' . ltrim($doc['caminho'], '/');
+                if (is_file($abs) && str_starts_with(realpath($abs) ?: '', realpath(APP_ROOT . '/uploads') ?: '///')) {
+                    @unlink($abs);
+                }
+                Documento::excluir($id);
+            }
+        }
+        $this->redirect('documentos');
+    }
+
     /** GET/POST documentos/upload?tipo=imovel&ref= */
     public function upload(): void
     {

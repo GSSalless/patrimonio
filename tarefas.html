@@ -345,11 +345,12 @@ const DADOS = [
     {t:'Documentos (contrato/aditivo/outros, tipo_referencia `contrato`) · vencimento (data_fim, ativos) alimenta a Agenda · item no menu', done:true},
     {t:'Migração 003_contratos.sql (cria tabela + tipo_referencia→VARCHAR) aplicada automaticamente pelo runner', done:true},
   ]},
-  { id:'m13', nome:'Módulo 13 — Documentos', icone:'🗂️', cor:'#2563eb', sub:'parcial', itens:[
-    {t:'Tabela `documentos` polimórfica + upload (documentos/upload.php)', done:true},
-    {t:'Página repositório central com busca e filtros', done:false},
-    {t:'Categorias completas (pessoas, veículos, empresas, investimentos…)', done:false},
-    {t:'Campos: data de emissão, vencimento, observações', done:false},
+  { id:'m13', nome:'Módulo 13 — Documentos', icone:'🗂️', cor:'#2563eb', sub:'finalizado 08/09 · testado E2E', itens:[
+    {t:'Tabela `documentos` polimórfica + upload (via cada módulo)', done:true},
+    {t:'Repositório central (tela /documentos) reunindo todos os arquivos do cliente vindos dos módulos, com download autenticado (sem link direto p/ uploads) e escopo/sem IDOR', done:true},
+    {t:'Filtros: busca por nome/descrição · categoria · módulo (tipo_referencia) · validade (vencidos/30d/vigentes) + chips de resumo', done:true},
+    {t:'Resolução de vínculo (a que entidade cada arquivo pertence + link ao cadastro, em lote sem N+1)', done:true},
+    {t:'Campos exibidos: categoria, módulo, tamanho, emissão, badge de validade por urgência, descrição · exclusão (admin) · item 📁 no menu + app no dashboard', done:true},
   ]},
   { id:'m14', nome:'Módulo 14 — Agenda e Alertas', icone:'🔔', cor:'#ea580c', sub:'implementado 11/08 · finalizado 08/09 · testado E2E', itens:[
     {t:'Motor de alertas (helper alertas_consolidado) + página /agenda em baldes (vencidos, 7d, 30d, adiante) com cores por urgência', done:true},
@@ -360,13 +361,14 @@ const DADOS = [
     {t:'Investimentos: vencimento de renda fixa ativa (ramo no UNION pela data_vencimento · categoria 📈)', done:true},
     {t:'Pessoas: CNH / passaporte vencendo — coberto pelo ramo "Documentos com validade"; campos estruturados de validade na pessoa ficam p/ F3', done:true},
   ]},
-  { id:'m15', nome:'Módulo 15 — Dashboard Executivo', icone:'📊', cor:'#b06bff', sub:'parcial', itens:[
+  { id:'m15', nome:'Módulo 15 — Dashboard Executivo', icone:'📊', cor:'#b06bff', sub:'finalizado 08/09 · indicadores por área', itens:[
     {t:'Hub de módulos no dashboard (feito)', done:true},
     {t:'Patrimônio total consolidado (imóveis + veículos + outros bens + contas BRL) — herói na Gestão Geral + barra de composição + patrimônio por cliente nos cards', done:true},
     {t:'Dashboard do cliente: patrimônio total + quebra por categoria com barras de participação', done:true},
-    {t:'Financeiro: caixa consolidado, aplicações (falta Investimentos/Caixa)', done:false},
-    {t:'RH: nº de colaboradores, férias, treinamentos', done:false},
-    {t:'Contratos ativos/vencendo · Seguros vigentes/vencendo', done:false},
+    {t:'Indicadores por área (helper indicadores_gestao) como KPIs clicáveis na Gestão Geral e no Dashboard do cliente', done:true},
+    {t:'Financeiro: saldo (contas BRL + investimentos ativos) · nº de contas · nº de aplicações', done:true},
+    {t:'RH: nº de colaboradores ativos · férias e treinamentos programados (60d)', done:true},
+    {t:'Contratos ativos/vencendo 30d · Seguros vigentes/vencendo 30d', done:true},
   ]},
   { id:'ux', nome:'Melhorias UX / Plataforma', icone:'✨', cor:'#0f766e', sub:'sessão 26/06/2026', itens:[
     {t:'Dashboard como hub de apps (estilo iPhone)', done:true},

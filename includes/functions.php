@@ -137,6 +137,91 @@ function patrimonio_consolidado(?int $cliente_id = null): array {
     ];
 }
 
+/**
+ * Indicadores executivos (Módulo 15) — RH, Contratos, Seguros e Financeiro.
+ * Escopo por cliente (id) ou consolidado (null). Cada bloco é defensivo:
+ * se a tabela ainda não existe (migração não rodou), volta zerado.
+ *
+ * @return array{
+ *   rh:array{colaboradores:int,ferias:int,treinamentos:int},
+ *   contratos:array{ativos:int,vencendo:int},
+ *   seguros:array{vigentes:int,vencendo:int},
+ *   financeiro:array{contas_qtd:int,contas_saldo:float,invest_qtd:int,invest_valor:float}
+ * }
+ */
+function indicadores_gestao(?int $cliente_id = null): array {
+    $and = $cliente_id !== null ? ' AND cliente_id = :cid' : '';
+    $bind = $cliente_id !== null ? [':cid' => $cliente_id] : [];
+
+    // Executa uma agregação com tratamento de tabela ausente.
+    $ag = function (string $sql, array $extra = []) use ($bind): array {
+        try {
+            $stmt = db()->prepare($sql);
+            $stmt->execute($bind + $extra);
+            return $stmt->fetch(PDO::FETCH_NUM) ?: [];
+        } catch (\Throwable $e) {
+            return [];
+        }
+    };
+
+    // RH — colaboradores ativos + férias/treinamentos programados (próximos 60 dias).
+    $rhCol = $ag("SELECT COUNT(*) FROM colaboradores WHERE ativo = 1 AND status <> 'desligado'$and");
+    $rhFer = $ag(
+        "SELECT COUNT(*) FROM colaborador_historico ch
+           JOIN colaboradores co ON co.id = ch.colaborador_id AND co.ativo = 1" .
+        ($cliente_id !== null ? ' AND co.cliente_id = :cid' : '') .
+        " WHERE ch.tipo = 'ferias' AND ch.data IS NOT NULL
+             AND ch.data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 60 DAY)"
+    );
+    $rhTre = $ag(
+        "SELECT COUNT(*) FROM colaborador_historico ch
+           JOIN colaboradores co ON co.id = ch.colaborador_id AND co.ativo = 1" .
+        ($cliente_id !== null ? ' AND co.cliente_id = :cid' : '') .
+        " WHERE ch.tipo = 'treinamento' AND ch.data IS NOT NULL
+             AND ch.data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 60 DAY)"
+    );
+
+    // Contratos — ativos + vencendo em 30 dias.
+    $ctAtv = $ag("SELECT COUNT(*) FROM contratos WHERE ativo = 1 AND status = 'ativo'$and");
+    $ctVen = $ag("SELECT COUNT(*) FROM contratos WHERE ativo = 1 AND status = 'ativo'
+                    AND data_fim IS NOT NULL
+                    AND data_fim BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)$and");
+
+    // Seguros — vigentes + vencendo em 30 dias.
+    $sgVig = $ag("SELECT COUNT(*) FROM seguros WHERE ativo = 1 AND status = 'vigente'$and");
+    $sgVen = $ag("SELECT COUNT(*) FROM seguros WHERE ativo = 1 AND status = 'vigente'
+                    AND vigencia_fim IS NOT NULL
+                    AND vigencia_fim BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)$and");
+
+    // Financeiro — contas (saldo BRL) + investimentos ativos (valor atual).
+    $finCt = $ag("SELECT COUNT(*), COALESCE(SUM(CASE WHEN moeda = 'BRL' THEN saldo_atual ELSE 0 END),0)
+                    FROM contas_financeiras WHERE ativo = 1$and");
+    $finIv = $ag("SELECT COUNT(*), COALESCE(SUM(valor_atual),0)
+                    FROM investimentos WHERE ativo = 1 AND status = 'ativo'$and");
+
+    return [
+        'rh' => [
+            'colaboradores' => (int) ($rhCol[0] ?? 0),
+            'ferias'        => (int) ($rhFer[0] ?? 0),
+            'treinamentos'  => (int) ($rhTre[0] ?? 0),
+        ],
+        'contratos' => [
+            'ativos'   => (int) ($ctAtv[0] ?? 0),
+            'vencendo' => (int) ($ctVen[0] ?? 0),
+        ],
+        'seguros' => [
+            'vigentes' => (int) ($sgVig[0] ?? 0),
+            'vencendo' => (int) ($sgVen[0] ?? 0),
+        ],
+        'financeiro' => [
+            'contas_qtd'   => (int) ($finCt[0] ?? 0),
+            'contas_saldo' => (float) ($finCt[1] ?? 0),
+            'invest_qtd'   => (int) ($finIv[0] ?? 0),
+            'invest_valor' => (float) ($finIv[1] ?? 0),
+        ],
+    ];
+}
+
 function proximo_codigo_seguro(): string {
     $stmt = db()->query("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) AS ultimo FROM seguros");
     $row = $stmt->fetch();

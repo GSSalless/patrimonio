@@ -59,6 +59,51 @@ $total_pat = (float) $pat['total'];
     </div>
   </div>
 
+  <!-- Indicadores executivos (Módulo 15): RH, Contratos, Seguros, Financeiro -->
+  <div class="gg-kpis">
+    <a class="gg-kpi" href="<?= base_url('agenda') ?>">
+      <div class="gg-kpi-top"><span class="gg-kpi-ico">💰</span> Financeiro</div>
+      <div class="gg-kpi-n"><?= moeda((float) ($ind['financeiro']['contas_saldo'] + $ind['financeiro']['invest_valor'])) ?></div>
+      <div class="gg-kpi-sub">
+        🏦 <?= (int) $ind['financeiro']['contas_qtd'] ?> conta<?= $ind['financeiro']['contas_qtd'] == 1 ? '' : 's' ?>
+        · 📈 <?= (int) $ind['financeiro']['invest_qtd'] ?> aplicaç<?= $ind['financeiro']['invest_qtd'] == 1 ? 'ão' : 'ões' ?>
+      </div>
+    </a>
+
+    <a class="gg-kpi" href="<?= base_url('colaboradores') ?>">
+      <div class="gg-kpi-top"><span class="gg-kpi-ico">👔</span> RH</div>
+      <div class="gg-kpi-n"><?= (int) $ind['rh']['colaboradores'] ?></div>
+      <div class="gg-kpi-sub">
+        colaborador<?= $ind['rh']['colaboradores'] == 1 ? '' : 'es' ?> ativo<?= $ind['rh']['colaboradores'] == 1 ? '' : 's' ?>
+        <?php if ($ind['rh']['ferias'] || $ind['rh']['treinamentos']): ?>
+          <br><span class="gg-kpi-flag">🏖️ <?= (int) $ind['rh']['ferias'] ?> férias · 🎓 <?= (int) $ind['rh']['treinamentos'] ?> treino</span>
+        <?php endif; ?>
+      </div>
+    </a>
+
+    <a class="gg-kpi" href="<?= base_url('contratos') ?>">
+      <div class="gg-kpi-top"><span class="gg-kpi-ico">📜</span> Contratos</div>
+      <div class="gg-kpi-n"><?= (int) $ind['contratos']['ativos'] ?></div>
+      <div class="gg-kpi-sub">
+        ativo<?= $ind['contratos']['ativos'] == 1 ? '' : 's' ?>
+        <?php if ($ind['contratos']['vencendo']): ?>
+          <br><span class="gg-kpi-flag gg-kpi-warn">⏱ <?= (int) $ind['contratos']['vencendo'] ?> vencendo em 30d</span>
+        <?php endif; ?>
+      </div>
+    </a>
+
+    <a class="gg-kpi" href="<?= base_url('seguros') ?>">
+      <div class="gg-kpi-top"><span class="gg-kpi-ico">🛡️</span> Seguros</div>
+      <div class="gg-kpi-n"><?= (int) $ind['seguros']['vigentes'] ?></div>
+      <div class="gg-kpi-sub">
+        vigente<?= $ind['seguros']['vigentes'] == 1 ? '' : 's' ?>
+        <?php if ($ind['seguros']['vencendo']): ?>
+          <br><span class="gg-kpi-flag gg-kpi-warn">⏱ <?= (int) $ind['seguros']['vencendo'] ?> vencendo em 30d</span>
+        <?php endif; ?>
+      </div>
+    </a>
+  </div>
+
   <?php if (($alertas['urgentes'] ?? 0) > 0): ?>
   <a class="gg-alertas" href="<?= base_url('agenda') ?>">
     <span class="gg-alertas-ico">🔔</span>
@@ -126,6 +171,21 @@ $total_pat = (float) $pat['total'];
   .gg-leg-qtd{color:#8f8b80}
   .gg-leg-val{font-size:.98rem;font-weight:700;color:#fff;margin-top:.1rem}
   .gg-leg-pct{font-size:.78rem;font-weight:500;color:#c9a227;margin-left:.2rem}
+
+  /* Indicadores executivos (KPIs) */
+  .gg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin-top:1.3rem}
+  .gg-kpi{display:block;text-decoration:none;color:inherit;background:var(--cor-branco,#fff);
+    border:1px solid var(--cor-borda,#e3e8ef);border-radius:14px;padding:1rem 1.1rem;
+    box-shadow:0 3px 10px rgba(0,0,0,.05);transition:box-shadow .2s,transform .2s}
+  .gg-kpi:hover{box-shadow:0 8px 20px rgba(0,0,0,.09);transform:translateY(-2px);text-decoration:none}
+  .gg-kpi-top{display:flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:700;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--cor-secundario)}
+  .gg-kpi-ico{font-size:1rem}
+  .gg-kpi-n{font-family:var(--fonte-titulo);font-size:1.6rem;font-weight:800;color:var(--cor-primaria);
+    line-height:1.1;margin:.35rem 0 .2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gg-kpi-sub{font-size:.8rem;color:var(--cor-secundario);line-height:1.35}
+  .gg-kpi-flag{display:inline-block;margin-top:.25rem;font-weight:600;color:var(--cor-primaria)}
+  .gg-kpi-warn{color:#b45309}
 
   /* Faixa de alertas */
   .gg-alertas{display:flex;align-items:center;gap:.9rem;margin-top:1.4rem;padding:.9rem 1.1rem;

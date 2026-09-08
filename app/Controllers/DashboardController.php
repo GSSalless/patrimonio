@@ -63,7 +63,11 @@ class DashboardController extends Controller
             $stmt->execute([$cli['id']]);
             $qtd_contratos = (int) $stmt->fetchColumn();
         } catch (\Throwable $e) { $qtd_contratos = 0; } // tabela pode não existir até a migração rodar
+        // Contagem de documentos (Módulo 13) para o badge do app.
+        $qtd_documentos = Documento::contar((int) $cli['id']);
+        // Indicadores executivos do cliente (Módulo 15): RH, Contratos, Seguros, Financeiro.
+        $ind = indicadores_gestao((int) $cli['id']);
 
-        $this->view('dashboard/index', compact('cli', 'pat', 'alertas', 'qtd_seguros', 'qtd_empresas', 'qtd_investimentos', 'qtd_fornecedores', 'qtd_colaboradores', 'qtd_contratos'));
+        $this->view('dashboard/index', compact('cli', 'pat', 'ind', 'alertas', 'qtd_seguros', 'qtd_empresas', 'qtd_investimentos', 'qtd_fornecedores', 'qtd_colaboradores', 'qtd_contratos', 'qtd_documentos'));
     }
 }

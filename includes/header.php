@@ -89,6 +89,7 @@ if ($usuario):
           ['contratos',  'Contratos',   'bi-file-earmark-text', true],
           ['fornecedores','Fornecedores','bi-people-fill',  true],
           ['colaboradores','Colaboradores','bi-person-badge', true],
+          ['documentos',  'Documentos',  'bi-folder2-open', true],
         ]];
       }
     } else {
@@ -103,6 +104,7 @@ if ($usuario):
           ['contratos',  'Contratos',   'bi-file-earmark-text', true],
           ['fornecedores','Fornecedores','bi-people-fill',    true],
           ['colaboradores','Colaboradores','bi-person-badge', true],
+          ['documentos', 'Documentos',  'bi-folder2-open',   true],
           ['agenda',     'Agenda',      'bi-calendar-check', true],
         ]],
       ];

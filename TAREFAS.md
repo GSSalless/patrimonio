@@ -428,10 +428,13 @@
 - [x] Documentos (contrato/aditivo/outros, `tipo_referencia` `contrato`) · **`data_fim` (ativos) alimenta a Agenda** (novo UNION branch) · app 📜 no dashboard + item no menu
 - [x] Migração `sql/migrations/003_contratos.sql` (cria `contratos` + `documentos.tipo_referencia`→VARCHAR) **aplicada automaticamente pelo runner** · `schema.sql` sincronizado
 
-### Módulo 13 — Documentos (repositório central)  🟡 *(parcial)*
+### Módulo 13 — Documentos (repositório central)  🟢 *(finalizado 08/09 — testado E2E + render)*
 - [x] Upload polimórfico (tipo_referencia + referencia_id) + categorias
-- [ ] Categorias completas: pessoais, imóveis, veículos, empresas, investimentos, contratos, seguros
-- [ ] Campos: arquivo, categoria, data emissão, data vencimento, observações
+- [x] **Repositório central** — tela `documentos` (`DocumentosController::index`) lista **todos** os arquivos do cliente (ou de todos, admin sem seleção) reunidos dos módulos (imóvel, veículo, seguro, contrato, empresa, colaborador, fornecedor, conta, investimento…). Escopo por cliente/sem IDOR; download autenticado via `ArquivoController` (nunca link direto p/ /uploads).
+- [x] **Filtros**: busca por nome/descrição · por categoria · por módulo (tipo_referencia) · por validade (vencidos / vencem em 30 dias / vigentes). Chips de resumo (total · com validade · vencidos).
+- [x] **Resolução de vínculo** — `Documento::resolverVinculos()` mostra a que entidade cada arquivo pertence (nome + link para o cadastro), em lote (sem N+1)
+- [x] Campos exibidos: arquivo, categoria, módulo/vínculo, tamanho, data de emissão, **badge de validade** (cor por urgência), descrição
+- [x] Exclusão pelo repositório (admin, com escopo — apaga registro + arquivo do disco). Item "Documentos" 📁 no menu lateral (admin+cliente) + app no dashboard com badge de contagem
 
 ### Módulo 14 — Agenda e Alertas  🟢 *(implementado 11/08 · finalizado 08/09 — todas as fontes de vencimento ligadas)*
 - [x] **Motor de alertas** — helper `alertas_consolidado(?cliente_id)` em `functions.php` (UNION varrendo todas as datas de vencimento) + `dias_ate()`, `alerta_status()`, `alertas_resumo()`. `AgendaController` + rota `agenda` + view `agenda/index.php` em baldes (Vencidos / 7 dias / 30 dias / Mais adiante) com cor por urgência e chips de resumo. Escopo: admin com cliente = agenda do cliente; admin sem cliente = agenda geral (todos); cliente = a própria.
@@ -445,13 +448,15 @@
 - [x] Investimentos: **vencimento** (renda fixa ativa) — ramo `data_vencimento` no UNION (categoria `investimento` 📈)
 - [x] Pessoas: CNH/passaporte vencendo — **coberto** hoje pelo ramo genérico "Documentos com validade" (basta anexar o doc com `data_validade`). Campos estruturados de validade na pessoa ficam para F3/R5.
 
-### Módulo 15 — Dashboard Executivo  🟡 *(parcial — patrimônio consolidado feito 11/08)*
+### Módulo 15 — Dashboard Executivo  🟢 *(finalizado 08/09 — indicadores por área)*
 - [x] Hub de módulos no dashboard (menu estilo apps)
 - [x] **Patrimônio total consolidado** — helper `patrimonio_consolidado(?cliente_id)` em `functions.php` (imóveis `valor_mercado` + veículos `valor_mercado→fipe→aquisição` + outros bens `valor_mercado→aquisição` + contas `saldo_atual` só BRL). **Gestão Geral:** herói preto&dourado com total sob gestão + barra de composição empilhada + legenda (valor/qtd/%) + patrimônio por cliente nos cards. **Dashboard do cliente:** painel com total + quebra por categoria com barras de participação. ✅ testado HTTP+navegador (total R$ 4.048.750,00 p/ Marcos)
-- [ ] Financeiro: caixa consolidado, bancos, aplicações *(depende de Caixa/Investimentos)*
-- [ ] RH: nº de colaboradores, férias, treinamentos *(depende do Módulo 02)*
-- [ ] Contratos: ativos, vencendo *(depende do Módulo 12)*
-- [ ] Seguros: vigentes, vencendo *(depende do Módulo 11)*
+- [x] **Indicadores por área** — novo helper `indicadores_gestao(?cliente_id)` em `functions.php` (defensivo: tabela ausente volta zerada). 4 KPIs clicáveis na **Gestão Geral** (consolidado) e no **Dashboard do cliente** (por cliente):
+  - [x] **Financeiro**: saldo (contas BRL + investimentos ativos) · nº de contas · nº de aplicações
+  - [x] **RH**: nº de colaboradores ativos · férias e treinamentos programados (próximos 60 dias)
+  - [x] **Contratos**: ativos · vencendo em 30 dias
+  - [x] **Seguros**: vigentes · vencendo em 30 dias
+- [x] Testado E2E (`indicadores_gestao` nos dois escopos) + render das telas Gestão Geral/Dashboard sem erros PHP
 
 ---
 
@@ -579,6 +584,7 @@
 
 | Data | O que foi feito |
 |------|----------------|
+| 08/09/2026 | **Módulos 13 e 15 finalizados.** **M13 — Documentos (repositório central):** nova tela `documentos` (`DocumentosController::index` + view `documentos/index.php`) que reúne **todos** os arquivos anexados nos módulos numa lista única, com filtros (busca por nome/descrição, categoria, módulo/tipo_referencia, validade: vencidos/30d/vigentes), chips de resumo e badge de validade por urgência. `Documento` model ganhou `listar()`, `resolverVinculos()` (mostra a que entidade cada doc pertence + link ao cadastro, resolvido em lote sem N+1), `categorias()`, `tiposLabel()`, `buscar()`, `excluir()`, `contar()`. Download autenticado via `ArquivoController` (sem link direto p/ /uploads), exclusão pelo repositório (admin, com escopo, apaga registro + arquivo). Item 📁 no menu (admin+cliente) + app no dashboard com badge. **M15 — Dashboard Executivo:** novo helper `indicadores_gestao(?cliente_id)` (defensivo) com 4 KPIs por área — Financeiro (saldo contas BRL + investimentos, nº contas/aplicações), RH (colaboradores ativos, férias/treinamentos em 60d), Contratos (ativos, vencendo 30d), Seguros (vigentes, vencendo 30d) — exibidos como cards clicáveis na Gestão Geral (consolidado) e no Dashboard do cliente. Testado E2E contra o banco (M13: 9/9 filtros+vínculos; M15: indicadores nos 2 escopos) + render das telas documentos/gestão-geral/dashboard sem erros PHP. Sem migração nova (usa tabelas existentes). |
 | 08/09/2026 | **Módulo 14 — Agenda e Alertas finalizado.** Ligadas as três fontes de vencimento que faltavam no motor `alertas_consolidado()`: **colaboradores** (novo ramo no UNION lendo `colaborador_historico` — férias e treinamentos com `data >= CURDATE()` de colaborador ativo, categoria `colaborador` 👔 com link para `colaboradores/editar`), **investimentos** (vencimento de renda fixa ativa já no UNION, categoria `investimento` 📈) e **CNH/passaporte** (coberto pelo ramo genérico "Documentos com validade" — campos estruturados de validade na pessoa ficam p/ F3). Ícone `colaborador` adicionado ao mapa da view `agenda/index.php`. Testado E2E contra o MariaDB do sandbox (colaborador + histórico de férias/treinamento futuros → 2 eventos `colaborador` na agenda com data/título/link corretos). Verificado que M01/M03 têm só "Relacionamentos" em aberto (→ F3, Teia Patrimonial), fora do MVP. |
 | 07/09/2026 | **Módulo 12 — Contratos implementado (primeira feature 100% pelo pipeline autônomo).** Cadastro central de contratos: `Contrato` model + `ContratosController` (index/novo/editar, escopo por cliente sem IDOR) + views `contratos/{lista,novo,editar,_campos}.php` + rotas + `proximo_codigo_contrato()` (CT-XXXX) + `contrato_tipo_label()`. Tipos (10), vínculo polimórfico (imóvel/veículo/outro bem/fornecedor/colaborador/empresa), contraparte, vigência+renovação, valor+periodicidade+índice, situação, upload de documentos. **`data_fim` alimenta a Agenda** (novo branch no UNION). App 📜 no dashboard (badge de ativos) + item no menu. **Migração `003_contratos.sql` criada em `sql/migrations/` — aplica sozinha no deploy** (cria a tabela + troca `documentos.tipo_referencia` de ENUM para VARCHAR, acabando com o ALTER de enum a cada módulo). `schema.sql` sincronizado. Lint OK. |
 | 07/09/2026 | **Reorganização do acompanhamento por escopo do MVP.** O `tarefas.html` passou a contar **só o MVP de entrega**: cards de fase posterior ganharam `fora:true` e saem do percentual (aparecem esmaecidos, selo "Fase posterior", no fim da página). Marcados como fase posterior: **M6** (logística/entrega), **"Fora do MVP — teto"**, **Reuniões 21/07** (r1–r4) e **12/08** (r5a–e, rework de Pessoas/layout/OCR) e **Bloco K** (testes com dados reais). Resultado: o número saiu de ~60% (enganoso, contava tudo) para **~79% do MVP** (132/168), refletindo o que de fato entra na entrega de 08/09. Banner e notas atualizados; migrations agora descritas como automáticas (runner). |

@@ -15,6 +15,8 @@ class GestaoGeralController extends Controller
 
         // Patrimônio consolidado de TODOS os clientes (Módulo 15).
         $pat = patrimonio_consolidado();
+        // Indicadores executivos consolidados (Módulo 15): RH, Contratos, Seguros, Financeiro.
+        $ind = indicadores_gestao();
         // Resumo de alertas de todos os clientes (Módulo 14).
         $alertas = alertas_resumo();
 
@@ -31,6 +33,6 @@ class GestaoGeralController extends Controller
         }
         unset($c);
 
-        $this->view('gestao_geral/index', compact('total_clientes', 'pat', 'alertas', 'clientes'));
+        $this->view('gestao_geral/index', compact('total_clientes', 'pat', 'ind', 'alertas', 'clientes'));
     }
 }

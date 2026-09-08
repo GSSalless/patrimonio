@@ -58,6 +58,32 @@ $linhas = [
     </div>
   </div>
 
+  <!-- Indicadores executivos do cliente (Módulo 15) -->
+  <?php if (!empty($ind)): ?>
+  <div class="db-kpis">
+    <a class="db-kpi" href="<?= base_url('contas') ?>">
+      <div class="db-kpi-top">💰 Financeiro</div>
+      <div class="db-kpi-n"><?= moeda((float) ($ind['financeiro']['contas_saldo'] + $ind['financeiro']['invest_valor'])) ?></div>
+      <div class="db-kpi-sub">🏦 <?= (int) $ind['financeiro']['contas_qtd'] ?> · 📈 <?= (int) $ind['financeiro']['invest_qtd'] ?></div>
+    </a>
+    <a class="db-kpi" href="<?= base_url('colaboradores') ?>">
+      <div class="db-kpi-top">👔 RH</div>
+      <div class="db-kpi-n"><?= (int) $ind['rh']['colaboradores'] ?></div>
+      <div class="db-kpi-sub"><?php if ($ind['rh']['ferias'] || $ind['rh']['treinamentos']): ?>🏖️ <?= (int) $ind['rh']['ferias'] ?> · 🎓 <?= (int) $ind['rh']['treinamentos'] ?><?php else: ?>ativos<?php endif; ?></div>
+    </a>
+    <a class="db-kpi" href="<?= base_url('contratos') ?>">
+      <div class="db-kpi-top">📜 Contratos</div>
+      <div class="db-kpi-n"><?= (int) $ind['contratos']['ativos'] ?></div>
+      <div class="db-kpi-sub<?= $ind['contratos']['vencendo'] ? ' db-kpi-warn' : '' ?>"><?= $ind['contratos']['vencendo'] ? '⏱ ' . (int) $ind['contratos']['vencendo'] . ' vencendo' : 'ativos' ?></div>
+    </a>
+    <a class="db-kpi" href="<?= base_url('seguros') ?>">
+      <div class="db-kpi-top">🛡️ Seguros</div>
+      <div class="db-kpi-n"><?= (int) $ind['seguros']['vigentes'] ?></div>
+      <div class="db-kpi-sub<?= $ind['seguros']['vencendo'] ? ' db-kpi-warn' : '' ?>"><?= $ind['seguros']['vencendo'] ? '⏱ ' . (int) $ind['seguros']['vencendo'] . ' vencendo' : 'vigentes' ?></div>
+    </a>
+  </div>
+  <?php endif; ?>
+
   <div class="app-grid">
     <a href="<?= base_url('patrimonio') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
@@ -123,6 +149,14 @@ $linhas = [
       <span class="app-icon-label">Colaboradores</span>
     </a>
 
+    <a href="<?= base_url('documentos') ?>" class="app-icon">
+      <span class="app-icon-tile app-tile-azul">
+        📁
+        <?php if (($qtd_documentos ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_documentos ?></span><?php endif; ?>
+      </span>
+      <span class="app-icon-label">Documentos</span>
+    </a>
+
     <?php $ag_urg = $alertas['urgentes'] ?? 0; ?>
     <a href="<?= base_url('agenda') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-laranja">
@@ -168,5 +202,17 @@ $linhas = [
     .db-pat-ico{grid-area:ico}.db-pat-cat{grid-area:cat}.db-pat-v{grid-area:v}
     .db-pat-track{grid-area:track;height:7px}
   }
+
+  /* Indicadores executivos do cliente (Módulo 15) */
+  .db-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;margin-bottom:1.6rem}
+  .db-kpi{display:block;text-decoration:none;color:inherit;background:var(--cor-branco,#fff);
+    border:1px solid var(--cor-borda,#e3e8ef);border-radius:14px;padding:.85rem 1rem;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .2s,transform .2s}
+  .db-kpi:hover{box-shadow:0 8px 18px rgba(0,0,0,.09);transform:translateY(-2px);text-decoration:none}
+  .db-kpi-top{font-size:.76rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--cor-secundario)}
+  .db-kpi-n{font-family:var(--fonte-titulo);font-size:1.35rem;font-weight:800;color:var(--cor-primaria);
+    line-height:1.1;margin:.3rem 0 .15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .db-kpi-sub{font-size:.78rem;color:var(--cor-secundario)}
+  .db-kpi-warn{color:#b45309;font-weight:600}
 </style>
 <?php require APP_ROOT . '/includes/footer.php'; ?>

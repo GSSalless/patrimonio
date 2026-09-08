@@ -157,8 +157,10 @@ $router->post('condominios/editar',  [CondominiosController::class, 'editar']);
 $router->get('condominios/vincular', [CondominiosController::class, 'vincular']);
 
 // Documentos
-$router->get('documentos/upload',  [DocumentosController::class, 'upload']);
-$router->post('documentos/upload', [DocumentosController::class, 'upload']);
+$router->get('documentos',          [DocumentosController::class, 'index']);   // repositório central (M13)
+$router->post('documentos/excluir', [DocumentosController::class, 'excluir']);
+$router->get('documentos/upload',   [DocumentosController::class, 'upload']);
+$router->post('documentos/upload',  [DocumentosController::class, 'upload']);
 
 // Patrimônio (hub de categorias)
 $router->get('patrimonio', [PatrimonioController::class, 'index']);
