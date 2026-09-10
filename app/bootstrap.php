@@ -37,6 +37,22 @@ if (isset($_GET['cliente_id']) && ($u = usuario_logado()) && $u['nivel'] === 'ad
     exit;
 }
 
+// Voltar às telas "gerais" (grupo Geral do menu: Gestão Geral, Clientes,
+// Agenda) significa que o admin SAIU do contexto de um cliente. Limpamos a
+// seleção para o menu lateral voltar a mostrar só o grupo Geral — desmarcar
+// um cliente é justamente clicar num desses botões. Selecionar de novo é
+// sempre via ?cliente_id (bloco acima).
+if (($ua = usuario_logado()) && $ua['nivel'] === 'admin') {
+    $rota_bs = trim($_GET['url'] ?? '', '/');
+    $eh_geral = $rota_bs === 'gestao-geral'
+             || $rota_bs === 'agenda'
+             || $rota_bs === 'clientes'
+             || str_starts_with($rota_bs, 'clientes/');
+    if ($eh_geral) {
+        unset($_SESSION['cliente_selecionado']);
+    }
+}
+
 // Usuário CLIENTE: a seleção fica travada no próprio registro em toda requisição
 // (segurança — não pode ver outro cliente — e navegação consistente). Um cliente
 // nunca troca de contexto via ?cliente_id (o bloco acima é só admin).
