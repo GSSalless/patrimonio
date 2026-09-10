@@ -30,8 +30,9 @@ require APP_ROOT . '/includes/header.php';
         </a>
         <div class="pessoa-card-acoes">
           <?php if ($wa): ?>
-            <a href="<?= h($wa) ?>" target="_blank" rel="noopener" class="btn btn-sm" style="background:#25d366;color:#fff;border:none">
-              <i class="bi bi-whatsapp"></i> WhatsApp
+            <a href="<?= h($wa) ?>" target="_blank" rel="noopener" class="pessoa-wa"
+               title="Conversar no WhatsApp" aria-label="Conversar no WhatsApp">
+              <i class="bi bi-whatsapp"></i>
             </a>
           <?php else: ?><span></span><?php endif; ?>
           <a href="<?= base_url('dashboard?cliente_id=' . $c['id']) ?>" class="btn btn-secundario btn-sm">Patrimônio →</a>
@@ -57,5 +58,12 @@ require APP_ROOT . '/includes/header.php';
   .pessoa-linha{color:var(--cor-secundario);font-size:.82rem;margin-top:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .pessoa-card-acoes{display:flex;justify-content:space-between;align-items:center;gap:.5rem;
     padding:.6rem 1.1rem;border-top:1px solid var(--cor-borda,#eef1f5);background:#fafbfc}
+  /* Botão WhatsApp: só o ícone, redondo e verde */
+  .pessoa-wa{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex-shrink:0;
+    border-radius:50%;background:#25d366;color:#fff;font-size:1.15rem;text-decoration:none;line-height:1;
+    box-shadow:0 2px 6px rgba(37,211,102,.35);transition:background .18s,transform .18s,box-shadow .18s}
+  .pessoa-wa:hover{background:#1ebe5b;transform:translateY(-1px);box-shadow:0 5px 14px rgba(37,211,102,.45);text-decoration:none;color:#fff}
+  .pessoa-wa:active{transform:translateY(0)}
+  .pessoa-wa i{display:block}
 </style>
 <?php require APP_ROOT . '/includes/footer.php'; ?>
