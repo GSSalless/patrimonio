@@ -13,7 +13,7 @@ require APP_ROOT . '/includes/header.php';
 $co_id = (int) $colaborador['id'];
 $parentescos = ['conjuge'=>'Cônjuge','filho'=>'Filho','filha'=>'Filha','pai'=>'Pai','mae'=>'Mãe','outro'=>'Outro'];
 $hist_tipos  = ['salario'=>'Salário','promocao'=>'Promoção','avaliacao'=>'Avaliação','ferias'=>'Férias','treinamento'=>'Treinamento','advertencia'=>'Advertência','atestado'=>'Atestado','falta'=>'Falta','beneficio'=>'Benefício','outro'=>'Outro'];
-$hist_cor = ['salario'=>'#1a7a45','promocao'=>'#0891b2','avaliacao'=>'#6366f1','ferias'=>'#c9a227','treinamento'=>'#3fae7a','advertencia'=>'#b82020','atestado'=>'#b45309','falta'=>'#b45309','beneficio'=>'#9b6dd6','outro'=>'#64748b'];
+$hist_cor = ['salario'=>'#1a7a45','promocao'=>'#0891b2','avaliacao'=>'#6366f1','ferias'=>'#22C7F2','treinamento'=>'#3fae7a','advertencia'=>'#b82020','atestado'=>'#b45309','falta'=>'#b45309','beneficio'=>'#9b6dd6','outro'=>'#64748b'];
 ?>
 <div class="container" style="max-width:960px">
   <div class="card-header" style="margin-bottom:1.25rem">

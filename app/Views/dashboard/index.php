@@ -13,11 +13,11 @@ $qtd_imoveis = $pat['imoveis_qtd'] ?? 0;
 $qtd_contas  = $pat['contas_qtd'] ?? 0;
 $total_pat   = (float) ($pat['total'] ?? 0);
 $linhas = [
-    ['Imóveis',  '🏛️', $pat['imoveis_valor']  ?? 0, $pat['imoveis_qtd']  ?? 0, '#c9a227'],
-    ['Veículos', '🚗', $pat['veiculos_valor'] ?? 0, $pat['veiculos_qtd'] ?? 0, '#5b8def'],
-    ['Outros bens', '💎', $pat['outros_valor'] ?? 0, $pat['outros_qtd'] ?? 0, '#9b6dd6'],
-    ['Investimentos', '📈', $pat['invest_valor'] ?? 0, $pat['invest_qtd'] ?? 0, '#e0669e'],
-    ['Contas',   '🏦', $pat['contas_saldo']   ?? 0, $pat['contas_qtd']   ?? 0, '#3fae7a'],
+    ['Imóveis',  '🏛️', $pat['imoveis_valor']  ?? 0, $pat['imoveis_qtd']  ?? 0, '#168BFF'],
+    ['Veículos', '🚗', $pat['veiculos_valor'] ?? 0, $pat['veiculos_qtd'] ?? 0, '#F59E0B'],
+    ['Outros bens', '💎', $pat['outros_valor'] ?? 0, $pat['outros_qtd'] ?? 0, '#A855F7'],
+    ['Investimentos', '📈', $pat['invest_valor'] ?? 0, $pat['invest_qtd'] ?? 0, '#22C7F2'],
+    ['Contas',   '🏦', $pat['contas_saldo']   ?? 0, $pat['contas_qtd']   ?? 0, '#22C55E'],
 ];
 ?>
 <div class="container">

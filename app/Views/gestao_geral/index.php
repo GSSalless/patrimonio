@@ -9,12 +9,13 @@ $page_title = 'Gestão Geral';
 require APP_ROOT . '/includes/header.php';
 
 // Composição do patrimônio para a barra empilhada + legenda.
+// Cores das categorias — paleta do Design System CZR (mockup)
 $comp = [
-    ['label' => 'Imóveis',  'emoji' => '🏛️', 'valor' => $pat['imoveis_valor'],  'qtd' => $pat['imoveis_qtd'],  'cor' => '#c9a227'],
-    ['label' => 'Veículos', 'emoji' => '🚗', 'valor' => $pat['veiculos_valor'], 'qtd' => $pat['veiculos_qtd'], 'cor' => '#5b8def'],
-    ['label' => 'Outros bens', 'emoji' => '💎', 'valor' => $pat['outros_valor'], 'qtd' => $pat['outros_qtd'], 'cor' => '#9b6dd6'],
-    ['label' => 'Investimentos', 'emoji' => '📈', 'valor' => $pat['invest_valor'], 'qtd' => $pat['invest_qtd'], 'cor' => '#e0669e'],
-    ['label' => 'Contas',   'emoji' => '🏦', 'valor' => $pat['contas_saldo'],  'qtd' => $pat['contas_qtd'],  'cor' => '#3fae7a'],
+    ['label' => 'Imóveis',  'emoji' => '🏛️', 'valor' => $pat['imoveis_valor'],  'qtd' => $pat['imoveis_qtd'],  'cor' => '#168BFF'],
+    ['label' => 'Veículos', 'emoji' => '🚗', 'valor' => $pat['veiculos_valor'], 'qtd' => $pat['veiculos_qtd'], 'cor' => '#F59E0B'],
+    ['label' => 'Outros bens', 'emoji' => '💎', 'valor' => $pat['outros_valor'], 'qtd' => $pat['outros_qtd'], 'cor' => '#A855F7'],
+    ['label' => 'Investimentos', 'emoji' => '📈', 'valor' => $pat['invest_valor'], 'qtd' => $pat['invest_qtd'], 'cor' => '#22C7F2'],
+    ['label' => 'Contas',   'emoji' => '🏦', 'valor' => $pat['contas_saldo'],  'qtd' => $pat['contas_qtd'],  'cor' => '#22C55E'],
 ];
 $total_pat = (float) $pat['total'];
 ?>

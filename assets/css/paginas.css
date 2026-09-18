@@ -142,7 +142,7 @@
   }
 
 /* ═══ gestao_geral/index.php ═══════════════════════════════════════════ */
-  /* Herói — patrimônio consolidado (preto & dourado) */
+  /* Herói — patrimônio consolidado (tema escuro CZR) */
   .gg-hero{background:linear-gradient(135deg,var(--text),var(--surface-2));border:1px solid rgba(34,199,242,.35);
     border-radius:18px;padding:1.4rem 1.5rem;box-shadow:0 8px 26px rgba(0,0,0,.18);color:var(--surface-2)}
   .gg-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
