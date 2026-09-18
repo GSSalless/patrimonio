@@ -237,7 +237,7 @@ $del = fn($tipo, $itemId) => base_url("clientes/item-remover?tipo=$tipo&item=$it
       </p>
     <?php else: ?>
       <p style="margin:.25rem 0 1rem">
-        <span class="tag" style="background:#4a3a10;color:#e6c15a">Sem acesso</span>
+        <span class="tag" style="background:#4a3a10;color:var(--warning)">Sem acesso</span>
         &nbsp;Este cliente ainda não tem login.
       </p>
     <?php endif; ?>

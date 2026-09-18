@@ -20,7 +20,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --preto: #0e0e10; --preto-2: #1b1b1f;
-    --dourado: #b8912f; --dourado-claro: #d4af37;
+    --dourado: #b8912f; --dourado-claro: var(--secondary);
     --marfim: #f6f4ee;
     --serif: 'Playfair Display', Georgia, serif;
     --sans: 'Inter', 'Segoe UI', Arial, sans-serif;
@@ -41,7 +41,7 @@
     min-height: 520px;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(212,175,55,.25);
+    border: 1px solid rgba(34,199,242,.25);
     box-shadow: 0 24px 70px rgba(0,0,0,.28);
   }
   .login-left {
@@ -56,7 +56,7 @@
   }
   .login-left::after {
     content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 1px;
-    background: linear-gradient(180deg, transparent, rgba(212,175,55,.5), transparent);
+    background: linear-gradient(180deg, transparent, rgba(34,199,242,.5), transparent);
   }
   .brand h1 { font-family: var(--serif); font-size: 27px; font-weight: 800; color: var(--dourado-claro); letter-spacing: .3px; }
   .brand p { font-size: 13px; color: rgba(244,241,232,.5); margin-top: 4px; letter-spacing: .04em; }
@@ -70,7 +70,7 @@
   .login-right {
     width: 380px;
     flex-shrink: 0;
-    background: #fff;
+    background: var(--surface);
     padding: 48px 40px;
     display: flex;
     flex-direction: column;
@@ -83,11 +83,11 @@
   .field label { display: block; font-size: 11.5px; font-weight: 700; color: #7a7361; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
   .field input {
     width: 100%; padding: 11px 14px; border: 1.5px solid #e7e0d0;
-    border-radius: 8px; font-size: 14px; color: #1c1a17; background: #fffdf9;
+    border-radius: 8px; font-size: 14px; color: #1c1a17; background: var(--surface)df9;
     font-family: var(--sans);
     outline: none; transition: border .2s, box-shadow .2s;
   }
-  .field input:focus { border-color: var(--dourado); box-shadow: 0 0 0 3px rgba(184,145,47,.15); background: #fff; }
+  .field input:focus { border-color: var(--dourado); box-shadow: 0 0 0 3px rgba(184,145,47,.15); background: var(--surface); }
 
   .forgot { text-align: right; margin-top: -8px; margin-bottom: 20px; }
   .forgot a { font-size: 12px; color: var(--dourado); text-decoration: none; }
@@ -95,7 +95,7 @@
 
   .btn-login {
     width: 100%; padding: 13px;
-    background: linear-gradient(180deg, #d4af37 0%, var(--dourado) 100%);
+    background: linear-gradient(180deg, var(--secondary) 0%, var(--dourado) 100%);
     color: #201a08;
     border: none; border-radius: 8px; font-size: 14.5px; font-weight: 700;
     font-family: var(--sans); letter-spacing: .02em;

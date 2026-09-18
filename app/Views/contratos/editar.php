@@ -39,7 +39,7 @@ $vinc_txt = Contrato::descreverVinculo($contrato['vinculo_tipo'], $contrato['vin
       <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
         <?php foreach ($docs_list as $doc): ?>
         <a href="<?= url_documento($doc) ?>" target="_blank"
-           style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:#fff;font-size:.85rem;text-decoration:none;color:inherit">
+           style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:var(--surface);font-size:.85rem;text-decoration:none;color:inherit">
           <span><?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? '🖼️' : '📄' ?></span>
           <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= h($doc['nome_arquivo']) ?></span>
           <span class="tag"><?= h($doc['categoria']) ?></span>
@@ -54,7 +54,7 @@ $vinc_txt = Contrato::descreverVinculo($contrato['vinculo_tipo'], $contrato['vin
         <textarea name="observacoes" rows="3"><?= h($d['observacoes'] ?? '') ?></textarea>
       </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar alterações</button>
         <a href="<?= base_url('contratos') ?>" class="btn btn-secundario">Voltar</a>
       </div>

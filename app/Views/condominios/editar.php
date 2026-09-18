@@ -46,7 +46,7 @@ $money = fn($k) => $d[$k] ? number_format((float)$d[$k], 2, ',', '.') : '';
       <div class="form-secao"><div class="form-secao-titulo">6. Observações</div></div>
       <div class="form-grupo"><textarea name="observacoes" rows="3" style="width:100%"><?= $val('observacoes') ?></textarea></div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar alterações</button>
         <a href="<?= $imovel_id ? base_url('imoveis/ficha?id='.$imovel_id) : base_url('imoveis') ?>" class="btn btn-secundario">Cancelar</a>
       </div>

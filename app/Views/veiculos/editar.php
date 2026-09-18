@@ -71,7 +71,7 @@ $v = fn($k) => h($d[$k] ?? '');
         <div class="form-grupo" style="grid-column:1/-1"><label>Observações</label><input type="text" name="observacoes" value="<?=$v('observacoes')?>"></div>
       </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar alterações</button>
         <a href="<?= base_url('veiculos') ?>" class="btn btn-secundario">Cancelar</a>
       </div>

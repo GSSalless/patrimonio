@@ -22,7 +22,7 @@ $cliente_sel = cliente_selecionado();
   <?php
     // Camadas de CSS (organizadores). tokens.css primeiro — é o tema.
     $css_dir = __DIR__ . '/../assets/css/';
-    $css_layers = ['tokens.css', 'layout.css', 'style.css'];
+    $css_layers = ['tokens.css', 'layout.css', 'style.css', 'paginas.css'];
     foreach ($css_layers as $layer):
       if (!is_file($css_dir . $layer)) continue;
       $ver = @filemtime($css_dir . $layer) ?: time();

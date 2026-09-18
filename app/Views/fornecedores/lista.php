@@ -56,7 +56,7 @@ $cat_icone = ['contabilidade'=>'🧮','juridico'=>'⚖️','seguros'=>'🛡️',
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
           <span style="font-size:1.15rem"><?= $cat_icone[$f['categoria']] ?? '🤝' ?></span>
           <?= h($f['codigo']) ?> · <?= $cat_label[$f['categoria']] ?? $f['categoria'] ?>
-          <?php if ($f['avaliacao_nota']): ?><span style="margin-left:auto;color:#d4af37;font-size:.85rem"><?= str_repeat('★', (int)$f['avaliacao_nota']) ?></span><?php endif; ?>
+          <?php if ($f['avaliacao_nota']): ?><span style="margin-left:auto;color:var(--secondary);font-size:.85rem"><?= str_repeat('★', (int)$f['avaliacao_nota']) ?></span><?php endif; ?>
         </div>
         <div class="imovel-card-nome"><?= h($f['nome_fantasia'] ?: $f['nome']) ?></div>
         <div class="imovel-card-local">

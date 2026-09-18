@@ -47,7 +47,7 @@ $hist_cor = ['salario'=>'#1a7a45','promocao'=>'#0891b2','avaliacao'=>'#6366f1','
       <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
         <?php foreach ($docs_list as $doc): ?>
         <a href="<?= url_documento($doc) ?>" target="_blank"
-           style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:#fff;font-size:.85rem;text-decoration:none;color:inherit">
+           style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:var(--surface);font-size:.85rem;text-decoration:none;color:inherit">
           <span><?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? '🖼️' : '📄' ?></span>
           <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= h($doc['nome_arquivo']) ?></span>
           <span class="tag"><?= h($doc['categoria']) ?></span>
@@ -60,7 +60,7 @@ $hist_cor = ['salario'=>'#1a7a45','promocao'=>'#0891b2','avaliacao'=>'#6366f1','
       <div class="form-secao" style="margin-top:1.5rem"><div class="form-secao-titulo">7. Observações</div></div>
       <div class="form-grupo"><textarea name="observacoes" rows="3"><?= h($d['observacoes'] ?? '') ?></textarea></div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar alterações</button>
         <a href="<?= base_url('colaboradores') ?>" class="btn btn-secundario">Cancelar</a>
       </div>
