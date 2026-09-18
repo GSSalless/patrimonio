@@ -1,45 +1,14 @@
 /* ═══════════════════════════════════════════════════════════
-   Gestão Patrimonial — Tema Premium "Preto & Dourado"
-   Híbrido: header/nav pretos · conteúdo marfim · acentos dourados
-   Tipografia: Playfair Display (títulos) + Inter (corpo)
+   Gestão Patrimonial — Design System "CZR Soluções"
+   Tema escuro navy · acentos azul/ciano · tipografia Inter
+   ───────────────────────────────────────────────────────────
+   Os TOKENS (cores, fontes, raios, sombras) ficam em
+   assets/css/tokens.css — carregado ANTES deste arquivo.
+   Aqui ficam apenas os componentes, que consomem os tokens.
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Reset & Base ───────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  /* Núcleo do tema */
-  --preto:        #0e0e10;   /* header · nav · login */
-  --preto-2:      #1b1b1f;   /* gradientes / superfícies escuras */
-  --grafite:      #2a2a2e;
-  --dourado:      #b8912f;   /* acento sobre fundo claro (links, foco) */
-  --dourado-claro:#d4af37;   /* acento sobre fundo escuro (logo, ícones) */
-  --dourado-h:    #9a7826;
-  --marfim:       #f6f4ee;
-
-  /* Aliases usados pelas Views e pelo resto do CSS */
-  --cor-primaria:  #16141a;   /* títulos / superfícies escuras */
-  --cor-acento:    #b8912f;   /* dourado */
-  --cor-acento-h:  #9a7826;
-  --cor-fundo:     #f6f4ee;    /* marfim */
-  --cor-branco:    #ffffff;
-  --cor-borda:     #e7e0d0;    /* hairline dourado-claro */
-  --cor-texto:     #1c1a17;
-  --cor-secundario:#6f6858;
-  --cor-sucesso:   #2f7d52;
-  --cor-alerta:    #a56a12;
-  --cor-erro:      #b23b3b;
-  --cor-tag-bg:    #f2ead6;
-  --cor-tag-txt:   #8a6a1f;
-
-  --sombra:        0 2px 10px rgba(20,16,8,.07);
-  --sombra-alta:   0 14px 38px rgba(20,16,8,.16);
-  --raio:          10px;
-  --raio-sm:       6px;
-
-  --fonte-titulo:  'Playfair Display', Georgia, 'Times New Roman', serif;
-  --fonte-corpo:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
 
 body {
   font-family: var(--fonte-corpo);

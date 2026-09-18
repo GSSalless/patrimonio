@@ -17,10 +17,18 @@ $cliente_sel = cliente_selecionado();
   <title><?= h($page_title ?? 'Gestão Patrimonial') ?></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <?php $css_ver = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time(); ?>
-  <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>?v=<?= $css_ver ?>">
+  <?php
+    // Camadas de CSS (organizadores). tokens.css primeiro — é o tema.
+    $css_dir = __DIR__ . '/../assets/css/';
+    $css_layers = ['tokens.css', 'style.css'];
+    foreach ($css_layers as $layer):
+      if (!is_file($css_dir . $layer)) continue;
+      $ver = @filemtime($css_dir . $layer) ?: time();
+  ?>
+  <link rel="stylesheet" href="<?= base_url('assets/css/' . $layer) ?>?v=<?= $ver ?>">
+  <?php endforeach; ?>
 </head>
 <body>
 

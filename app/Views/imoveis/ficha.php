@@ -105,7 +105,7 @@ if (!function_exists('linha')) {
             </div>
             <?php endif; ?>
           <?php endforeach; ?>
-          <div style="background:var(--cor-primaria);padding:.75rem;border-radius:6px;color:#fff">
+          <div style="background:var(--primary);padding:.75rem;border-radius:6px;color:#fff">
             <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;opacity:.7">Total mensal</div>
             <div style="font-size:1rem;font-weight:700"><?= moeda(custo_mensal_total($im)) ?>/mês</div>
           </div>
