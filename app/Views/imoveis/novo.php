@@ -98,7 +98,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
           </select>
         </div>
       </div>
-      <div id="preview-localizacao" style="display:none;margin-bottom:1rem;padding:.85rem 1rem;background:#faf7ef;border-radius:8px;border-left:4px solid var(--cor-acento)">
+      <div id="preview-localizacao" style="display:none;margin-bottom:1rem;padding:.85rem 1rem;background:var(--surface-2);border-radius:8px;border-left:4px solid var(--cor-acento)">
         <div style="font-size:.78rem;color:var(--cor-secundario);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Links gerados automaticamente</div>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap">
           <a id="btn-preview-maps" href="#" target="_blank" class="btn btn-secundario btn-sm">📍 Google Maps</a>
@@ -238,7 +238,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
       <div class="form-grid form-grid-3" style="margin-bottom:1rem">
         <div class="form-grupo"><label>Valor de mercado (R$)</label><input type="text" name="valor_mercado" placeholder="0,00" value="<?= h($d['valor_mercado'] ?? '') ?>"></div>
         <div class="form-grupo"><label>Data da avaliação</label><input type="date" name="data_avaliacao_mercado" value="<?= h($d['data_avaliacao_mercado'] ?? date('Y-m-d')) ?>"></div>
-        <div class="form-grupo"><label>Valor do m² (R$) <span style="font-weight:400;color:var(--cor-secundario);font-size:.8em">— automático</span></label><input type="text" name="valor_m2" id="valor_m2" placeholder="0,00" readonly title="Calculado automaticamente: valor de compra ÷ área total" style="background:#eef1f5;cursor:not-allowed" value="<?= h($d['valor_m2'] ?? '') ?>"></div>
+        <div class="form-grupo"><label>Valor do m² (R$) <span style="font-weight:400;color:var(--cor-secundario);font-size:.8em">— automático</span></label><input type="text" name="valor_m2" id="valor_m2" placeholder="0,00" readonly title="Calculado automaticamente: valor de compra ÷ área total" style="background:var(--surface-2);cursor:not-allowed" value="<?= h($d['valor_m2'] ?? '') ?>"></div>
         <div class="form-grupo"><label>Valor contábil (R$)</label><input type="text" name="valor_contabil" placeholder="0,00" value="<?= h($d['valor_contabil'] ?? '') ?>"></div>
         <div class="form-grupo" style="grid-column:span 2"><label>Empresa avaliadora</label><input type="text" name="empresa_avaliadora" placeholder="Ex.: CBRE, JLL, Cushman & Wakefield…" value="<?= h($d['empresa_avaliadora'] ?? '') ?>"></div>
       </div>
@@ -263,8 +263,8 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
         foreach ($upload_items as $item):
         ?>
         <div class="upload-row" id="row-<?= $item['field'] ?>"
-             style="display:flex;align-items:center;gap:1rem;padding:.75rem 1rem;border:1px solid var(--cor-borda);border-radius:8px;transition:all .3s;background:#fff">
-          <div class="upload-check" style="width:28px;height:28px;border-radius:50%;border:2px solid #cbd2db;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s">
+             style="display:flex;align-items:center;gap:1rem;padding:.75rem 1rem;border:1px solid var(--cor-borda);border-radius:8px;transition:all .3s;background:var(--surface)">
+          <div class="upload-check" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s">
             <svg class="check-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;transition:opacity .2s">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
@@ -291,7 +291,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
         Formatos aceitos: PDF, JPG, PNG, WEBP · Tamanho máximo por arquivo: 30 MB
       </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar imóvel</button>
         <a href="<?= base_url('imoveis') ?>" class="btn btn-secundario">Cancelar</a>
       </div>
@@ -316,14 +316,6 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
     </div>
   </div>
 </div>
-<style>
-.upload-row.tem-arquivo { border-color: #1a7a45; background: #f0faf4 !important; }
-.upload-row.tem-arquivo .upload-check { background: #1a7a45; border-color: #1a7a45; }
-.upload-row.tem-arquivo .check-icon { opacity: 1 !important; }
-.upload-row.tem-arquivo .upload-btn { background: #e6f4ec; color: #1a7a45; }
-@keyframes pop-in { 0% { transform: scale(0.4); opacity: 0; } 70% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
-.upload-row.tem-arquivo .check-icon { animation: pop-in .35s ease forwards; }
-</style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   function atualizar_maps() {

@@ -37,7 +37,7 @@ require APP_ROOT . '/includes/header.php';
         <textarea name="observacoes" rows="3" placeholder="Informações adicionais sobre o fornecedor…"><?= h($d['observacoes'] ?? '') ?></textarea>
       </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar fornecedor</button>
         <a href="<?= base_url('fornecedores') ?>" class="btn btn-secundario">Cancelar</a>
       </div>

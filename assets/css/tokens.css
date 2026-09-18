@@ -1,0 +1,79 @@
+/* ═══════════════════════════════════════════════════════════
+   Gestão Patrimonial — Design System "CZR Soluções"
+   TOKENS (fonte única de verdade do tema)
+   ───────────────────────────────────────────────────────────
+   Tema escuro navy · acentos azul/ciano · tipografia Inter.
+   Baseado no Design System do mockup (bloco 5).
+
+   ⚠️  Para mudar a identidade visual do sistema inteiro,
+       edite APENAS este arquivo.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Paleta base do Design System ──────────────────────── */
+  --primary:      #168BFF;   /* Primária  — ações, links, foco    */
+  --primary-h:    #0F6FD6;   /* Primária (hover)                  */
+  --secondary:    #22C7F2;   /* Secundária — realces, ícones      */
+  --secondary-h:  #12A9D4;
+
+  --bg:           #07111F;   /* Fundo Principal (canvas)          */
+  --surface:      #0D1C2B;   /* Fundo Superfície (cards)          */
+  --surface-2:    #10233A;   /* Superfície elevada / chips        */
+  --sidebar:      #081522;   /* Sidebar                           */
+
+  --success:      #22C55E;   /* Sucesso                           */
+  --warning:      #F59E0B;   /* Atenção                           */
+  --danger:       #EF4444;   /* Crítico                           */
+  --neutral:      #64748B;   /* Neutro                            */
+  --purple:       #A855F7;   /* categoria/realce auxiliar         */
+
+  --text:         #F5F9FC;   /* Texto Principal                   */
+  --text-2:       #94A3B8;   /* Texto Secundário                  */
+  --text-3:       #64748B;   /* Legenda / muted                   */
+
+  --border:       #18304A;   /* hairline                          */
+  --border-2:     #1E3A5A;   /* borda mais visível                */
+
+  /* ── Escala tipográfica (Inter) ────────────────────────── */
+  --fonte-titulo: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --fonte-corpo:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* ── Raios ─────────────────────────────────────────────── */
+  --raio:         14px;
+  --raio-sm:      10px;
+
+  /* ── Sombras (tema escuro) ─────────────────────────────── */
+  --sombra:       0 8px 30px rgba(0,0,0,.35);
+  --sombra-alta:  0 18px 48px rgba(0,0,0,.5);
+
+  /* ═══════════════════════════════════════════════════════
+     ALIASES DE COMPATIBILIDADE
+     Nomes de variáveis já usados pelo style.css e pelas views,
+     remapeados para o novo tema. Assim todo o CSS existente
+     passa a usar as cores novas sem reescrever cada regra.
+     ═══════════════════════════════════════════════════════ */
+
+  /* Núcleo do tema antigo (preto & dourado) → navy & azul */
+  --preto:         var(--sidebar);   /* header · nav · login       */
+  --preto-2:       var(--surface);   /* superfícies escuras        */
+  --grafite:       var(--surface-2);
+  --dourado:       var(--primary);   /* acento principal           */
+  --dourado-claro: var(--secondary); /* acento claro (logo/ícones) */
+  --dourado-h:     var(--primary-h);
+  --marfim:        var(--bg);
+
+  /* Aliases usados pelas Views e pelo resto do CSS */
+  --cor-primaria:   var(--text);       /* títulos (agora texto claro) */
+  --cor-acento:     var(--primary);
+  --cor-acento-h:   var(--primary-h);
+  --cor-fundo:      var(--bg);
+  --cor-branco:     var(--surface);    /* fundo de cards              */
+  --cor-borda:      var(--border);
+  --cor-texto:      var(--text);
+  --cor-secundario: var(--text-2);
+  --cor-sucesso:    var(--success);
+  --cor-alerta:     var(--warning);
+  --cor-erro:       var(--danger);
+  --cor-tag-bg:     var(--surface-2);
+  --cor-tag-txt:    var(--secondary);
+}

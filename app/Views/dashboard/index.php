@@ -13,11 +13,11 @@ $qtd_imoveis = $pat['imoveis_qtd'] ?? 0;
 $qtd_contas  = $pat['contas_qtd'] ?? 0;
 $total_pat   = (float) ($pat['total'] ?? 0);
 $linhas = [
-    ['Imóveis',  '🏛️', $pat['imoveis_valor']  ?? 0, $pat['imoveis_qtd']  ?? 0, '#c9a227'],
-    ['Veículos', '🚗', $pat['veiculos_valor'] ?? 0, $pat['veiculos_qtd'] ?? 0, '#5b8def'],
-    ['Outros bens', '💎', $pat['outros_valor'] ?? 0, $pat['outros_qtd'] ?? 0, '#9b6dd6'],
-    ['Investimentos', '📈', $pat['invest_valor'] ?? 0, $pat['invest_qtd'] ?? 0, '#e0669e'],
-    ['Contas',   '🏦', $pat['contas_saldo']   ?? 0, $pat['contas_qtd']   ?? 0, '#3fae7a'],
+    ['Imóveis',  '🏛️', $pat['imoveis_valor']  ?? 0, $pat['imoveis_qtd']  ?? 0, '#168BFF'],
+    ['Veículos', '🚗', $pat['veiculos_valor'] ?? 0, $pat['veiculos_qtd'] ?? 0, '#F59E0B'],
+    ['Outros bens', '💎', $pat['outros_valor'] ?? 0, $pat['outros_qtd'] ?? 0, '#A855F7'],
+    ['Investimentos', '📈', $pat['invest_valor'] ?? 0, $pat['invest_qtd'] ?? 0, '#22C7F2'],
+    ['Contas',   '🏦', $pat['contas_saldo']   ?? 0, $pat['contas_qtd']   ?? 0, '#22C55E'],
 ];
 ?>
 <div class="container">
@@ -179,40 +179,4 @@ $linhas = [
   <?php endif; ?>
 
 </div>
-
-<style>
-  .db-pat{background:var(--cor-branco,#fff);border:1px solid var(--cor-borda,#e3e8ef);border-radius:16px;
-    padding:1.2rem 1.35rem;box-shadow:0 3px 12px rgba(0,0,0,.05);margin-bottom:1.6rem}
-  .db-pat-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
-    padding-bottom:.9rem;margin-bottom:.9rem;border-bottom:1px solid var(--cor-borda,#e3e8ef)}
-  .db-pat-l{font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:var(--cor-secundario)}
-  .db-pat-n{font-family:var(--fonte-titulo);font-size:1.7rem;font-weight:800;color:var(--cor-primaria)}
-  .db-pat-rows{display:flex;flex-direction:column;gap:.7rem}
-  .db-pat-row{display:grid;grid-template-columns:auto minmax(90px,1fr) 2fr auto;align-items:center;gap:.7rem}
-  .db-pat-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-    font-size:1rem;border:1px solid}
-  .db-pat-cat{font-size:.88rem;color:var(--cor-primaria);font-weight:600}
-  .db-pat-q{display:inline-block;min-width:18px;text-align:center;font-size:.72rem;font-weight:600;
-    color:var(--cor-secundario);background:var(--cor-fundo,#f4f1ea);border-radius:999px;padding:0 .4rem;margin-left:.15rem}
-  .db-pat-track{height:8px;border-radius:6px;background:var(--cor-fundo,#f0ece3);overflow:hidden}
-  .db-pat-fill{display:block;height:100%;border-radius:6px;transition:width .5s ease}
-  .db-pat-v{font-weight:700;font-size:.92rem;color:var(--cor-primaria);white-space:nowrap;text-align:right}
-  @media (max-width:560px){
-    .db-pat-row{grid-template-columns:auto 1fr auto;grid-template-areas:"ico cat v" "track track track"}
-    .db-pat-ico{grid-area:ico}.db-pat-cat{grid-area:cat}.db-pat-v{grid-area:v}
-    .db-pat-track{grid-area:track;height:7px}
-  }
-
-  /* Indicadores executivos do cliente (Módulo 15) */
-  .db-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;margin-bottom:1.6rem}
-  .db-kpi{display:block;text-decoration:none;color:inherit;background:var(--cor-branco,#fff);
-    border:1px solid var(--cor-borda,#e3e8ef);border-radius:14px;padding:.85rem 1rem;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .2s,transform .2s}
-  .db-kpi:hover{box-shadow:0 8px 18px rgba(0,0,0,.09);transform:translateY(-2px);text-decoration:none}
-  .db-kpi-top{font-size:.76rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--cor-secundario)}
-  .db-kpi-n{font-family:var(--fonte-titulo);font-size:1.35rem;font-weight:800;color:var(--cor-primaria);
-    line-height:1.1;margin:.3rem 0 .15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .db-kpi-sub{font-size:.78rem;color:var(--cor-secundario)}
-  .db-kpi-warn{color:#b45309;font-weight:600}
-</style>
 <?php require APP_ROOT . '/includes/footer.php'; ?>

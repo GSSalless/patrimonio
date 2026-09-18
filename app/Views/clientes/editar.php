@@ -28,7 +28,7 @@ $del = fn($tipo, $itemId) => base_url("clientes/item-remover?tipo=$tipo&item=$it
   <div class="card" style="margin-bottom:1.25rem">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
       <div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700"><?= h($nomeExib) ?></div>
+        <div style="font-size:1.5rem;font-weight:700"><?= h($nomeExib) ?></div>
         <div style="color:var(--cor-secundario);margin-top:.25rem">
           <span class="tag"><?= $cliente['tipo_pessoa'] ?></span>
           <?= $cliente['tipo_pessoa'] === 'PF' ? 'CPF' : 'CNPJ' ?>: <strong><?= h($cliente['cpf_cnpj']) ?></strong>
@@ -237,7 +237,7 @@ $del = fn($tipo, $itemId) => base_url("clientes/item-remover?tipo=$tipo&item=$it
       </p>
     <?php else: ?>
       <p style="margin:.25rem 0 1rem">
-        <span class="tag" style="background:#4a3a10;color:#e6c15a">Sem acesso</span>
+        <span class="tag" style="background:#4a3a10;color:var(--warning)">Sem acesso</span>
         &nbsp;Este cliente ainda não tem login.
       </p>
     <?php endif; ?>

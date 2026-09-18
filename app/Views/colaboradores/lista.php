@@ -8,7 +8,7 @@
 $page_title = 'Colaboradores';
 require APP_ROOT . '/includes/header.php';
 $status_op  = ['ativo'=>'Ativo','experiencia'=>'Experiência','afastado'=>'Afastado','ferias'=>'Férias','desligado'=>'Desligado'];
-$status_cor = ['ativo'=>'#1a7a45','experiencia'=>'#0891b2','afastado'=>'#b45309','ferias'=>'#c9a227','desligado'=>'#64748b'];
+$status_cor = ['ativo'=>'#1a7a45','experiencia'=>'#0891b2','afastado'=>'#b45309','ferias'=>'#22C7F2','desligado'=>'#64748b'];
 // Folha dos ativos.
 $total_folha = array_sum(array_map(fn($c) => in_array($c['status'], ['ativo','experiencia','ferias']) ? (float)($c['salario'] ?? 0) : 0, $colaboradores));
 $ativos = count(array_filter($colaboradores, fn($c) => $c['status'] !== 'desligado'));

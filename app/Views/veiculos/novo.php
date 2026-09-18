@@ -89,8 +89,8 @@ require APP_ROOT . '/includes/header.php';
         foreach ($upload_items as $item):
         ?>
         <div class="upload-row" id="row-<?= $item['field'] ?>"
-             style="display:flex;align-items:center;gap:1rem;padding:.75rem 1rem;border:1px solid var(--cor-borda);border-radius:8px;transition:all .3s;background:#fff">
-          <div class="upload-check" style="width:28px;height:28px;border-radius:50%;border:2px solid #cbd2db;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s">
+             style="display:flex;align-items:center;gap:1rem;padding:.75rem 1rem;border:1px solid var(--cor-borda);border-radius:8px;transition:all .3s;background:var(--surface)">
+          <div class="upload-check" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s">
             <svg class="check-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;transition:opacity .2s">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
@@ -116,7 +116,7 @@ require APP_ROOT . '/includes/header.php';
         Formatos aceitos: PDF, JPG, PNG, WEBP · Tamanho máximo por arquivo: 30 MB
       </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar veículo</button>
         <a href="<?= base_url('veiculos') ?>" class="btn btn-secundario">Cancelar</a>
       </div>
@@ -139,14 +139,6 @@ require APP_ROOT . '/includes/header.php';
     </div>
   </div>
 </div>
-
-<style>
-.upload-row.tem-arquivo { border-color:#1a7a45; background:#f0faf4 !important; }
-.upload-row.tem-arquivo .upload-check { background:#1a7a45; border-color:#1a7a45; }
-.upload-row.tem-arquivo .check-icon { opacity:1 !important; animation:pop-in .35s ease forwards; }
-.upload-row.tem-arquivo .upload-btn { background:#e6f4ec; color:#1a7a45; }
-@keyframes pop-in { 0%{transform:scale(.4);opacity:0} 70%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
-</style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.upload-input').forEach(input => {

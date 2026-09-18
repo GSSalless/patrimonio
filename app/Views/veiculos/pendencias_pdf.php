@@ -29,7 +29,7 @@
     .grupo li { font-size: .9rem; color: #3a4656; margin-bottom: .25rem; }
     .rodape { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #e7e0d0; font-size: .75rem; color: #9aa6b4; text-align: center; }
     .barra-print { position: sticky; top: 0; background: #16141a; color: #fff; padding: .75rem 1rem; margin: -2.5rem -2.5rem 1.5rem; display: flex; gap: .75rem; align-items: center; justify-content: center; }
-    .barra-print button { background: #b8912f; color: #fff; border: none; padding: .5rem 1.25rem; border-radius: 6px; font-size: .9rem; cursor: pointer; font-weight: 600; }
+    .barra-print button { background: #168BFF; color: #fff; border: none; padding: .5rem 1.25rem; border-radius: 6px; font-size: .9rem; cursor: pointer; font-weight: 600; }
     @media print { .barra-print { display: none; } body { padding: 0; } }
   </style>
 </head>

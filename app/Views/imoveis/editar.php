@@ -58,7 +58,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
         <div class="form-grupo"><label>Estado</label><select name="estado" id="estado"><option value="">—</option>
           <?php foreach($estados as $uf): ?><option value="<?=$uf?>" <?=$d['estado']===$uf?'selected':''?>><?=$uf?></option><?php endforeach;?></select></div>
       </div>
-      <div id="preview-localizacao" style="display:none;margin-bottom:1rem;padding:.85rem 1rem;background:#faf7ef;border-radius:8px;border-left:4px solid var(--cor-acento)">
+      <div id="preview-localizacao" style="display:none;margin-bottom:1rem;padding:.85rem 1rem;background:var(--surface-2);border-radius:8px;border-left:4px solid var(--cor-acento)">
         <div style="font-size:.78rem;color:var(--cor-secundario);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Links gerados automaticamente</div>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap">
           <a id="btn-preview-maps" href="<?= h($im['link_maps'] ?? '#') ?>" target="_blank" class="btn btn-secundario btn-sm">📍 Google Maps</a>
@@ -139,7 +139,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
       <div class="form-grid form-grid-3" style="margin-bottom:1rem">
         <div class="form-grupo"><label>Valor de mercado (R$)</label><input type="text" name="valor_mercado" placeholder="0,00" value="<?=mf_val((float)($d['valor_mercado']??0))?>"></div>
         <div class="form-grupo"><label>Data da avaliação</label><input type="date" name="data_avaliacao_mercado" value="<?=$v('data_avaliacao_mercado')?>"></div>
-        <div class="form-grupo"><label>Valor do m² (R$) <span style="font-weight:400;color:var(--cor-secundario);font-size:.8em">— automático</span></label><input type="text" name="valor_m2" id="valor_m2" placeholder="0,00" readonly title="Calculado automaticamente: valor de compra ÷ área total" style="background:#eef1f5;cursor:not-allowed" value="<?=mf_val((float)($d['valor_m2']??0))?>"></div>
+        <div class="form-grupo"><label>Valor do m² (R$) <span style="font-weight:400;color:var(--cor-secundario);font-size:.8em">— automático</span></label><input type="text" name="valor_m2" id="valor_m2" placeholder="0,00" readonly title="Calculado automaticamente: valor de compra ÷ área total" style="background:var(--surface-2);cursor:not-allowed" value="<?=mf_val((float)($d['valor_m2']??0))?>"></div>
         <div class="form-grupo"><label>Valor contábil (R$)</label><input type="text" name="valor_contabil" placeholder="0,00" value="<?=mf_val((float)($d['valor_contabil']??0))?>"></div>
         <div class="form-grupo" style="grid-column:span 2"><label>Empresa avaliadora</label><input type="text" name="empresa_avaliadora" value="<?=$v('empresa_avaliadora')?>"></div>
       </div>
@@ -150,7 +150,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
         <?php endforeach;?>
       </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid #dde2ea">
+      <div style="display:flex;gap:.75rem;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border)">
         <button type="submit" class="btn btn-primario">Salvar alterações</button>
         <a href="<?= base_url('imoveis/ficha?id='.$id) ?>" class="btn btn-secundario">Cancelar</a>
       </div>

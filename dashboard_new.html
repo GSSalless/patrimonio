@@ -1,0 +1,589 @@
+<title>CZR Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    /* Paleta do Design System CZR (mockup) */
+    --bg:        #07111F;   /* Fundo Principal */
+    --surface:   #0D1C2B;   /* Fundo Superfície / cards */
+    --surface-2: #10233A;   /* superfície levemente elevada */
+    --sidebar:   #081522;   /* Sidebar */
+    --primary:   #168BFF;   /* Primária */
+    --secondary: #22C7F2;   /* Secundária */
+    --success:   #22C55E;   /* Sucesso */
+    --warning:   #F59E0B;   /* Atenção */
+    --danger:    #EF4444;   /* Crítico */
+    --neutral:   #64748B;   /* Neutro */
+    --purple:    #A855F7;   /* categoria Empresas (donut) */
+    --text:      #F5F9FC;   /* Texto Principal */
+    --text-2:    #94A3B8;   /* texto secundário */
+    --text-3:    #64748B;   /* legenda / muted */
+    --border:    #18304A;   /* hairline */
+    --border-2:  #1E3A5A;
+    --radius:    14px;
+    --radius-sm: 10px;
+    --shadow:    0 8px 30px rgba(0,0,0,.35);
+    --sidebar-w: 236px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--text);
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  /* ── Sidebar ─────────────────────────────── */
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0;
+    width:var(--sidebar-w);
+    background:var(--sidebar);
+    border-right:1px solid var(--border);
+    display:flex; flex-direction:column;
+    padding-top:env(safe-area-inset-top,0px);
+    z-index:60;
+    transition:transform .24s cubic-bezier(.4,0,.2,1);
+  }
+  .brand{
+    display:flex; align-items:center; gap:.7rem;
+    padding:1.15rem 1.25rem 1.1rem;
+  }
+  .brand-mark{
+    width:38px; height:38px; border-radius:10px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.95rem; letter-spacing:.02em;
+    color:#fff;
+    background:linear-gradient(150deg,var(--primary),var(--secondary));
+    box-shadow:0 4px 14px rgba(22,139,255,.4);
+  }
+  .brand-name{ font-weight:700; font-size:1.02rem; line-height:1; }
+  .brand-sub{ font-size:.62rem; letter-spacing:.18em; color:var(--secondary); font-weight:600; margin-top:.25rem; text-transform:uppercase; }
+
+  .nav{ flex:1; overflow-y:auto; padding:.35rem .6rem 1rem; }
+  .nav-item{
+    display:flex; align-items:center; gap:.75rem;
+    padding:.6rem .7rem; margin-bottom:.12rem;
+    border-radius:var(--radius-sm);
+    color:var(--text-2); font-size:.87rem; font-weight:500;
+    text-decoration:none; cursor:pointer;
+    border:1px solid transparent;
+    transition:background .15s,color .15s;
+  }
+  .nav-item svg{ width:19px; height:19px; flex-shrink:0; opacity:.9; }
+  .nav-item:hover{ background:rgba(255,255,255,.04); color:var(--text); }
+  .nav-item.active{
+    background:linear-gradient(90deg,rgba(22,139,255,.18),rgba(22,139,255,.05));
+    color:#fff;
+    border-color:rgba(22,139,255,.35);
+  }
+  .nav-item.active svg{ color:var(--primary); opacity:1; }
+  .nav-sep{ height:1px; background:var(--border); margin:.7rem .5rem; }
+
+  .nav-user{
+    display:flex; align-items:center; gap:.65rem;
+    padding:.85rem 1rem; margin:.4rem;
+    border-top:1px solid var(--border);
+  }
+  .avatar{
+    width:36px; height:36px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; color:#fff; font-size:.9rem;
+    background:linear-gradient(150deg,var(--primary),#0f6fd6);
+  }
+  .nav-user-name{ font-size:.85rem; font-weight:600; }
+  .nav-user-role{ font-size:.7rem; color:var(--text-3); }
+
+  /* ── Área principal ──────────────────────── */
+  .main{ margin-left:var(--sidebar-w); min-height:100vh; }
+
+  .topbar{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
+    display:flex; align-items:center; gap:1rem;
+    padding:.8rem 1.5rem;
+    background:rgba(7,17,31,.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .hamb{
+    display:none; width:38px; height:38px; flex-shrink:0;
+    align-items:center; justify-content:center;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; color:var(--text); cursor:pointer;
+  }
+  .hamb svg{ width:20px; height:20px; }
+  .search{
+    display:flex; align-items:center; gap:.55rem;
+    flex:1; max-width:420px;
+    padding:.55rem .85rem;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; color:var(--text-3);
+  }
+  .search svg{ width:17px; height:17px; flex-shrink:0; }
+  .search input{
+    border:none; background:none; outline:none; flex:1;
+    color:var(--text); font-family:var(--font); font-size:.86rem;
+  }
+  .search input::placeholder{ color:var(--text-3); }
+  .topbar-right{ margin-left:auto; display:flex; align-items:center; gap:1.1rem; }
+  .icon-btn{
+    position:relative; width:40px; height:40px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; color:var(--text-2); cursor:pointer;
+  }
+  .icon-btn svg{ width:19px; height:19px; }
+  .dot{
+    position:absolute; top:8px; right:9px;
+    width:8px; height:8px; border-radius:50%;
+    border:2px solid var(--surface);
+  }
+  .dot.red{ background:var(--danger); }
+  .dot.amber{ background:var(--warning); }
+  .topbar-date{ text-align:right; line-height:1.2; }
+  .topbar-date .d{ font-size:.78rem; color:var(--text-2); }
+  .topbar-date .t{ font-size:1.05rem; font-weight:700; letter-spacing:.02em; }
+
+  .content{ padding:1.5rem; display:flex; flex-direction:column; gap:1.15rem; }
+
+  /* ── Card base ───────────────────────────── */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:1.25rem;
+  }
+  .card-head{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:1.1rem;
+  }
+  .card-title{ font-size:1.02rem; font-weight:600; }
+  .card-sub{ font-size:.78rem; color:var(--text-3); }
+  .link{ color:var(--primary); font-size:.8rem; font-weight:600; text-decoration:none; cursor:pointer; }
+  .pill{
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.3rem .7rem; border-radius:8px;
+    background:var(--surface-2); border:1px solid var(--border);
+    font-size:.76rem; color:var(--text-2); cursor:pointer;
+  }
+  .pill svg{ width:13px; height:13px; }
+
+  /* ── Saudação ────────────────────────────── */
+  .hello{
+    display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(34,199,242,.10), transparent 55%),
+      radial-gradient(120% 140% at 0% 100%, rgba(22,139,255,.12), transparent 55%),
+      var(--surface);
+  }
+  .hello h1{ font-size:1.7rem; font-weight:700; margin:0 0 .25rem; letter-spacing:-.01em; }
+  .hello p{ margin:0; color:var(--text-2); font-size:.9rem; }
+  .hello-quote{
+    text-align:right; font-style:italic; color:var(--secondary);
+    font-size:.95rem; max-width:230px; line-height:1.4;
+  }
+
+  /* ── KPIs ────────────────────────────────── */
+  .kpi-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1.15rem;
+  }
+  .kpi{ position:relative; }
+  .kpi-ico{
+    position:absolute; top:1.1rem; right:1.1rem;
+    width:34px; height:34px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .kpi-ico svg{ width:17px; height:17px; }
+  .kpi-label{ font-size:.78rem; color:var(--text-2); margin-bottom:.55rem; }
+  .kpi-value{ font-size:1.55rem; font-weight:700; letter-spacing:-.01em; }
+  .kpi-delta{ display:flex; align-items:center; gap:.3rem; font-size:.78rem; font-weight:600; margin-top:.5rem; }
+  .up::before{ content:'▲'; font-size:.62rem; }
+  .t-green{ color:var(--success); }  .bg-green{ background:rgba(34,197,94,.14); color:var(--success); }
+  .t-amber{ color:var(--warning); }  .bg-amber{ background:rgba(245,158,11,.14); color:var(--warning); }
+  .t-red{ color:var(--danger); }     .bg-red{ background:rgba(239,68,68,.14); color:var(--danger); }
+  .bg-blue{ background:rgba(22,139,255,.14); color:var(--primary); }
+  .kpi-delta .muted{ color:var(--text-3); font-weight:500; }
+
+  /* ── Linhas de 2 colunas ─────────────────── */
+  .row-2{ display:grid; grid-template-columns:1.7fr 1fr; gap:1.15rem; }
+  .row-2b{ display:grid; grid-template-columns:1fr 1fr; gap:1.15rem; }
+
+  /* Gráfico de linha */
+  .chart-line{ width:100%; height:auto; display:block; }
+
+  /* Donut */
+  .donut-wrap{ display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap; }
+  .donut{ position:relative; width:150px; height:150px; flex-shrink:0; }
+  .donut svg{ width:100%; height:100%; transform:rotate(-90deg); }
+  .donut-center{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+  }
+  .donut-center .v{ font-size:1.05rem; font-weight:700; }
+  .donut-center .l{ font-size:.68rem; color:var(--text-3); }
+  .legend{ display:flex; flex-direction:column; gap:.55rem; flex:1; min-width:150px; }
+  .legend-row{ display:flex; align-items:center; gap:.6rem; font-size:.82rem; }
+  .legend-dot{ width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+  .legend-row .name{ color:var(--text-2); }
+  .legend-row .pct{ margin-left:auto; font-weight:600; }
+
+  /* Lista de tarefas */
+  .task-list{ display:flex; flex-direction:column; }
+  .task-row{
+    display:flex; align-items:center; gap:.85rem;
+    padding:.8rem .2rem; border-bottom:1px solid var(--border);
+  }
+  .task-row:last-child{ border-bottom:none; }
+  .task-ico{
+    width:34px; height:34px; border-radius:9px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .task-ico svg{ width:17px; height:17px; }
+  .task-name{ flex:1; font-size:.87rem; }
+  .task-count{
+    min-width:26px; height:24px; padding:0 .5rem; border-radius:7px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.82rem; font-weight:700;
+    background:var(--surface-2); border:1px solid var(--border);
+  }
+
+  /* Mercados */
+  .tabs{ display:flex; gap:.3rem; margin-bottom:1rem; flex-wrap:wrap; }
+  .tab{
+    padding:.4rem .8rem; border-radius:8px; font-size:.8rem; font-weight:500;
+    color:var(--text-2); background:transparent; border:1px solid transparent; cursor:pointer;
+  }
+  .tab.active{ background:var(--surface-2); color:var(--text); border-color:var(--border); }
+  .quotes{ display:grid; grid-template-columns:1fr 1fr; gap:.55rem .9rem; }
+  .quote{
+    display:flex; align-items:baseline; gap:.5rem;
+    padding:.5rem .3rem; border-bottom:1px solid var(--border);
+  }
+  .quote .sym{ font-size:.82rem; color:var(--text-2); width:74px; flex-shrink:0; }
+  .quote .val{ font-size:.86rem; font-weight:600; }
+  .quote .chg{ margin-left:auto; font-size:.76rem; font-weight:600; }
+  .clocks{ display:grid; grid-template-columns:repeat(4,1fr); gap:.6rem; margin-top:1rem; }
+  .clock{
+    text-align:center; padding:.7rem .3rem;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+  }
+  .clock svg{ width:18px; height:18px; color:var(--secondary); margin-bottom:.25rem; }
+  .clock .city{ font-size:.68rem; color:var(--text-3); }
+  .clock .time{ font-size:.92rem; font-weight:700; }
+
+  /* Badge de status (usado no rodapé demo) */
+  .demo-note{
+    text-align:center; font-size:.74rem; color:var(--text-3);
+    padding:.4rem 0 1rem;
+  }
+  .demo-note b{ color:var(--secondary); font-weight:600; }
+
+  /* ── Off-canvas / responsivo ─────────────── */
+  .overlay{
+    position:fixed; inset:0; background:rgba(4,10,18,.6);
+    z-index:55; opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  @media (max-width:1000px){
+    .sidebar{ transform:translateX(-100%); box-shadow:var(--shadow); }
+    body.nav-open .sidebar{ transform:translateX(0); }
+    body.nav-open .overlay{ opacity:1; pointer-events:auto; }
+    .main{ margin-left:0; }
+    .hamb{ display:flex; }
+    .kpi-grid{ grid-template-columns:repeat(2,1fr); }
+    .row-2, .row-2b{ grid-template-columns:1fr; }
+  }
+  @media (max-width:560px){
+    .content{ padding:1rem; }
+    .topbar{ padding:.7rem 1rem; }
+    .hello{ flex-direction:column; align-items:flex-start; }
+    .hello-quote{ text-align:left; max-width:none; }
+    .kpi-grid{ grid-template-columns:1fr; }
+    .quotes{ grid-template-columns:1fr; }
+    .clocks{ grid-template-columns:repeat(2,1fr); }
+    .topbar-date .d{ display:none; }
+  }
+  @media (prefers-reduced-motion:reduce){ *{ transition:none!important; } }
+</style>
+
+<!-- ═══ Biblioteca de ícones (símbolos SVG) ═══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-dash"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></g>
+    <g id="i-users"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3 3 0 0 1 0 5.6"/><path d="M17.5 20a5.5 5.5 0 0 0-3-4.9"/></g>
+    <g id="i-net"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="4" r="1.8"/><circle cx="12" cy="20" r="1.8"/><circle cx="4.5" cy="8" r="1.8"/><circle cx="19.5" cy="8" r="1.8"/><path d="M12 6v3.4M12 14.6V18M9.8 10.8 6 8.8M14.2 10.8 18 8.8"/></g>
+    <g id="i-box"><path d="M12 3 20 7v10l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/></g>
+    <g id="i-wallet"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><circle cx="16.5" cy="14" r="1.2"/></g>
+    <g id="i-file"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></g>
+    <g id="i-check"><path d="M4 5.5h16M4 12h16M4 18.5h9"/><path d="M15.5 17.5l1.8 1.8 3.2-3.6" style="stroke-width:2"/></g>
+    <g id="i-user"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></g>
+    <g id="i-truck"><rect x="2.5" y="7" width="11" height="9" rx="1"/><path d="M13.5 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></g>
+    <g id="i-folder"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.2h8A1.5 1.5 0 0 1 20.5 8.7v9.3A1.5 1.5 0 0 1 19 19.5H4.5A1.5 1.5 0 0 1 3 18z"/></g>
+    <g id="i-chart"><path d="M4 4v16h16"/><path d="M8 15l3.5-4 3 2.5L20 7"/></g>
+    <g id="i-spark"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></g>
+    <g id="i-gear"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4 5.3 5.3"/></g>
+    <g id="i-help"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.1 1-1.1 1.8"/><circle cx="12" cy="16.5" r=".6" style="stroke-width:1.6"/></g>
+    <g id="i-bell"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 19a2 2 0 0 0 4 0"/></g>
+    <g id="i-search"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></g>
+    <g id="i-home"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></g>
+    <g id="i-doc2"><path d="M7 3h6l4 4v14H7z"/><path d="M13 3v4h4"/></g>
+    <g id="i-refresh"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 16"/><path d="M4 20v-4h4"/></g>
+    <g id="i-renew"><path d="M3 12a9 9 0 0 1 15.5-6.2"/><path d="M18.5 3v3H15.5"/><path d="M21 12a9 9 0 0 1-15.5 6.2"/><path d="M5.5 21v-3H8.5"/></g>
+    <g id="i-clock"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></g>
+    <g id="i-menu"><path d="M4 7h16M4 12h16M4 17h16"/></g>
+    <g id="i-alert"><path d="M12 3.5 21 19H3z"/><path d="M12 10v4"/><circle cx="12" cy="16.5" r=".5" style="stroke-width:1.6"/></g>
+    <g id="i-trend"><path d="M4 15l5-5 3 3 8-8"/><path d="M20 5v5h-5"/></g>
+  </defs>
+</svg>
+<style>svg use, .nav-item svg, .icon-btn svg, .search svg, .task-ico svg, .kpi-ico svg, .clock svg, .hamb svg, .pill svg{ fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }</style>
+
+<!-- ═══ Sidebar ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">CZR</div>
+    <div>
+      <div class="brand-name">CZR</div>
+      <div class="brand-sub">Soluções</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <a class="nav-item active"><svg><use href="#i-dash"/></svg>Dashboard</a>
+    <a class="nav-item"><svg><use href="#i-users"/></svg>Clientes</a>
+    <a class="nav-item"><svg><use href="#i-net"/></svg>Teia Patrimonial</a>
+    <a class="nav-item"><svg><use href="#i-box"/></svg>Ativos</a>
+    <a class="nav-item"><svg><use href="#i-wallet"/></svg>Financeiro</a>
+    <a class="nav-item"><svg><use href="#i-file"/></svg>Documentos</a>
+    <a class="nav-item"><svg><use href="#i-check"/></svg>Tarefas</a>
+    <a class="nav-item"><svg><use href="#i-user"/></svg>Pessoas (RH)</a>
+    <a class="nav-item"><svg><use href="#i-truck"/></svg>Fornecedores</a>
+    <a class="nav-item"><svg><use href="#i-folder"/></svg>Projetos</a>
+    <a class="nav-item"><svg><use href="#i-chart"/></svg>Relatórios</a>
+    <a class="nav-item"><svg><use href="#i-spark"/></svg>IA Assistente</a>
+    <div class="nav-sep"></div>
+    <a class="nav-item"><svg><use href="#i-gear"/></svg>Configurações</a>
+    <a class="nav-item"><svg><use href="#i-help"/></svg>Ajuda</a>
+  </nav>
+  <div class="nav-user">
+    <div class="avatar">C</div>
+    <div>
+      <div class="nav-user-name">César Cordeiro</div>
+      <div class="nav-user-role">Administrador</div>
+    </div>
+  </div>
+</aside>
+<div class="overlay" id="overlay"></div>
+
+<!-- ═══ Principal ═══ -->
+<div class="main">
+  <header class="topbar">
+    <button class="hamb" id="hamb" aria-label="Abrir menu"><svg><use href="#i-menu"/></svg></button>
+    <label class="search">
+      <svg><use href="#i-search"/></svg>
+      <input id="busca" placeholder="Buscar clientes, ativos, documentos, tarefas..." aria-label="Buscar">
+    </label>
+    <div class="topbar-right">
+      <button class="icon-btn" aria-label="Notificações"><svg><use href="#i-bell"/></svg><span class="dot amber"></span></button>
+      <button class="icon-btn" aria-label="Alertas"><svg><use href="#i-bell"/></svg><span class="dot red"></span></button>
+      <div class="topbar-date">
+        <div class="d">Qua, 10 de set de 2026</div>
+        <div class="t num">14:28</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- Saudação -->
+    <section class="card hello">
+      <div>
+        <h1>Olá, César!</h1>
+        <p>Aqui o panorama da sua operação.</p>
+      </div>
+      <div class="hello-quote">“Organização hoje,<br>mais patrimônio amanhã.”</div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="kpi-grid">
+      <div class="card kpi">
+        <div class="kpi-ico bg-blue"><svg><use href="#i-box"/></svg></div>
+        <div class="kpi-label">Património sob gestão</div>
+        <div class="kpi-value num">R$ 48.320.000</div>
+        <div class="kpi-delta t-green"><span class="up"></span>12,4% <span class="muted">vs. mês anterior</span></div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-ico bg-green"><svg><use href="#i-trend"/></svg></div>
+        <div class="kpi-label">Receitas (mês)</div>
+        <div class="kpi-value num">R$ 312.450</div>
+        <div class="kpi-delta t-green"><span class="up"></span>8,7% <span class="muted">vs. mês anterior</span></div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-ico bg-amber"><svg><use href="#i-wallet"/></svg></div>
+        <div class="kpi-label">Despesas (mês)</div>
+        <div class="kpi-value num">R$ 186.320</div>
+        <div class="kpi-delta t-amber"><span class="up"></span>5,1% <span class="muted">vs. mês anterior</span></div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-ico bg-red"><svg><use href="#i-alert"/></svg></div>
+        <div class="kpi-label">Pendências críticas</div>
+        <div class="kpi-value num">8</div>
+        <div class="kpi-delta t-red"><svg style="width:12px;height:12px"><use href="#i-alert"/></svg> requerem sua atenção</div>
+      </div>
+    </section>
+
+    <!-- Evolução + Distribuição -->
+    <section class="row-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Evolução do patrimônio sob gestão</div>
+          <span class="pill"><svg><use href="#i-refresh"/></svg>12 meses</span>
+        </div>
+        <svg class="chart-line" viewBox="0 0 560 244" role="img" aria-label="Evolução do patrimônio, de 31 a 48,32 milhões entre janeiro e setembro">
+          <defs>
+            <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#168BFF" stop-opacity=".38"/>
+              <stop offset="100%" stop-color="#168BFF" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- grid + eixo Y -->
+          <g stroke="#18304A" stroke-width="1">
+            <line x1="44" y1="20"  x2="540" y2="20"/>
+            <line x1="44" y1="52"  x2="540" y2="52"/>
+            <line x1="44" y1="84"  x2="540" y2="84"/>
+            <line x1="44" y1="116" x2="540" y2="116"/>
+            <line x1="44" y1="148" x2="540" y2="148"/>
+            <line x1="44" y1="180" x2="540" y2="180"/>
+            <line x1="44" y1="212" x2="540" y2="212"/>
+          </g>
+          <g fill="#64748B" font-size="11" font-family="Inter" text-anchor="end">
+            <text x="36" y="215">0</text><text x="36" y="183">10</text><text x="36" y="151">20</text>
+            <text x="36" y="119">30</text><text x="36" y="87">40</text><text x="36" y="55">50</text><text x="36" y="24">60</text>
+          </g>
+          <text x="44" y="235" fill="#64748B" font-size="10.5" font-family="Inter">R$ MM</text>
+          <!-- área + linha -->
+          <polygon points="44,112.8 106,106.4 168,101.6 230,96.8 292,88.8 354,84 416,76 478,68 540,57.4 540,212 44,212" fill="url(#area)"/>
+          <polyline points="44,112.8 106,106.4 168,101.6 230,96.8 292,88.8 354,84 416,76 478,68 540,57.4" fill="none" stroke="#168BFF" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+          <!-- endpoint -->
+          <circle cx="540" cy="57.4" r="4.5" fill="#22C7F2" stroke="#07111F" stroke-width="2"/>
+          <!-- tooltip -->
+          <g>
+            <rect x="404" y="26" width="128" height="40" rx="8" fill="#10233A" stroke="#1E3A5A"/>
+            <text x="416" y="43" fill="#94A3B8" font-size="10.5" font-family="Inter">Set/2026</text>
+            <text x="416" y="59" fill="#F5F9FC" font-size="13" font-weight="700" font-family="Inter">R$ 48,32M</text>
+          </g>
+          <!-- labels X -->
+          <g fill="#64748B" font-size="11" font-family="Inter" text-anchor="middle">
+            <text x="44" y="232">Jan</text><text x="106" y="232">Fev</text><text x="168" y="232">Mar</text>
+            <text x="230" y="232">Abr</text><text x="292" y="232">Mai</text><text x="354" y="232">Jun</text>
+            <text x="416" y="232">Jul</text><text x="478" y="232">Ago</text><text x="540" y="232">Set</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Distribuição por categoria</div></div>
+        <div class="donut-wrap">
+          <div class="donut">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#0F2136" stroke-width="12"/>
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#168BFF" stroke-width="12" stroke-dasharray="142.8 196.5" stroke-dashoffset="0"/>
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#22C7F2" stroke-width="12" stroke-dasharray="83.5 255.8" stroke-dashoffset="-142.8"/>
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#A855F7" stroke-width="12" stroke-dasharray="42.8 296.5" stroke-dashoffset="-226.3"/>
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#F59E0B" stroke-width="12" stroke-dasharray="28.2 311.1" stroke-dashoffset="-269.1"/>
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#64748B" stroke-width="12" stroke-dasharray="41.4 297.9" stroke-dashoffset="-297.2"/>
+            </svg>
+            <div class="donut-center">
+              <div class="v num">R$ 48,32M</div>
+              <div class="l">Total</div>
+            </div>
+          </div>
+          <div class="legend">
+            <div class="legend-row"><span class="legend-dot" style="background:#168BFF"></span><span class="name">Imóveis</span><span class="pct num">42,1%</span></div>
+            <div class="legend-row"><span class="legend-dot" style="background:#22C7F2"></span><span class="name">Investimentos</span><span class="pct num">24,6%</span></div>
+            <div class="legend-row"><span class="legend-dot" style="background:#A855F7"></span><span class="name">Empresas</span><span class="pct num">12,6%</span></div>
+            <div class="legend-row"><span class="legend-dot" style="background:#F59E0B"></span><span class="name">Veículos</span><span class="pct num">8,3%</span></div>
+            <div class="legend-row"><span class="legend-dot" style="background:#64748B"></span><span class="name">Outros</span><span class="pct num">12,2%</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tarefas + Mercados -->
+    <section class="row-2b">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Tarefas e Pendências</div>
+          <a class="link">Ver todas →</a>
+        </div>
+        <div class="task-list">
+          <div class="task-row">
+            <div class="task-ico bg-blue"><svg><use href="#i-clock"/></svg></div>
+            <div class="task-name">Vencimentos esta semana</div>
+            <div class="task-count num">12</div>
+          </div>
+          <div class="task-row">
+            <div class="task-ico bg-amber"><svg><use href="#i-doc2"/></svg></div>
+            <div class="task-name">Documentos pendentes</div>
+            <div class="task-count num">8</div>
+          </div>
+          <div class="task-row">
+            <div class="task-ico bg-green"><svg><use href="#i-refresh"/></svg></div>
+            <div class="task-name">Revisões programadas</div>
+            <div class="task-count num">5</div>
+          </div>
+          <div class="task-row">
+            <div class="task-ico bg-red"><svg><use href="#i-renew"/></svg></div>
+            <div class="task-name">Contratos a renovar</div>
+            <div class="task-count num">4</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Mercados &amp; Mundo</div></div>
+        <div class="tabs" id="tabs">
+          <button class="tab active">Moedas</button>
+          <button class="tab">Bolsas</button>
+          <button class="tab">Commodities</button>
+          <button class="tab">Relógio Mundial</button>
+        </div>
+        <div class="quotes">
+          <div class="quote"><span class="sym">USD / BRL</span><span class="val num">5,42</span><span class="chg t-green">+0,32%</span></div>
+          <div class="quote"><span class="sym">Ibovespa</span><span class="val num">134.521</span><span class="chg t-green">+1,24%</span></div>
+          <div class="quote"><span class="sym">EUR / BRL</span><span class="val num">6,35</span><span class="chg t-green">+0,28%</span></div>
+          <div class="quote"><span class="sym">S&amp;P 500</span><span class="val num">5.482</span><span class="chg t-green">+0,62%</span></div>
+          <div class="quote"><span class="sym">GBP / BRL</span><span class="val num">7,38</span><span class="chg t-green">+0,12%</span></div>
+          <div class="quote"><span class="sym">Nasdaq</span><span class="val num">17.420</span><span class="chg t-green">+0,71%</span></div>
+        </div>
+        <div class="clocks">
+          <div class="clock"><svg><use href="#i-clock"/></svg><div class="city">São Paulo</div><div class="time num">14:28</div></div>
+          <div class="clock"><svg><use href="#i-clock"/></svg><div class="city">Nova York</div><div class="time num">13:28</div></div>
+          <div class="clock"><svg><use href="#i-clock"/></svg><div class="city">Londres</div><div class="time num">18:28</div></div>
+          <div class="clock"><svg><use href="#i-clock"/></svg><div class="city">Dubai</div><div class="time num">21:28</div></div>
+        </div>
+      </div>
+    </section>
+
+    <p class="demo-note">Protótipo visual — <b>CZR Soluções · Gestão Patrimonial</b> · dados ilustrativos para demonstração do novo layout.</p>
+  </div>
+</div>
+
+<script>
+  // Menu off-canvas (telas pequenas)
+  var hamb = document.getElementById('hamb');
+  var overlay = document.getElementById('overlay');
+  function closeNav(){ document.body.classList.remove('nav-open'); }
+  hamb.addEventListener('click', function(){ document.body.classList.toggle('nav-open'); });
+  overlay.addEventListener('click', closeNav);
+
+  // Troca de abas (Mercados)
+  var tabs = document.getElementById('tabs');
+  tabs.addEventListener('click', function(e){
+    var b = e.target.closest('.tab'); if(!b) return;
+    tabs.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    b.classList.add('active');
+  });
+</script>

@@ -146,30 +146,30 @@ class ErrorHandler
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{$codigo} — {$titulo}</title>
 <style>
-  :root{--dourado:#d4af37;--dourado-2:#b8912f}
+  :root{--dourado:#168BFF;--dourado-2:#22C7F2}
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(180deg,#16161a 0%,#0e0e10 100%);color:#f4f1e8;
+    background:linear-gradient(180deg,#0D1C2B 0%,#07111F 100%);color:#F5F9FC;
     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:1.5rem}
   .box{max-width:520px;width:100%;text-align:center}
-  .cod{font-family:Georgia,'Times New Roman',serif;font-size:5rem;font-weight:700;line-height:1;
+  .cod{font-family:'Inter',sans-serif;font-size:5rem;font-weight:700;line-height:1;
     background:linear-gradient(90deg,var(--dourado),var(--dourado-2));-webkit-background-clip:text;
     background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
-  h1{font-family:Georgia,serif;font-weight:600;font-size:1.5rem;margin:.2rem 0 .6rem}
-  p{color:rgba(244,241,232,.7);line-height:1.6;margin:0 auto 1.6rem;max-width:400px}
+  h1{font-family:'Inter',sans-serif;font-weight:600;font-size:1.5rem;margin:.2rem 0 .6rem}
+  p{color:rgba(245,249,252,.7);line-height:1.6;margin:0 auto 1.6rem;max-width:400px}
   .acoes{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
   a.btn{display:inline-block;padding:.65rem 1.3rem;border-radius:8px;font-size:.92rem;font-weight:600;
     text-decoration:none;transition:.15s}
-  .btn-o{background:linear-gradient(180deg,#d4af37,#b8912f);color:#16141a}
+  .btn-o{background:#168BFF;color:#fff}
   .btn-o:hover{filter:brightness(1.08)}
-  .btn-g{border:1px solid rgba(212,175,55,.4);color:rgba(244,241,232,.85)}
-  .btn-g:hover{background:rgba(212,175,55,.1)}
-  .err-tec{margin-top:2rem;text-align:left;background:rgba(0,0,0,.35);border:1px solid rgba(212,175,55,.25);
-    border-radius:8px;padding:1rem;font-size:.82rem;color:#f0d98a;overflow:auto}
-  .err-tec span{color:rgba(244,241,232,.55)}
-  .err-tec code{color:#f4f1e8}
-  .err-dica{margin:.7rem 0;padding:.6rem .7rem;background:rgba(212,175,55,.12);border-radius:6px;color:#f4f1e8}
-  .err-tec pre{margin:.7rem 0 0;white-space:pre-wrap;color:rgba(244,241,232,.6);font-size:.75rem}
+  .btn-g{border:1px solid rgba(34,199,242,.4);color:rgba(245,249,252,.85)}
+  .btn-g:hover{background:rgba(34,199,242,.1)}
+  .err-tec{margin-top:2rem;text-align:left;background:rgba(0,0,0,.35);border:1px solid rgba(34,199,242,.25);
+    border-radius:8px;padding:1rem;font-size:.82rem;color:#cbd5e1;overflow:auto}
+  .err-tec span{color:rgba(245,249,252,.55)}
+  .err-tec code{color:#F5F9FC}
+  .err-dica{margin:.7rem 0;padding:.6rem .7rem;background:rgba(22,139,255,.12);border-radius:6px;color:#F5F9FC}
+  .err-tec pre{margin:.7rem 0 0;white-space:pre-wrap;color:rgba(245,249,252,.6);font-size:.75rem}
 </style></head><body>
   <div class="box">
     <div class="cod">{$codigo}</div>

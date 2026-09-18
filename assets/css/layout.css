@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════════════════════════════
+   Layout — topo, sidebar (menu lateral) e container
+   Design System "CZR Soluções" (tema escuro)
+   Consome os tokens de tokens.css.
+   ═══════════════════════════════════════════════════════════ */
+
+:root { --sidebar-w: 236px; }
+
+/* ── Topo / barra superior ──────────────────────────────── */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .8rem 1.5rem;
+  background: rgba(7, 17, 31, .82);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.menu-toggle {
+  display: none;
+  width: 40px; height: 40px;
+  align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.menu-toggle:hover { border-color: var(--border-2); }
+
+/* Busca */
+.topo-busca {
+  display: flex; align-items: center; gap: .55rem;
+  flex: 1; max-width: 420px;
+  padding: .55rem .85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--raio-sm);
+  color: var(--text-3);
+}
+.topo-busca i { font-size: 1rem; flex-shrink: 0; }
+.topo-busca input {
+  flex: 1; min-width: 0;
+  border: none; background: none; outline: none;
+  color: var(--text); font-family: var(--fonte-corpo); font-size: .88rem;
+}
+.topo-busca input::placeholder { color: var(--text-3); }
+
+/* Cluster direito */
+.topo-dir { margin-left: auto; display: flex; align-items: center; gap: 1rem; }
+
+.topo-icone {
+  position: relative;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  color: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+}
+.topo-icone:hover { color: var(--text); border-color: var(--border-2); }
+.topo-icone .ponto {
+  position: absolute; top: 8px; right: 9px;
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 2px solid var(--surface);
+}
+.topo-icone .ponto.vermelho { background: var(--danger); }
+.topo-icone .ponto.ambar    { background: var(--warning); }
+
+/* Chip do cliente selecionado (admin) */
+.topo-cliente {
+  display: inline-flex; align-items: center; gap: .45rem;
+  max-width: 220px;
+  padding: .45rem .85rem;
+  font-size: .84rem;
+  color: var(--text);
+  background: rgba(22, 139, 255, .12);
+  border: 1px solid rgba(22, 139, 255, .35);
+  border-radius: 999px;
+  text-decoration: none;
+}
+.topo-cliente i { color: var(--secondary); font-size: 1rem; }
+.topo-cliente span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topo-cliente:hover { background: rgba(22, 139, 255, .2); text-decoration: none; }
+
+/* Data / hora */
+.topo-data { text-align: right; line-height: 1.2; }
+.topo-data .d { font-size: .76rem; color: var(--text-2); white-space: nowrap; }
+.topo-data .t { font-size: 1.05rem; font-weight: 700; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+
+/* ── Menu lateral (sidebar) ─────────────────────────────── */
+.menu-overlay {
+  position: fixed; inset: 0;
+  background: rgba(4, 10, 18, .6);
+  backdrop-filter: blur(2px);
+  z-index: 190;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+body.menu-aberto .menu-overlay { opacity: 1; }
+
+.menu-lateral {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); max-width: 82vw;
+  height: 100%;
+  z-index: 200;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  box-shadow: 6px 0 32px rgba(0, 0, 0, .45);
+  display: flex; flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .24s cubic-bezier(.4, 0, .2, 1);
+}
+body.menu-aberto .menu-lateral { transform: translateX(0); }
+
+.menu-lateral-topo {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.15rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+/* Marca CZR */
+.marca-cz { display: flex; align-items: center; gap: .7rem; }
+.marca-cz-mark {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: .92rem; color: #fff;
+  background: linear-gradient(150deg, var(--primary), var(--secondary));
+  box-shadow: 0 4px 14px rgba(22, 139, 255, .4);
+}
+.marca-cz-nome { font-weight: 700; font-size: 1rem; line-height: 1; color: var(--text); }
+.marca-cz-sub { font-size: .6rem; letter-spacing: .18em; color: var(--secondary); font-weight: 600; text-transform: uppercase; margin-top: .28rem; }
+
+.menu-fechar {
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+}
+.menu-fechar:hover { color: var(--text); background: var(--surface-2); }
+
+.menu-nav { flex: 1; padding: .6rem .6rem 1rem; overflow-y: auto; }
+.menu-item {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .6rem .7rem; margin-bottom: .12rem;
+  border-radius: var(--raio-sm);
+  color: var(--text-2);
+  font-size: .87rem; font-weight: 500;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.menu-item i { font-size: 1.05rem; width: 1.25rem; text-align: center; flex-shrink: 0; opacity: .9; }
+.menu-item:hover { background: rgba(255, 255, 255, .04); color: var(--text); text-decoration: none; }
+.menu-item.ativo {
+  background: linear-gradient(90deg, rgba(22, 139, 255, .18), rgba(22, 139, 255, .05));
+  color: #fff;
+  border-color: rgba(22, 139, 255, .35);
+}
+.menu-item.ativo i { color: var(--primary); opacity: 1; }
+
+.menu-grupo-tit {
+  font-size: .68rem; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--text-3); font-weight: 700;
+  padding: .3rem .75rem; margin: .9rem 0 .35rem;
+}
+.menu-grupo-tit:first-child { margin-top: .2rem; }
+
+/* Rodapé: usuário + sair */
+.menu-lateral-rodape {
+  padding: .85rem .9rem 1rem;
+  border-top: 1px solid var(--border);
+}
+.menu-user { display: flex; align-items: center; gap: .65rem; }
+.menu-user-avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: #fff; font-size: .9rem;
+  background: linear-gradient(150deg, var(--primary), var(--primary-h));
+}
+.menu-user-nome { color: var(--text); font-size: .85rem; font-weight: 600; }
+.menu-user-nivel { color: var(--text-3); font-size: .72rem; }
+.menu-sair {
+  display: inline-flex; align-items: center; gap: .5rem;
+  margin-top: .85rem;
+  padding: .5rem .9rem;
+  font-size: .85rem;
+  color: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--raio-sm);
+  text-decoration: none;
+}
+.menu-sair:hover { background: var(--surface-2); color: var(--text); border-color: var(--border-2); text-decoration: none; }
+
+/* ── Container do conteúdo ──────────────────────────────── */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.6rem 1.5rem;
+}
+
+/* ── Desktop: sidebar fixa (deixa de ser drawer) ────────── */
+@media (min-width: 1024px) {
+  body { padding-left: var(--sidebar-w); }
+  .menu-toggle { display: none; }
+  .menu-fechar { display: none; }
+  .menu-overlay { display: none !important; }
+  .menu-lateral { transform: none !important; box-shadow: none; }
+  body.menu-aberto { overflow: auto; }
+}
+
+/* ── Mobile / tablet ────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .menu-toggle { display: flex; }
+}
+@media (max-width: 768px) {
+  .topo { padding: .65rem 1rem; gap: .7rem; }
+  .container { padding: 1.1rem 1rem; }
+}
+@media (max-width: 560px) {
+  .topo-data .d { display: none; }
+  .topo-cliente { max-width: 130px; }
+}

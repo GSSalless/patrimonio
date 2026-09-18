@@ -17,10 +17,18 @@ $cliente_sel = cliente_selecionado();
   <title><?= h($page_title ?? 'Gestão Patrimonial') ?></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <?php $css_ver = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time(); ?>
-  <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>?v=<?= $css_ver ?>">
+  <?php
+    // Camadas de CSS (organizadores). tokens.css primeiro — é o tema.
+    $css_dir = __DIR__ . '/../assets/css/';
+    $css_layers = ['tokens.css', 'layout.css', 'style.css', 'paginas.css'];
+    foreach ($css_layers as $layer):
+      if (!is_file($css_dir . $layer)) continue;
+      $ver = @filemtime($css_dir . $layer) ?: time();
+  ?>
+  <link rel="stylesheet" href="<?= base_url('assets/css/' . $layer) ?>?v=<?= $ver ?>">
+  <?php endforeach; ?>
 </head>
 <body>
 
@@ -29,6 +37,19 @@ if ($usuario):
   // Rota atual (para marcar o item ativo no menu). Vem do front controller.
   $rota_atual = trim($_GET['url'] ?? '', '/');
   $eh_admin   = $usuario['nivel'] === 'admin';
+
+  // Data/hora para o topo (pt-BR, sem depender de locale do servidor)
+  $dias_semana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  $meses_abrev = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  $ts = time();
+  $data_fmt = $dias_semana[(int)date('w', $ts)] . ', ' . date('d', $ts)
+            . ' de ' . $meses_abrev[(int)date('n', $ts) - 1] . ' de ' . date('Y', $ts);
+  $hora_fmt = date('H:i', $ts);
+
+  // Inicial do usuário para o avatar
+  $inicial = function_exists('mb_substr')
+    ? mb_strtoupper(mb_substr($usuario['nome'], 0, 1))
+    : strtoupper(substr($usuario['nome'], 0, 1));
 ?>
 <header class="topo">
   <button type="button" class="menu-toggle" id="menu-toggle"
@@ -36,24 +57,26 @@ if ($usuario):
     <i class="bi bi-list"></i>
   </button>
 
-  <button type="button" class="topo-voltar"
-          onclick="history.length > 1 ? history.back() : location.href='<?= base_url($eh_admin ? 'gestao-geral' : 'dashboard') ?>'"
-          aria-label="Voltar">
-    <i class="bi bi-arrow-left"></i><span>Voltar</span>
-  </button>
+  <label class="topo-busca">
+    <i class="bi bi-search"></i>
+    <input type="search" placeholder="Buscar clientes, ativos, documentos..." aria-label="Buscar">
+  </label>
 
-  <div class="topo-logo">Gestão <span>Patrimonial</span></div>
+  <div class="topo-dir">
+    <button type="button" class="topo-icone" aria-label="Notificações" title="Notificações">
+      <i class="bi bi-bell"></i><span class="ponto ambar"></span>
+    </button>
 
-  <?php if ($eh_admin && $cliente_sel): ?>
-  <a class="topo-cliente" href="<?= base_url('clientes') ?>" title="Trocar cliente">
-    <i class="bi bi-person-circle"></i><span><?= h($cliente_sel['nome']) ?></span>
-  </a>
-  <?php endif; ?>
+    <?php if ($eh_admin && $cliente_sel): ?>
+    <a class="topo-cliente" href="<?= base_url('clientes') ?>" title="Trocar cliente">
+      <i class="bi bi-person-circle"></i><span><?= h($cliente_sel['nome']) ?></span>
+    </a>
+    <?php endif; ?>
 
-  <div class="topo-usuario">
-    <?= h($usuario['nome']) ?>
-    <span class="topo-sep">|</span>
-    <a href="<?= base_url('logout') ?>">Sair</a>
+    <div class="topo-data">
+      <div class="d"><?= h($data_fmt) ?></div>
+      <div class="t" id="relogio"><?= h($hora_fmt) ?></div>
+    </div>
   </div>
 </header>
 
@@ -61,7 +84,13 @@ if ($usuario):
 <div class="menu-overlay" id="menu-overlay" hidden></div>
 <aside class="menu-lateral" id="menu-lateral" aria-hidden="true">
   <div class="menu-lateral-topo">
-    <span class="menu-lateral-marca">Gestão <span>Patrimonial</span></span>
+    <div class="marca-cz">
+      <div class="marca-cz-mark">CZR</div>
+      <div>
+        <div class="marca-cz-nome">CZR</div>
+        <div class="marca-cz-sub">Soluções</div>
+      </div>
+    </div>
     <button type="button" class="menu-fechar" id="menu-fechar" aria-label="Fechar menu">
       <i class="bi bi-x-lg"></i>
     </button>
@@ -127,8 +156,11 @@ if ($usuario):
 
   <div class="menu-lateral-rodape">
     <div class="menu-user">
-      <div class="menu-user-nome"><?= h($usuario['nome']) ?></div>
-      <div class="menu-user-nivel"><?= $eh_admin ? 'Administrador' : 'Cliente' ?></div>
+      <div class="menu-user-avatar"><?= h($inicial) ?></div>
+      <div>
+        <div class="menu-user-nome"><?= h($usuario['nome']) ?></div>
+        <div class="menu-user-nivel"><?= $eh_admin ? 'Administrador' : 'Cliente' ?></div>
+      </div>
     </div>
     <a class="menu-sair" href="<?= base_url('logout') ?>">
       <i class="bi bi-box-arrow-right"></i> Sair

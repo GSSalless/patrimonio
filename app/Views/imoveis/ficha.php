@@ -94,18 +94,18 @@ if (!function_exists('linha')) {
             endif; ?>
           </div>
         </div>
-        <hr style="border:none;border-top:1px solid #dde2ea;margin:1.25rem 0">
+        <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0">
         <div class="card-titulo" style="margin-bottom:1rem">Custos mensais</div>
         <div class="form-grid form-grid-3">
           <?php foreach (['custo_condominio'=>'Condomínio','custo_iptu_mensal'=>'IPTU (mensal)','custo_energia'=>'Energia','custo_agua'=>'Água','custo_internet'=>'Internet','custo_outros'=>'Outros'] as $campo => $label): ?>
             <?php if ($im[$campo]): ?>
-            <div style="background:#f9fafc;padding:.75rem;border-radius:6px">
+            <div style="background:var(--surface-2);padding:.75rem;border-radius:6px">
               <div style="font-size:.78rem;color:var(--cor-secundario);text-transform:uppercase;letter-spacing:.04em"><?= $label ?></div>
               <div style="font-size:1rem;font-weight:700;color:var(--cor-primaria)"><?= moeda((float)$im[$campo]) ?>/mês</div>
             </div>
             <?php endif; ?>
           <?php endforeach; ?>
-          <div style="background:var(--cor-primaria);padding:.75rem;border-radius:6px;color:#fff">
+          <div style="background:var(--primary);padding:.75rem;border-radius:6px;color:#fff">
             <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;opacity:.7">Total mensal</div>
             <div style="font-size:1rem;font-weight:700"><?= moeda(custo_mensal_total($im)) ?>/mês</div>
           </div>
@@ -234,13 +234,13 @@ if (!function_exists('linha')) {
           </div>
           <div class="form-grid form-grid-2" style="gap:1rem">
             <?php if ($r['custo_previsto']): ?>
-            <div style="background:#f9fafc;padding:.75rem;border-radius:6px">
+            <div style="background:var(--surface-2);padding:.75rem;border-radius:6px">
               <div style="font-size:.78rem;color:var(--cor-secundario);text-transform:uppercase">Custo previsto</div>
               <div style="font-size:1.05rem;font-weight:700"><?= moeda((float)$r['custo_previsto']) ?></div>
             </div>
             <?php endif; ?>
             <?php if ($r['custo_realizado']): ?>
-            <div style="background:#f9fafc;padding:.75rem;border-radius:6px">
+            <div style="background:var(--surface-2);padding:.75rem;border-radius:6px">
               <div style="font-size:.78rem;color:var(--cor-secundario);text-transform:uppercase">Custo realizado</div>
               <div style="font-size:1.05rem;font-weight:700;color:<?= $r['custo_realizado'] > $r['custo_previsto'] ? '#b82020' : '#1a7a45' ?>"><?= moeda((float)$r['custo_realizado']) ?></div>
             </div>
@@ -332,7 +332,7 @@ if (!function_exists('linha')) {
             <?php linha('Início',  data_br($contrato['data_inicio'])); ?>
             <?php linha('Término', $contrato['data_fim'] ? data_br($contrato['data_fim']) : 'Indeterminado'); ?>
           </div>
-          <div style="background:#faf7ef;padding:1.25rem;border-radius:8px;text-align:center">
+          <div style="background:var(--surface-2);padding:1.25rem;border-radius:8px;text-align:center">
             <div style="font-size:.8rem;color:var(--cor-secundario);text-transform:uppercase">Aluguel mensal</div>
             <div style="font-size:2rem;font-weight:800;color:var(--cor-primaria)"><?= moeda((float)$contrato['valor_aluguel']) ?></div>
             <div style="font-size:.85rem;color:var(--cor-secundario)">Vence todo dia <?= $contrato['dia_vencimento'] ?></div>
@@ -375,7 +375,7 @@ if (!function_exists('linha')) {
         foreach ($checklist as $cat => $lbl) if (in_array($cat, $cats_presentes)) $check_ok++;
         $check_total = count($checklist);
         ?>
-        <div style="background:#f9fafc;border:1px solid var(--cor-borda);border-radius:10px;padding:1rem;margin-bottom:1.25rem">
+        <div style="background:var(--surface-2);border:1px solid var(--cor-borda);border-radius:10px;padding:1rem;margin-bottom:1.25rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
             <span class="card-titulo">Checklist documental</span>
             <span class="tag <?= $check_ok===$check_total ? 'tag-verde' : ($check_ok? 'tag-laranja':'tag-vermelho') ?>"><?= $check_ok ?>/<?= $check_total ?></span>
@@ -461,7 +461,7 @@ if (!function_exists('linha')) {
           </div>
         </div>
 
-        <hr style="border:none;border-top:1px solid #dde2ea;margin:1.25rem 0">
+        <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0">
         <div class="card-titulo" style="margin-bottom:.75rem">Comodidades</div>
         <?php
           $coms = condominio_comodidades();
@@ -474,7 +474,7 @@ if (!function_exists('linha')) {
           <?php if (!$tem_alguma): ?><span style="color:var(--cor-secundario);font-size:.9rem">Nenhuma comodidade marcada.</span><?php endif; ?>
         </div>
 
-        <hr style="border:none;border-top:1px solid #dde2ea;margin:1.25rem 0">
+        <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0">
         <div class="card-titulo" style="margin-bottom:.75rem">Documentos</div>
         <?php if ($cond_docs): ?>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem">
