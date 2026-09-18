@@ -98,5 +98,20 @@ function init_menu_lateral() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharMenu(); });
 }
 
+// Relógio vivo no topo (atualiza o horário a cada minuto)
+function init_relogio() {
+  const el = document.getElementById('relogio');
+  if (!el) return;
+  const tick = () => {
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    el.textContent = `${hh}:${mm}`;
+  };
+  tick();
+  setInterval(tick, 30000);
+}
+
 document.addEventListener('DOMContentLoaded', init_abas);
 document.addEventListener('DOMContentLoaded', init_menu_lateral);
+document.addEventListener('DOMContentLoaded', init_relogio);
