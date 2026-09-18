@@ -28,7 +28,7 @@ $del = fn($tipo, $itemId) => base_url("clientes/item-remover?tipo=$tipo&item=$it
   <div class="card" style="margin-bottom:1.25rem">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
       <div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700"><?= h($nomeExib) ?></div>
+        <div style="font-size:1.5rem;font-weight:700"><?= h($nomeExib) ?></div>
         <div style="color:var(--cor-secundario);margin-top:.25rem">
           <span class="tag"><?= $cliente['tipo_pessoa'] ?></span>
           <?= $cliente['tipo_pessoa'] === 'PF' ? 'CPF' : 'CNPJ' ?>: <strong><?= h($cliente['cpf_cnpj']) ?></strong>

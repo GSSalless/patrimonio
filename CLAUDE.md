@@ -137,6 +137,31 @@ o `php -S` embutido NÃO processa `.htaccess`.
 
 ---
 
+## Design System / CSS — "CZR Soluções" (tema escuro)
+
+Identidade visual baseada no Design System do cliente (mockup 09/2026):
+**tema escuro navy, acentos azul/ciano, tipografia Inter** (sem serifas).
+
+**Paleta (fonte única: `assets/css/tokens.css`):**
+Primária `#168BFF` · Secundária `#22C7F2` · Fundo `#07111F` · Superfície `#0D1C2B`
+· Sidebar `#081522` · Sucesso `#22C55E` · Atenção `#F59E0B` · Crítico `#EF4444`
+· Neutro `#64748B` · Texto `#F5F9FC`.
+
+**Arquitetura de CSS (organizadores centrais — NÃO usar `<style>` por view).**
+Carregados em camadas pelo `includes/header.php`, nesta ordem:
+1. `assets/css/tokens.css` — ⭐ variáveis (cores, fonte, raios, sombras). **Para mudar a identidade do sistema inteiro, edite só este arquivo.**
+2. `assets/css/layout.css` — topo, sidebar (menu lateral) e container.
+3. `assets/css/style.css` — componentes (cards, botões, badges/status, tabelas, formulários, abas, modais, hub/teia, listas).
+4. `assets/css/paginas.css` — estilos específicos por página (extraídos das views; cada seção = uma view, sem colisão de classes).
+
+**Regras:**
+- **Nada de `<style>` nem cores literais nas views.** Use as classes/variáveis. Ao criar tela nova, adicione o CSS específico em `paginas.css` (seção própria) usando os tokens.
+- Exceções permitidas com `<style>` inline: `auth/login.php` (tela isolada, sem header) e `*_pdf.php` (estilo de impressão em papel branco).
+- Botões: `.btn` + `.btn-primario|secundario|acao|perigo|desabilitado`. Badges de status: `.badge` + `.badge-ativo|andamento|pendente|vencido|concluido|cancelado`.
+- Ícones: **Bootstrap Icons** (`bi bi-*`).
+
+---
+
 ## Como Iniciar uma Nova Sessão
 
 1. Ler este arquivo (`CLAUDE.md`)
