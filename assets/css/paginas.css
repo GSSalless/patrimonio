@@ -61,6 +61,9 @@
   .pessoa-wa i{display:block}
 
 /* ═══ dashboard/index.php ═══════════════════════════════════════════ */
+  .db-cabecalho{margin-bottom:1.5rem}
+  .db-cli-nome{font-size:1.2rem;color:var(--cor-primaria);margin:0}
+  .db-cli-doc{font-size:.85rem;color:var(--cor-secundario);margin-top:.15rem}
   .db-pat{background:var(--cor-branco,var(--surface));border:1px solid var(--cor-borda,var(--border));border-radius:16px;
     padding:1.2rem 1.35rem;box-shadow:0 3px 12px rgba(0,0,0,.05);margin-bottom:1.6rem}
   .db-pat-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
@@ -90,6 +93,7 @@
     box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .2s,transform .2s}
   .db-kpi:hover{box-shadow:0 8px 18px rgba(0,0,0,.09);transform:translateY(-2px);text-decoration:none}
   .db-kpi-top{font-size:.76rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--cor-secundario)}
+  .db-kpi-top i{color:var(--secondary)}
   .db-kpi-n{font-family:var(--fonte-titulo);font-size:1.35rem;font-weight:800;color:var(--cor-primaria);
     line-height:1.1;margin:.3rem 0 .15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .db-kpi-sub{font-size:.78rem;color:var(--cor-secundario)}
