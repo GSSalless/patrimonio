@@ -389,31 +389,31 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); }
 /* ── Menu de apps (dashboard) ────────────────────────────── */
 .app-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
-  gap: 1.75rem 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 1.3rem .8rem;
   justify-items: center;
-  max-width: 640px;
+  max-width: 760px;               /* ~6 tiles por linha (12 itens = 2 linhas) */
 }
 
 .app-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .6rem;
+  gap: .5rem;
   text-decoration: none;
   color: inherit;
-  width: 92px;
+  width: 72px;
 }
 
 .app-icon-tile {
   position: relative;
-  width: 84px;
-  height: 84px;
-  border-radius: 22px;            /* squircle */
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;            /* squircle */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.6rem;
+  font-size: 1.7rem;
   line-height: 1;
   color: var(--dourado-claro);
   border: 1px solid rgba(34,199,242,.28);
