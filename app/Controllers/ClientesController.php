@@ -26,12 +26,35 @@ class ClientesController extends Controller
         'bairro', 'cidade', 'uf', 'email', 'telefone', 'testamento_obs', 'observacoes',
     ];
 
-    /** GET clientes — lista em cards. */
+    /** GET clientes — lista em cards, com abas de status (todos/ativos/inativos). */
     public function index(): void
     {
         exige_admin();
-        $clientes = Cliente::listarAtivos();
-        $this->view('clientes/lista', compact('clientes'));
+        $filtro = $_GET['status'] ?? 'todos';
+        if (!in_array($filtro, ['todos', 'ativos', 'inativos'], true)) $filtro = 'todos';
+
+        $clientes = Cliente::listarPorStatus($filtro);
+        $contagem = Cliente::contarPorStatus();
+        $this->view('clientes/lista', compact('clientes', 'contagem', 'filtro'));
+    }
+
+    /** POST clientes/status — ativa/desativa um cliente (não apaga). */
+    public function status(): void
+    {
+        exige_admin();
+        $id    = (int) ($_POST['id'] ?? 0);
+        $ativo = ($_POST['acao'] ?? '') === 'ativar';
+        $volta = $_POST['status'] ?? 'todos';
+
+        if ($id > 0 && Cliente::buscar($id)) {
+            Cliente::definirAtivo($id, $ativo);
+            // Se o cliente desativado estava selecionado, sai do contexto dele.
+            $sel = cliente_selecionado();
+            if (!$ativo && $sel && (int) $sel['id'] === $id) {
+                unset($_SESSION['cliente_selecionado']);
+            }
+        }
+        $this->redirect('clientes?status=' . urlencode($volta));
     }
 
     /** GET/POST clientes/novo — cadastro base (leva ao completo). */

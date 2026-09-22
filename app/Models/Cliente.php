@@ -17,6 +17,50 @@ class Cliente
         )->fetchAll();
     }
 
+    /**
+     * Lista clientes por status para a tela de gestão da carteira.
+     * @param string $filtro 'todos' | 'ativos' | 'inativos'
+     */
+    public static function listarPorStatus(string $filtro = 'todos'): array
+    {
+        $where = match ($filtro) {
+            'ativos'   => 'WHERE c.ativo = 1',
+            'inativos' => 'WHERE c.ativo = 0',
+            default    => '',
+        };
+        return db()->query(
+            "SELECT c.*, u.email AS email_login
+               FROM clientes c
+               LEFT JOIN usuarios u ON u.id = c.usuario_id
+               $where
+              ORDER BY c.ativo DESC, c.nome"
+        )->fetchAll();
+    }
+
+    /** Contagem por status (para as abas Todos/Ativos/Inativos). */
+    public static function contarPorStatus(): array
+    {
+        $r = db()->query(
+            'SELECT
+                 COUNT(*)                         AS todos,
+                 SUM(CASE WHEN ativo = 1 THEN 1 ELSE 0 END) AS ativos,
+                 SUM(CASE WHEN ativo = 0 THEN 1 ELSE 0 END) AS inativos
+               FROM clientes'
+        )->fetch() ?: [];
+        return [
+            'todos'    => (int) ($r['todos'] ?? 0),
+            'ativos'   => (int) ($r['ativos'] ?? 0),
+            'inativos' => (int) ($r['inativos'] ?? 0),
+        ];
+    }
+
+    /** Ativa/desativa um cliente (gestão da carteira — nunca apaga). */
+    public static function definirAtivo(int $id, bool $ativo): void
+    {
+        db()->prepare('UPDATE clientes SET ativo = ? WHERE id = ?')
+            ->execute([$ativo ? 1 : 0, $id]);
+    }
+
     public static function buscar(int $id): ?array
     {
         $s = db()->prepare('SELECT * FROM clientes WHERE id = ?');
