@@ -955,3 +955,23 @@ CREATE TABLE IF NOT EXISTS contratos (
   KEY (cliente_id),
   FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- HISTÓRICO MENSAL DO PATRIMÔNIO (gráfico de evolução)
+-- Retrato por competência (YYYY-MM) de cada cliente. Alimentado
+-- automaticamente por patrimonio_snapshot_mensal() (dado real).
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS patrimonio_historico (
+  id            INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id    INT NOT NULL,
+  competencia   CHAR(7) NOT NULL,                 -- 'YYYY-MM'
+  total         DECIMAL(15,2) NOT NULL DEFAULT 0,
+  imoveis       DECIMAL(15,2) NOT NULL DEFAULT 0,
+  veiculos      DECIMAL(15,2) NOT NULL DEFAULT 0,
+  outros        DECIMAL(15,2) NOT NULL DEFAULT 0,
+  investimentos DECIMAL(15,2) NOT NULL DEFAULT 0,
+  contas        DECIMAL(15,2) NOT NULL DEFAULT 0,
+  atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_cliente_competencia (cliente_id, competencia),
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

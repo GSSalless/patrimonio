@@ -15,6 +15,21 @@ function data_br(?string $data): string {
     return date('d/m/Y', strtotime($data));
 }
 
+/** Nome do mês corrente em pt-BR (ex.: "setembro"), sem depender de locale. */
+function strftime_pt_mes(?int $ts = null): string {
+    $meses = ['janeiro','fevereiro','março','abril','maio','junho',
+              'julho','agosto','setembro','outubro','novembro','dezembro'];
+    return $meses[(int) date('n', $ts ?? time()) - 1];
+}
+
+/** Competência 'YYYY-MM' → rótulo curto para eixo do gráfico (ex.: "set/26"). */
+function competencia_curta(string $competencia): string {
+    $abrev = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+    [$ano, $mes] = array_pad(explode('-', $competencia), 2, '1');
+    $i = max(1, min(12, (int) $mes)) - 1;
+    return $abrev[$i] . '/' . substr($ano, -2);
+}
+
 /** Monta o link wa.me a partir de um telefone. Assume Brasil (+55) se não vier DDI. */
 function link_whatsapp(?string $telefone): string {
     $d = preg_replace('/\D/', '', $telefone ?? '');
@@ -220,6 +235,117 @@ function indicadores_gestao(?int $cliente_id = null): array {
             'invest_valor' => (float) ($finIv[1] ?? 0),
         ],
     ];
+}
+
+/**
+ * Grava/atualiza o retrato do patrimônio da competência ATUAL (YYYY-MM) para
+ * cada cliente ativo — dado REAL vindo de patrimonio_consolidado(). Idempotente
+ * (UPSERT pela competência), então roda barato a cada acesso e mantém o ponto
+ * do mês corrente sempre atualizado. É a base do gráfico de evolução, que passa
+ * a acumular histórico de verdade a partir de agora. Defensivo: se a tabela
+ * ainda não existir (migração não rodou), não faz nada.
+ */
+function patrimonio_snapshot_mensal(): void {
+    $comp = date('Y-m');
+    try {
+        $ids = db()->query('SELECT id FROM clientes WHERE ativo = 1')->fetchAll(PDO::FETCH_COLUMN);
+        $sql = 'INSERT INTO patrimonio_historico
+                    (cliente_id, competencia, total, imoveis, veiculos, outros, investimentos, contas)
+                VALUES (:cid, :comp, :total, :imoveis, :veiculos, :outros, :invest, :contas)
+                ON DUPLICATE KEY UPDATE
+                    total = VALUES(total), imoveis = VALUES(imoveis), veiculos = VALUES(veiculos),
+                    outros = VALUES(outros), investimentos = VALUES(investimentos), contas = VALUES(contas)';
+        $stmt = db()->prepare($sql);
+        foreach ($ids as $cid) {
+            $p = patrimonio_consolidado((int) $cid);
+            $stmt->execute([
+                ':cid' => (int) $cid, ':comp' => $comp,
+                ':total' => $p['total'], ':imoveis' => $p['imoveis_valor'],
+                ':veiculos' => $p['veiculos_valor'], ':outros' => $p['outros_valor'],
+                ':invest' => $p['invest_valor'], ':contas' => $p['contas_saldo'],
+            ]);
+        }
+    } catch (\Throwable $e) {
+        // tabela ausente ou erro pontual — o gráfico simplesmente fica vazio.
+    }
+}
+
+/**
+ * Série mensal do patrimônio para o gráfico de evolução (últimos N meses).
+ * cliente_id null = consolidado (SOMA de todos os clientes por competência).
+ * Retorna [ ['competencia'=>'YYYY-MM', 'total'=>float], ... ] em ordem crescente.
+ * Só devolve competências que REALMENTE existem no histórico (sem inventar).
+ */
+function patrimonio_evolucao(?int $cliente_id = null, int $meses = 12): array {
+    try {
+        $where = 'competencia >= :desde';
+        $bind  = [':desde' => date('Y-m', strtotime('-' . ($meses - 1) . ' months'))];
+        if ($cliente_id !== null) { $where .= ' AND cliente_id = :cid'; $bind[':cid'] = $cliente_id; }
+        $sql = "SELECT competencia, COALESCE(SUM(total),0) AS total
+                  FROM patrimonio_historico
+                 WHERE $where
+                 GROUP BY competencia
+                 ORDER BY competencia ASC";
+        $stmt = db()->prepare($sql);
+        $stmt->execute($bind);
+        $out = [];
+        foreach ($stmt->fetchAll() as $r) {
+            $out[] = ['competencia' => $r['competencia'], 'total' => (float) $r['total']];
+        }
+        return $out;
+    } catch (\Throwable $e) {
+        return [];
+    }
+}
+
+/**
+ * Receitas e despesas da competência ATUAL (mês corrente) a partir de
+ * lancamentos_financeiros. cliente_id null = consolidado (todos os clientes).
+ * @return array{receitas:float,despesas:float}
+ */
+function fluxo_mensal(?int $cliente_id = null): array {
+    $and = $cliente_id !== null ? ' AND cliente_id = :cid' : '';
+    $bind = [':comp' => date('Y-m')];
+    if ($cliente_id !== null) $bind[':cid'] = $cliente_id;
+    try {
+        $sql = "SELECT
+                    COALESCE(SUM(CASE WHEN tipo = 'receita' THEN valor ELSE 0 END),0) AS receitas,
+                    COALESCE(SUM(CASE WHEN tipo = 'despesa' THEN valor ELSE 0 END),0) AS despesas
+                  FROM lancamentos_financeiros
+                 WHERE DATE_FORMAT(data_competencia, '%Y-%m') = :comp$and";
+        $stmt = db()->prepare($sql);
+        $stmt->execute($bind);
+        $r = $stmt->fetch() ?: [];
+        return ['receitas' => (float) ($r['receitas'] ?? 0), 'despesas' => (float) ($r['despesas'] ?? 0)];
+    } catch (\Throwable $e) {
+        return ['receitas' => 0.0, 'despesas' => 0.0];
+    }
+}
+
+/**
+ * Agrupa os vencimentos (alertas_consolidado) em blocos para a lista
+ * "Tarefas e Pendências" do dashboard. Tudo dado real da Agenda.
+ * @return array lista de ['rotulo','n','cor'] (blocos com n>0)
+ */
+function tarefas_pendencias(?int $cliente_id = null): array {
+    $alertas = alertas_consolidado($cliente_id);
+    $esta_semana = 0; $documentos = 0; $revisoes = 0; $contratos = 0;
+    foreach ($alertas as $a) {
+        $dias = dias_ate($a['data']);
+        if ($dias >= 0 && $dias <= 7) $esta_semana++;
+        switch ($a['categoria'] ?? '') {
+            case 'documento': $documentos++; break;
+            case 'revisao':   $revisoes++;   break;
+            case 'contrato':  $contratos++;  break;
+        }
+    }
+    $blocos = [
+        ['rotulo' => 'Vencimentos esta semana', 'n' => $esta_semana, 'cor' => 'danger',  'link' => 'agenda'],
+        ['rotulo' => 'Documentos com validade', 'n' => $documentos,  'cor' => 'warning', 'link' => 'documentos'],
+        ['rotulo' => 'Revisões programadas',    'n' => $revisoes,    'cor' => 'secondary','link' => 'agenda'],
+        ['rotulo' => 'Contratos a renovar',     'n' => $contratos,   'cor' => 'primary', 'link' => 'contratos'],
+    ];
+    return array_values(array_filter($blocos, fn($b) => $b['n'] > 0));
 }
 
 function proximo_codigo_seguro(): string {

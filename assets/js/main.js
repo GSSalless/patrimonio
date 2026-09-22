@@ -112,6 +112,27 @@ function init_relogio() {
   setInterval(tick, 30000);
 }
 
+// Relógios mundiais (Gestão Geral) — usa Intl para lidar com fuso/horário de verão
+function init_relogios_mundiais() {
+  const nodes = document.querySelectorAll('.gg2-relogio[data-tz]');
+  if (!nodes.length) return;
+  const tick = () => {
+    nodes.forEach((n) => {
+      const tz = n.getAttribute('data-tz');
+      const alvo = n.querySelector('.gg2-rel-hora');
+      if (!alvo) return;
+      try {
+        alvo.textContent = new Intl.DateTimeFormat('pt-BR', {
+          hour: '2-digit', minute: '2-digit', hour12: false, timeZone: tz,
+        }).format(new Date());
+      } catch (_) { /* fuso inválido: mantém --:-- */ }
+    });
+  };
+  tick();
+  setInterval(tick, 30000);
+}
+
 document.addEventListener('DOMContentLoaded', init_abas);
 document.addEventListener('DOMContentLoaded', init_menu_lateral);
 document.addEventListener('DOMContentLoaded', init_relogio);
+document.addEventListener('DOMContentLoaded', init_relogios_mundiais);
