@@ -238,64 +238,86 @@ function indicadores_gestao(?int $cliente_id = null): array {
 }
 
 /**
- * Grava/atualiza o retrato do patrimônio da competência ATUAL (YYYY-MM) para
- * cada cliente ativo — dado REAL vindo de patrimonio_consolidado(). Idempotente
- * (UPSERT pela competência), então roda barato a cada acesso e mantém o ponto
- * do mês corrente sempre atualizado. É a base do gráfico de evolução, que passa
- * a acumular histórico de verdade a partir de agora. Defensivo: se a tabela
- * ainda não existir (migração não rodou), não faz nada.
+ * Patrimônio total consolidado NUMA DATA (fim de um mês), reconstruído a partir
+ * do histórico REAL do banco:
+ *  - imóveis  → avaliação mais recente até a data (senão valor_mercado/compra)
+ *  - outros bens → avaliação mais recente até a data (senão mercado/aquisição)
+ *  - contas   → saldo registrado mais recente até a data (só BRL; senão saldo_atual)
+ *  - veículos → valor atual (mercado→FIPE→aquisição) desde que já cadastrado
+ *  - investimentos → valor_atual dos ativos já cadastrados
+ * Cada bem só entra se já existia (DATE(criado_em) <= data). Sem inventar dados.
  */
-function patrimonio_snapshot_mensal(): void {
-    $comp = date('Y-m');
-    try {
-        $ids = db()->query('SELECT id FROM clientes WHERE ativo = 1')->fetchAll(PDO::FETCH_COLUMN);
-        $sql = 'INSERT INTO patrimonio_historico
-                    (cliente_id, competencia, total, imoveis, veiculos, outros, investimentos, contas)
-                VALUES (:cid, :comp, :total, :imoveis, :veiculos, :outros, :invest, :contas)
-                ON DUPLICATE KEY UPDATE
-                    total = VALUES(total), imoveis = VALUES(imoveis), veiculos = VALUES(veiculos),
-                    outros = VALUES(outros), investimentos = VALUES(investimentos), contas = VALUES(contas)';
+function patrimonio_total_em_data(string $data, ?int $cliente_id = null): float {
+    // A data é gerada internamente por date() (Y-m-d). Validada e embutida no SQL
+    // porque o mesmo valor aparece várias vezes por query e prepared statements
+    // nativos não permitem reusar o mesmo placeholder nomeado.
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data)) $data = date('Y-m-d');
+    $d = "'" . $data . "'";
+    $andCli = $cliente_id !== null ? ' AND t.cliente_id = :cid' : '';
+    $bind   = $cliente_id !== null ? [':cid' => $cliente_id] : [];
+
+    $uma = function (string $sql) use ($bind): float {
         $stmt = db()->prepare($sql);
-        foreach ($ids as $cid) {
-            $p = patrimonio_consolidado((int) $cid);
-            $stmt->execute([
-                ':cid' => (int) $cid, ':comp' => $comp,
-                ':total' => $p['total'], ':imoveis' => $p['imoveis_valor'],
-                ':veiculos' => $p['veiculos_valor'], ':outros' => $p['outros_valor'],
-                ':invest' => $p['invest_valor'], ':contas' => $p['contas_saldo'],
-            ]);
-        }
-    } catch (\Throwable $e) {
-        // tabela ausente ou erro pontual — o gráfico simplesmente fica vazio.
-    }
+        $stmt->execute($bind);
+        return (float) ($stmt->fetchColumn() ?: 0);
+    };
+
+    $imoveis = $uma(
+        "SELECT COALESCE(SUM(COALESCE(
+             (SELECT a.valor FROM avaliacoes a WHERE a.imovel_id = t.id AND a.data <= $d ORDER BY a.data DESC, a.id DESC LIMIT 1),
+             t.valor_mercado, t.valor_compra, 0)),0)
+           FROM imoveis t
+          WHERE t.ativo = 1 AND DATE(t.criado_em) <= $d$andCli"
+    );
+    $veiculos = $uma(
+        "SELECT COALESCE(SUM(COALESCE(t.valor_mercado, t.valor_fipe, t.valor_aquisicao, 0)),0)
+           FROM veiculos t
+          WHERE t.ativo = 1 AND DATE(t.criado_em) <= $d$andCli"
+    );
+    $outros = $uma(
+        "SELECT COALESCE(SUM(COALESCE(
+             (SELECT a.valor FROM avaliacoes_bem a WHERE a.outro_bem_id = t.id AND a.data <= $d ORDER BY a.data DESC, a.id DESC LIMIT 1),
+             t.valor_mercado, t.valor_aquisicao, 0)),0)
+           FROM outros_bens t
+          WHERE t.ativo = 1 AND DATE(t.criado_em) <= $d$andCli"
+    );
+    $contas = $uma(
+        "SELECT COALESCE(SUM(CASE WHEN t.moeda = 'BRL' THEN COALESCE(
+             (SELECT s.saldo FROM conta_saldos s WHERE s.conta_id = t.id AND s.data <= $d ORDER BY s.data DESC, s.id DESC LIMIT 1),
+             t.saldo_atual, 0) ELSE 0 END),0)
+           FROM contas_financeiras t
+          WHERE t.ativo = 1 AND DATE(t.criado_em) <= $d$andCli"
+    );
+    $invest = $uma(
+        "SELECT COALESCE(SUM(t.valor_atual),0)
+           FROM investimentos t
+          WHERE t.ativo = 1 AND t.status = 'ativo' AND DATE(t.criado_em) <= $d$andCli"
+    );
+
+    return $imoveis + $veiculos + $outros + $contas + $invest;
 }
 
 /**
- * Série mensal do patrimônio para o gráfico de evolução (últimos N meses).
- * cliente_id null = consolidado (SOMA de todos os clientes por competência).
+ * Série do patrimônio para o gráfico de evolução — SEMPRE os últimos N meses
+ * contados a partir de hoje (padrão 6). Cada ponto é o patrimônio consolidado
+ * no fim daquele mês, reconstruído do histórico real (patrimonio_total_em_data).
+ * cliente_id null = todos os clientes; caso contrário, um cliente.
  * Retorna [ ['competencia'=>'YYYY-MM', 'total'=>float], ... ] em ordem crescente.
- * Só devolve competências que REALMENTE existem no histórico (sem inventar).
  */
-function patrimonio_evolucao(?int $cliente_id = null, int $meses = 12): array {
+function patrimonio_evolucao(?int $cliente_id = null, int $meses = 6): array {
+    $out = [];
     try {
-        $where = 'competencia >= :desde';
-        $bind  = [':desde' => date('Y-m', strtotime('-' . ($meses - 1) . ' months'))];
-        if ($cliente_id !== null) { $where .= ' AND cliente_id = :cid'; $bind[':cid'] = $cliente_id; }
-        $sql = "SELECT competencia, COALESCE(SUM(total),0) AS total
-                  FROM patrimonio_historico
-                 WHERE $where
-                 GROUP BY competencia
-                 ORDER BY competencia ASC";
-        $stmt = db()->prepare($sql);
-        $stmt->execute($bind);
-        $out = [];
-        foreach ($stmt->fetchAll() as $r) {
-            $out[] = ['competencia' => $r['competencia'], 'total' => (float) $r['total']];
+        for ($i = $meses - 1; $i >= 0; $i--) {
+            $ref  = strtotime("first day of -$i month");
+            $comp = date('Y-m', $ref);
+            // Fim do mês; para o mês corrente usa a data de hoje (retrato até agora).
+            $fim  = ($i === 0) ? date('Y-m-d') : date('Y-m-t', $ref);
+            $out[] = ['competencia' => $comp, 'total' => patrimonio_total_em_data($fim, $cliente_id)];
         }
-        return $out;
     } catch (\Throwable $e) {
         return [];
     }
+    return $out;
 }
 
 /**

@@ -5,7 +5,8 @@
  * tarefas/pendências + relógios mundiais · indicadores por área · carteira.
  *
  * Todos os valores vêm do banco (patrimônio, lançamentos, agenda). O gráfico
- * de evolução usa patrimonio_historico (histórico real, acumula por mês).
+ * de evolução é reconstruído do histórico real (avaliações/saldos/movimentos)
+ * pelos últimos 6 meses — ver patrimonio_evolucao() em includes/functions.php.
  *
  * @var array      $usuario
  * @var int        $total_clientes
@@ -98,10 +99,12 @@ $delta_html = function (?float $pct): string {
         <h3>Evolução do patrimônio sob gestão</h3>
         <span class="gg2-chip"><?= count($evolucao) ?> <?= count($evolucao) == 1 ? 'mês' : 'meses' ?></span>
       </div>
-      <?php if (count($evolucao) >= 2):
+      <?php
+        $vals = $evolucao ? array_column($evolucao, 'total') : [];
+        $tem_dado = $vals && max($vals) > 0;
+        if ($tem_dado):
         // Geometria do gráfico de área/linha (SVG responsivo por viewBox).
         $W = 720; $H = 240; $padL = 8; $padR = 8; $padT = 16; $padB = 26;
-        $vals = array_column($evolucao, 'total');
         $max = max($vals); $min = min($vals);
         $span = ($max - $min) > 0 ? ($max - $min) : ($max > 0 ? $max : 1);
         $lo = $min - $span * 0.15; $hi = $max + $span * 0.15;
@@ -143,9 +146,8 @@ $delta_html = function (?float $pct): string {
       <?php else: ?>
       <div class="gg2-vazio">
         <i class="bi bi-graph-up"></i>
-        <p>Começamos a registrar o patrimônio deste mês.<br>
-           O gráfico de evolução aparece a partir do 2º mês de histórico —
-           os dados são reais, coletados automaticamente.</p>
+        <p>Ainda não há bens com valor lançado nos últimos 6 meses.<br>
+           Conforme os patrimônios forem cadastrados/avaliados, a evolução aparece aqui.</p>
         <?php if ($total_pat > 0): ?><div class="gg2-vazio-n"><?= moeda($total_pat) ?> <span>hoje</span></div><?php endif; ?>
       </div>
       <?php endif; ?>
