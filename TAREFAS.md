@@ -448,6 +448,16 @@
 - [x] Investimentos: **vencimento** (renda fixa ativa) — ramo `data_vencimento` no UNION (categoria `investimento` 📈)
 - [x] Pessoas: CNH/passaporte vencendo — **coberto** hoje pelo ramo genérico "Documentos com validade" (basta anexar o doc com `data_validade`). Campos estruturados de validade na pessoa ficam para F3/R5.
 
+#### 📆 Integração com o Google Agenda (na view /agenda) — 🔵 *ideia registrada 28/09, fase posterior*
+> Botão pra o gestor logado **vincular a própria agenda do Google** e ver os eventos junto da Agenda do sistema. **Arquitetura já decidida** com o Gilson.
+- **Arquitetura:** ao vivo + **cache leve** (~10 min) · **só leitura** (`calendar.readonly`) · **um** projeto Google (modo *Testing*) · **token por usuário** — **não** copiar a agenda pessoal pro banco.
+- **Multiusuário:** vale pra qualquer admin; um projeto/credencial só. Quem consegue conectar depende dos e-mails na lista de **"usuários de teste"** do Google (Testing). Publicar p/ qualquer um exigiria verificação do Google (fase bem posterior).
+- **Fluxo OAuth 2.0:** botão *Conectar* → redirect Google → `agenda/google/callback` → troca `code` por `access_token`+`refresh_token` → salva. *Desvincular* = revoke no Google + apaga o registro.
+- **Tabela nova:** `integracoes_google (usuario_id, google_email, access_token, refresh_token, expira_em, escopo, conectado_em)`.
+- **Exibição:** eventos do Google (próx. ~60 dias) na Agenda do **gestor logado** (independe do cliente selecionado) + botão *Atualizar*.
+- ⚠️ **Pré-requisito (César/Gilson):** criar projeto no Google Cloud + ativar **Calendar API** + tela de consentimento (Testing) + **OAuth Client Web** com redirect `https://czrsolucoes.com.br/agenda/google/callback` → colocar **Client ID/Secret** no `.env`. (O Claude não consegue criar — precisa do login Google do usuário.)
+- ❓ **Definir antes de codar:** (a) só o calendário principal ou todos; (b) exibir **separado** x **junto** dos vencimentos; (c) só leitura agora — futuro: sistema **criar** evento no Google (escopo de escrita); (d) só admin conecta.
+
 ### Módulo 15 — Dashboard Executivo  🟢 *(finalizado 08/09 — indicadores por área)*
 - [x] Hub de módulos no dashboard (menu estilo apps)
 - [x] **Patrimônio total consolidado** — helper `patrimonio_consolidado(?cliente_id)` em `functions.php` (imóveis `valor_mercado` + veículos `valor_mercado→fipe→aquisição` + outros bens `valor_mercado→aquisição` + contas `saldo_atual` só BRL). **Gestão Geral:** herói preto&dourado com total sob gestão + barra de composição empilhada + legenda (valor/qtd/%) + patrimônio por cliente nos cards. **Dashboard do cliente:** painel com total + quebra por categoria com barras de participação. ✅ testado HTTP+navegador (total R$ 4.048.750,00 p/ Marcos)

@@ -361,6 +361,14 @@ const DADOS = [
     {t:'Investimentos: vencimento de renda fixa ativa (ramo no UNION pela data_vencimento · categoria 📈)', done:true},
     {t:'Pessoas: CNH / passaporte vencendo — coberto pelo ramo "Documentos com validade"; campos estruturados de validade na pessoa ficam p/ F3', done:true},
   ]},
+  { id:'gcal', fora:true, nome:'Integração Google Agenda (na Agenda)', icone:'📆', cor:'#0b8043', sub:'ideia registrada 28/09 · aguardando definição + credenciais Google', itens:[
+    {t:'ARQUITETURA DEFINIDA: ao vivo + cache leve (~10 min) · só leitura (calendar.readonly) · 1 projeto Google (modo Testing) · token por usuário; nada de copiar a agenda pessoal pro banco', done:false},
+    {t:'Botão "Conectar Google Agenda" / "Desvincular" na view /agenda (fluxo OAuth 2.0: redirect → callback → troca por access+refresh token · revoke ao desvincular)', done:false},
+    {t:'Tabela integracoes_google (usuario_id, google_email, access_token, refresh_token, expira_em, escopo) — vale p/ qualquer admin; quem conecta depende dos e-mails na lista de "usuários de teste" do Google', done:false},
+    {t:'Buscar eventos ao vivo (próx. ~60 dias) e exibir na Agenda do gestor logado (independe do cliente selecionado) + botão Atualizar', done:false},
+    {t:'PRÉ-REQUISITO (César/Gilson): criar projeto no Google Cloud + ativar Calendar API + tela de consentimento (Testing) + OAuth Client Web (redirect /agenda/google/callback) → Client ID/Secret no .env', done:false},
+    {t:'DEFINIR ANTES DE CODAR: (a) calendário principal ou todos; (b) exibir separado x junto dos vencimentos; (c) só leitura agora — futuro: sistema CRIAR evento no Google (escopo de escrita); (d) só admin conecta', done:false},
+  ]},
   { id:'m15', nome:'Módulo 15 — Dashboard Executivo', icone:'📊', cor:'#b06bff', sub:'finalizado 08/09 · indicadores por área', itens:[
     {t:'Hub de módulos no dashboard (feito)', done:true},
     {t:'Patrimônio total consolidado (imóveis + veículos + outros bens + contas BRL) — herói na Gestão Geral + barra de composição + patrimônio por cliente nos cards', done:true},
