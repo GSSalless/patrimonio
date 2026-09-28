@@ -801,6 +801,9 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); }
 }
 
 /* ── Modal de seleção de cliente (menu do admin) ─────────────── */
+/* Respeita o atributo [hidden]: sem isto, o display:flex abaixo deixaria o
+   modal SEMPRE visível (aparecia sozinho ao carregar a página). */
+.modal-cli[hidden] { display: none; }
 .modal-cli {
   position: fixed; inset: 0; z-index: 260;
   display: flex; align-items: center; justify-content: center;
