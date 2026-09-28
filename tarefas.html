@@ -361,6 +361,14 @@ const DADOS = [
     {t:'Investimentos: vencimento de renda fixa ativa (ramo no UNION pela data_vencimento · categoria 📈)', done:true},
     {t:'Pessoas: CNH / passaporte vencendo — coberto pelo ramo "Documentos com validade"; campos estruturados de validade na pessoa ficam p/ F3', done:true},
   ]},
+  { id:'notion', nome:'Integração Notion (na Agenda)', icone:'🗒️', cor:'#111111', sub:'✅ implementado e testado em produção · 28/09', itens:[
+    {t:'Botão "Vincular Notion" na /agenda (só admin/gestor) — fluxo OAuth 2.0 nativo (PHP+cURL, sem lib): conectar → callback → token por usuário', done:true},
+    {t:'Ao conectar/sincronizar cria o board padrão "Tarefas & Pendências — CZR" na 1ª página compartilhada e envia as pendências (alertas_consolidado)', done:true},
+    {t:'Envia: tarefa/título, cliente, categoria, vencimento, situação (Vencida/Próxima/Em dia), detalhe e link de volta ao sistema', done:true},
+    {t:'Idempotente (notion_tarefas_map): re-sync atualiza, não duplica · botões Sincronizar e Desvincular · multiusuário (cada gestor conecta a própria conta)', done:true},
+    {t:'Migração 006 (notion_integracoes + notion_tarefas_map) + schema.sql · credenciais no .env (NOTION_CLIENT_ID/SECRET/REDIRECT)', done:true},
+    {t:'Futuro (opcional): sincronização automática (agendada ou via n8n) em vez do botão manual', done:false},
+  ]},
   { id:'gcal', fora:true, nome:'Integração Google Agenda (na Agenda)', icone:'📆', cor:'#0b8043', sub:'ideia registrada 28/09 · aguardando definição + credenciais Google', itens:[
     {t:'ARQUITETURA DEFINIDA: ao vivo + cache leve (~10 min) · só leitura (calendar.readonly) · 1 projeto Google (modo Testing) · token por usuário; nada de copiar a agenda pessoal pro banco', done:false},
     {t:'Botão "Conectar Google Agenda" / "Desvincular" na view /agenda (fluxo OAuth 2.0: redirect → callback → troca por access+refresh token · revoke ao desvincular)', done:false},
