@@ -11,7 +11,7 @@ $nat_label = [
   'operacional'=>'Operacional','holding_patrimonial'=>'Holding patrimonial',
   'holding_participacao'=>'Holding de participação','spe'=>'SPE','outro'=>'Outra',
 ];
-$nat_icone = ['operacional'=>'🏢','holding_patrimonial'=>'🏛️','holding_participacao'=>'🧬','spe'=>'🏗️','outro'=>'🏢'];
+$nat_icone = ['operacional'=>'bi-building','holding_patrimonial'=>'bi-bank','holding_participacao'=>'bi-diagram-3','spe'=>'bi-cone-striped','outro'=>'bi-briefcase'];
 $sit_cor   = ['ativa'=>'#1a7a45','baixada'=>'#b82020','suspensa'=>'#b45309','inapta'=>'#64748b'];
 $total_capital = array_sum(array_map(fn($e) => (float)($e['capital_social'] ?? 0), $empresas));
 ?>
@@ -20,7 +20,7 @@ $total_capital = array_sum(array_map(fn($e) => (float)($e['capital_social'] ?? 0
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)">🏢 Empresas — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-briefcase" style="color:var(--secondary)"></i> Empresas — <?= h($cli['nome']) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($empresas) ?> empresa(s)</div>
       </div>
     </div>
@@ -61,7 +61,7 @@ $total_capital = array_sum(array_map(fn($e) => (float)($e['capital_social'] ?? 0
     <a href="<?= base_url('empresas/editar?id=' . $e['id']) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
-          <span style="font-size:1.15rem"><?= $nat_icone[$e['natureza']] ?? '🏢' ?></span>
+          <i class="bi <?= $nat_icone[$e['natureza']] ?? 'bi-briefcase' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
           <?= h($e['codigo']) ?> · <?= $nat_label[$e['natureza']] ?? $e['natureza'] ?>
           <span class="tag" style="margin-left:auto;color:#fff;background:<?= $sit_cor[$e['situacao']] ?? '#64748b' ?>"><?= ucfirst($e['situacao']) ?></span>
         </div>
@@ -84,7 +84,7 @@ $total_capital = array_sum(array_map(fn($e) => (float)($e['capital_social'] ?? 0
   </div>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem">🏢</div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-briefcase"></i></div>
     <p style="color:var(--cor-secundario)">Nenhuma empresa cadastrada.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
     <a href="<?= base_url('empresas/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeira empresa</a>
