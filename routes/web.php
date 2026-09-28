@@ -17,6 +17,12 @@ $router->get('gestao-geral', [GestaoGeralController::class, 'index']);
 // Agenda e Alertas (Módulo 14)
 $router->get('agenda', [AgendaController::class, 'index']);
 
+// Integração Notion (envia as tarefas/pendências para o board do gestor)
+$router->get('agenda/notion/conectar',     [NotionController::class, 'conectar']);
+$router->get('agenda/notion/callback',     [NotionController::class, 'callback']);
+$router->post('agenda/notion/sincronizar', [NotionController::class, 'sincronizar']);
+$router->post('agenda/notion/desvincular', [NotionController::class, 'desvincular']);
+
 // Arquivos enviados — serviço autenticado (M2: segurança de arquivos)
 $router->get('arquivo', [ArquivoController::class, 'servir']);
 

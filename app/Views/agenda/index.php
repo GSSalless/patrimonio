@@ -38,6 +38,64 @@ $geral = ($escopo_nome === null);
     </div>
   </div>
 
+  <?php if (($usuario['nivel'] ?? '') === 'admin'):
+    // Mensagens de retorno da integração Notion.
+    $nmsgs = [
+      'conectado'    => ['ok',  'Notion conectado e tarefas enviadas para o seu board! ✅'],
+      'desvinculado' => ['ok',  'Notion desvinculado.'],
+      'sem_config'   => ['erro','Integração do Notion ainda não configurada no servidor (falta o Client ID/Secret).'],
+      'sem_pagina'   => ['erro','Conectado, mas nenhuma página foi compartilhada com a integração. No Notion, compartilhe uma página com o app e clique em Sincronizar.'],
+      'negado'       => ['erro','Autorização cancelada no Notion.'],
+      'state'        => ['erro','Sessão expirada na conexão com o Notion. Tente de novo.'],
+      'sem_code'     => ['erro','Não recebemos a autorização do Notion.'],
+      'erro'         => ['erro','Não foi possível concluir a ação no Notion. Tente novamente.'],
+    ];
+    if ($notion_msg === 'sync') {
+      $c=(int)($_GET['c']??0); $a=(int)($_GET['a']??0); $e=(int)($_GET['e']??0);
+      $nflash = ['ok', "Sincronizado com o Notion: $c criada(s), $a atualizada(s)" . ($e ? ", $e erro(s)" : '') . '.'];
+    } else {
+      $nflash = $nmsgs[$notion_msg] ?? null;
+    }
+  ?>
+    <?php if ($nflash): ?>
+      <div class="ag-notion-flash ag-nf-<?= $nflash[0] ?>"><?= h($nflash[1]) ?></div>
+    <?php endif; ?>
+
+    <div class="ag-notion">
+      <div class="ag-notion-info">
+        <span class="ag-notion-ico"><i class="bi bi-journal-check"></i></span>
+        <div>
+          <?php if ($notion): ?>
+            <div class="ag-notion-tit">Notion conectado<?= $notion['workspace_name'] ? ' · ' . h($notion['workspace_name']) : '' ?></div>
+            <div class="ag-notion-sub">
+              Suas tarefas/pendências são enviadas para o board no Notion.
+              <?php if (!empty($notion['ultimo_sync'])): ?> Último envio: <?= h(data_br($notion['ultimo_sync'])) ?>.<?php endif; ?>
+              <?php if (!empty($notion['database_url'])): ?> <a href="<?= h($notion['database_url']) ?>" target="_blank" rel="noopener">Abrir board ↗</a><?php endif; ?>
+            </div>
+          <?php else: ?>
+            <div class="ag-notion-tit">Vincular ao Notion</div>
+            <div class="ag-notion-sub">Conecte seu Notion para acompanhar as tarefas e pendências também por lá.</div>
+          <?php endif; ?>
+        </div>
+      </div>
+      <div class="ag-notion-acoes">
+        <?php if ($notion): ?>
+          <form method="post" action="<?= base_url('agenda/notion/sincronizar') ?>" style="display:inline">
+            <button type="submit" class="btn btn-primario btn-sm"><i class="bi bi-arrow-repeat"></i> Sincronizar</button>
+          </form>
+          <form method="post" action="<?= base_url('agenda/notion/desvincular') ?>" style="display:inline"
+                onsubmit="return confirm('Desvincular o Notion? As tarefas já enviadas continuam lá, mas paramos de sincronizar.');">
+            <button type="submit" class="btn btn-secundario btn-sm">Desvincular</button>
+          </form>
+        <?php else: ?>
+          <a class="btn btn-primario btn-sm" href="<?= base_url('agenda/notion/conectar') ?>">
+            <i class="bi bi-journal-check"></i> Vincular Notion
+          </a>
+        <?php endif; ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
   <?php if ($resumo['total'] === 0): ?>
     <div class="card"><p style="color:var(--cor-secundario);text-align:center;padding:2.5rem">
       🎉 Nenhum vencimento cadastrado. Conforme você preencher datas de IPTU, seguros,

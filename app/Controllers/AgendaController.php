@@ -50,6 +50,12 @@ class AgendaController extends Controller
 
         $escopo_nome = $cli['nome'] ?? null; // null = agenda geral
 
-        $this->view('agenda/index', compact('baldes', 'resumo', 'escopo_nome', 'cli'));
+        // Integração Notion (só admin): status do vínculo + mensagem de retorno.
+        $notion = null; $notion_msg = $_GET['notion'] ?? null;
+        if (($usuario['nivel'] ?? '') === 'admin') {
+            $notion = NotionIntegracao::doUsuario((int) $usuario['id']);
+        }
+
+        $this->view('agenda/index', compact('baldes', 'resumo', 'escopo_nome', 'cli', 'notion', 'notion_msg'));
     }
 }
