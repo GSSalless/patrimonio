@@ -44,7 +44,7 @@ $geral = ($escopo_nome === null);
       'conectado'    => ['ok',  'Notion conectado e tarefas enviadas para o seu board! ✅'],
       'desvinculado' => ['ok',  'Notion desvinculado.'],
       'sem_config'   => ['erro','Integração do Notion ainda não configurada no servidor (falta o Client ID/Secret).'],
-      'sem_pagina'   => ['erro','Conectado, mas nenhuma página foi compartilhada com a integração. No Notion, compartilhe uma página com o app e clique em Sincronizar.'],
+      'sem_pagina'   => ['erro','Notion conectado, mas você ainda não compartilhou uma página com a integração. No Notion: abra a página onde quer o board → menu “•••” (canto superior) → Conexões → adicione “CZR Patrimonial”. Depois volte aqui e clique em Sincronizar.'],
       'negado'       => ['erro','Autorização cancelada no Notion.'],
       'state'        => ['erro','Sessão expirada na conexão com o Notion. Tente de novo.'],
       'sem_code'     => ['erro','Não recebemos a autorização do Notion.'],

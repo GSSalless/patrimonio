@@ -111,17 +111,47 @@ class NotionIntegracao
     }
 
     /**
+     * Garante que exista o board (database) — cria na primeira página acessível
+     * se ainda não houver. Devolve o database_id ou null (nenhuma página
+     * compartilhada com a integração).
+     */
+    public static function garantirDatabase(int $usuarioId): ?string
+    {
+        $conn = self::doUsuario($usuarioId);
+        if (!$conn) return null;
+        if (!empty($conn['database_id'])) return $conn['database_id'];
+
+        $token = $conn['access_token'];
+        foreach (NotionClient::buscarPaginas($token) as $p) {
+            if (($p['object'] ?? '') !== 'page') continue;
+            try {
+                $db = NotionClient::criarDatabase($token, $p['id']);
+                if (!empty($db['id'])) {
+                    self::definirDatabase($usuarioId, $db['id'], $db['url'] ?? null);
+                    return $db['id'];
+                }
+            } catch (\Throwable $e) {
+                // Página não serve como pai (ex.: dentro de database) — tenta a próxima.
+            }
+        }
+        return null;
+    }
+
+    /**
      * Envia as pendências para o Notion (cria as novas, atualiza as existentes).
-     * @return array{criadas:int,atualizadas:int,erros:int}
+     * Cria o board automaticamente se ainda não existir.
+     * @return array{criadas:int,atualizadas:int,erros:int,sem_pagina:bool}
      */
     public static function sincronizar(int $usuarioId, ?int $clienteId = null): array
     {
-        $r = ['criadas' => 0, 'atualizadas' => 0, 'erros' => 0];
+        $r = ['criadas' => 0, 'atualizadas' => 0, 'erros' => 0, 'sem_pagina' => false];
         $conn = self::doUsuario($usuarioId);
-        if (!$conn || empty($conn['database_id'])) return $r;
+        if (!$conn) return $r;
+
+        $dbId = !empty($conn['database_id']) ? $conn['database_id'] : self::garantirDatabase($usuarioId);
+        if (!$dbId) { $r['sem_pagina'] = true; return $r; }
 
         $token = $conn['access_token'];
-        $dbId  = $conn['database_id'];
 
         // Mapa atual (chave => page_id) do usuário.
         $mapa = [];

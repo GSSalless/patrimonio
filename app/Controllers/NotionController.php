@@ -48,18 +48,10 @@ class NotionController extends Controller
                 'bot_id'         => $tok['bot_id'] ?? null,
             ]);
 
-            // Cria o board padrão na primeira página que o usuário compartilhou.
-            $paginas = NotionClient::buscarPaginas($tok['access_token'] ?? '');
-            if (!empty($paginas[0]['id'])) {
-                $db = NotionClient::criarDatabase($tok['access_token'], $paginas[0]['id']);
-                if (!empty($db['id'])) {
-                    NotionIntegracao::definirDatabase((int) $u['id'], $db['id'], $db['url'] ?? null);
-                    NotionIntegracao::sincronizar((int) $u['id']); // sobe as pendências atuais
-                    $this->redirect('agenda?notion=conectado');
-                }
-            }
-            // Conectou, mas nenhuma página foi compartilhada com a integração.
-            $this->redirect('agenda?notion=sem_pagina');
+            // Cria o board padrão (na 1ª página compartilhada) e sobe as pendências.
+            $r = NotionIntegracao::sincronizar((int) $u['id']);
+            if (!empty($r['sem_pagina'])) $this->redirect('agenda?notion=sem_pagina');
+            $this->redirect('agenda?notion=conectado');
         } catch (\Throwable $e) {
             error_log('[NOTION] callback: ' . $e->getMessage());
             $this->redirect('agenda?notion=erro');
@@ -73,6 +65,7 @@ class NotionController extends Controller
         $u = usuario_logado();
         try {
             $r = NotionIntegracao::sincronizar((int) $u['id']);
+            if (!empty($r['sem_pagina'])) $this->redirect('agenda?notion=sem_pagina');
             $this->redirect('agenda?notion=sync&c=' . $r['criadas'] . '&a=' . $r['atualizadas'] . '&e=' . $r['erros']);
         } catch (\Throwable $e) {
             error_log('[NOTION] sync: ' . $e->getMessage());
