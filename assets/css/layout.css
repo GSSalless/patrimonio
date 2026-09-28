@@ -79,18 +79,23 @@
 /* Chip do cliente selecionado (admin) */
 .topo-cliente {
   display: inline-flex; align-items: center; gap: .45rem;
-  max-width: 220px;
+  max-width: 240px;
   padding: .45rem .85rem;
   font-size: .84rem;
+  font-family: inherit;
   color: var(--text);
   background: rgba(22, 139, 255, .12);
   border: 1px solid rgba(22, 139, 255, .35);
   border-radius: 999px;
+  cursor: pointer;
   text-decoration: none;
 }
 .topo-cliente i { color: var(--secondary); font-size: 1rem; }
+.topo-cliente .topo-cliente-seta { font-size: .7rem; color: var(--text-2); }
 .topo-cliente span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topo-cliente:hover { background: rgba(22, 139, 255, .2); text-decoration: none; }
+.topo-cliente-vazio { background: rgba(34, 199, 242, .1); border-color: rgba(34, 199, 242, .35); }
+.topo-cliente-vazio i { color: var(--secondary); }
 
 /* Data / hora */
 .topo-data { text-align: right; line-height: 1.2; }
@@ -154,11 +159,16 @@ body.menu-aberto .menu-lateral { transform: translateX(0); }
 .menu-nav { flex: 1; padding: .6rem .6rem 1rem; overflow-y: auto; }
 .menu-item {
   display: flex; align-items: center; gap: .75rem;
+  width: 100%;
   padding: .6rem .7rem; margin-bottom: .12rem;
   border-radius: var(--raio-sm);
   color: var(--text-2);
   font-size: .87rem; font-weight: 500;
+  font-family: inherit;
+  background: transparent;              /* reset p/ quando o item é <button> */
   border: 1px solid transparent;
+  text-align: left;
+  cursor: pointer;
   text-decoration: none;
   transition: background .15s, color .15s, border-color .15s;
 }

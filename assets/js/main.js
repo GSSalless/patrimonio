@@ -132,7 +132,58 @@ function init_relogios_mundiais() {
   setInterval(tick, 30000);
 }
 
+// Modal de seleção de cliente (admin). Abre ao clicar num item do cliente
+// sem cliente setado, ou no chip do topo. Ao escolher, navega para a rota
+// pretendida com ?cliente_id — o bootstrap seta e redireciona para a URL limpa.
+function init_modal_cliente() {
+  const modal = document.getElementById('modal-cliente');
+  if (!modal) return;
+  const base = modal.dataset.base || '/';
+  let next = 'dashboard';
+
+  const abrir = (n) => {
+    next = n || 'dashboard';
+    modal.hidden = false;
+    document.body.classList.add('modal-aberto');
+    const busca = modal.querySelector('.mc-busca');
+    if (busca) { busca.value = ''; busca.dispatchEvent(new Event('input')); setTimeout(() => busca.focus(), 50); }
+  };
+  const fechar = () => { modal.hidden = true; document.body.classList.remove('modal-aberto'); };
+
+  document.querySelectorAll('.js-abre-clientes').forEach((el) => {
+    el.addEventListener('click', (e) => { e.preventDefault(); abrir(el.dataset.next); });
+  });
+
+  modal.querySelectorAll('.mc-item').forEach((it) => {
+    it.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = it.dataset.id;
+      if (!id) return;
+      const sep = next.includes('?') ? '&' : '?';
+      window.location.href = base + next + sep + 'cliente_id=' + encodeURIComponent(id);
+    });
+  });
+
+  // Fechar: X, clique no fundo, Esc
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.closest('.mc-fechar')) fechar();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) fechar(); });
+
+  // Busca simples (filtra a lista pelo texto)
+  const busca = modal.querySelector('.mc-busca');
+  if (busca) {
+    busca.addEventListener('input', () => {
+      const q = busca.value.trim().toLowerCase();
+      modal.querySelectorAll('.mc-item').forEach((it) => {
+        it.hidden = q !== '' && !it.textContent.toLowerCase().includes(q);
+      });
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', init_abas);
 document.addEventListener('DOMContentLoaded', init_menu_lateral);
 document.addEventListener('DOMContentLoaded', init_relogio);
 document.addEventListener('DOMContentLoaded', init_relogios_mundiais);
+document.addEventListener('DOMContentLoaded', init_modal_cliente);
