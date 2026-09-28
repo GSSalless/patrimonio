@@ -21,7 +21,7 @@ require APP_ROOT . '/includes/header.php';
   <div class="app-grid">
     <a href="<?= base_url('imoveis') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
-        🏛️
+        <i class="bi bi-building"></i>
         <?php if ($qtd_imoveis > 0): ?><span class="app-icon-badge"><?= $qtd_imoveis ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Imóveis</span>
@@ -29,7 +29,7 @@ require APP_ROOT . '/includes/header.php';
 
     <a href="<?= base_url('veiculos') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-verde">
-        🚗
+        <i class="bi bi-car-front"></i>
         <?php if ($qtd_veiculos > 0): ?><span class="app-icon-badge"><?= $qtd_veiculos ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Carros</span>
@@ -37,7 +37,7 @@ require APP_ROOT . '/includes/header.php';
 
     <a href="<?= base_url('outros') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-roxo">
-        🛥️
+        <i class="bi bi-gem"></i>
         <?php if ($qtd_outros > 0): ?><span class="app-icon-badge"><?= $qtd_outros ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Outros</span>
