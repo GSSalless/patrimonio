@@ -11,7 +11,7 @@ $classe_label = [
   'renda_fixa'=>'Renda fixa','tesouro'=>'Tesouro Direto','fundo'=>'Fundo','multimercado'=>'Multimercado',
   'acoes'=>'Ações','previdencia'=>'Previdência','offshore'=>'Offshore','cripto'=>'Cripto','outro'=>'Outro',
 ];
-$classe_icone = ['renda_fixa'=>'🏦','tesouro'=>'🏛️','fundo'=>'📊','multimercado'=>'📊','acoes'=>'📈','previdencia'=>'👴','offshore'=>'🌎','cripto'=>'₿','outro'=>'📈'];
+$classe_icone = ['renda_fixa'=>'bi-cash-coin','tesouro'=>'bi-bank','fundo'=>'bi-pie-chart','multimercado'=>'bi-bar-chart','acoes'=>'bi-graph-up-arrow','previdencia'=>'bi-person-check','offshore'=>'bi-globe-americas','cripto'=>'bi-currency-bitcoin','outro'=>'bi-graph-up-arrow'];
 $status_op  = ['ativo'=>'Ativo','resgatado'=>'Resgatado','vencido'=>'Vencido'];
 $status_cor = ['ativo'=>'#1a7a45','resgatado'=>'#64748b','vencido'=>'#b45309'];
 // Totais dos ativos.
@@ -24,7 +24,7 @@ $total_ganho    = ($total_atual > 0 && $total_aplicado > 0) ? $total_atual - $to
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)">📈 Investimentos — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-graph-up-arrow" style="color:var(--secondary)"></i> Investimentos — <?= h($cli['nome']) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($investimentos) ?> aplicação(ões)</div>
       </div>
     </div>
@@ -83,7 +83,7 @@ $total_ganho    = ($total_atual > 0 && $total_aplicado > 0) ? $total_atual - $to
     <a href="<?= base_url('investimentos/editar?id=' . $i['id']) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
-          <span style="font-size:1.15rem"><?= $classe_icone[$i['classe']] ?? '📈' ?></span>
+          <i class="bi <?= $classe_icone[$i['classe']] ?? 'bi-graph-up-arrow' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
           <?= h($i['codigo']) ?> · <?= $classe_label[$i['classe']] ?? $i['classe'] ?>
           <span class="tag" style="margin-left:auto;color:#fff;background:<?= $status_cor[$i['status']] ?? '#64748b' ?>"><?= $status_op[$i['status']] ?? $i['status'] ?></span>
         </div>
@@ -109,7 +109,7 @@ $total_ganho    = ($total_atual > 0 && $total_aplicado > 0) ? $total_atual - $to
   </div>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem">📈</div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-graph-up-arrow"></i></div>
     <p style="color:var(--cor-secundario)">Nenhum investimento cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
     <a href="<?= base_url('investimentos/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro investimento</a>

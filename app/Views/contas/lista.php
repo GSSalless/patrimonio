@@ -16,7 +16,7 @@ $tipos_label = [
   'internacional' => 'Internacional',
   'outro'         => 'Outra',
 ];
-$tipo_icone = ['corrente'=>'🏦','poupanca'=>'🐷','pagamento'=>'💳','investimento'=>'📈','internacional'=>'🌎','outro'=>'💼'];
+$tipo_icone = ['corrente'=>'bi-bank','poupanca'=>'bi-piggy-bank','pagamento'=>'bi-credit-card','investimento'=>'bi-graph-up-arrow','internacional'=>'bi-globe-americas','outro'=>'bi-wallet2'];
 ?>
 <div class="container">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
@@ -63,7 +63,7 @@ $tipo_icone = ['corrente'=>'🏦','poupanca'=>'🐷','pagamento'=>'💳','invest
     <a href="<?= base_url('contas/editar?id=' . $c['id']) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
-          <span style="font-size:1.15rem"><?= $tipo_icone[$c['tipo']] ?? '🏦' ?></span>
+          <i class="bi <?= $tipo_icone[$c['tipo']] ?? 'bi-bank' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
           <?= h($c['codigo']) ?> · <?= $tipos_label[$c['tipo']] ?? $c['tipo'] ?>
           <?php if ($c['integracao'] === 'asaas'): ?><span class="tag tag-verde" style="margin-left:auto">Asaas</span><?php endif; ?>
         </div>
@@ -87,7 +87,7 @@ $tipo_icone = ['corrente'=>'🏦','poupanca'=>'🐷','pagamento'=>'💳','invest
   </div>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem">🏦</div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-bank"></i></div>
     <p style="color:var(--cor-secundario)">Nenhuma conta cadastrada.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
     <a href="<?= base_url('contas/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeira conta</a>

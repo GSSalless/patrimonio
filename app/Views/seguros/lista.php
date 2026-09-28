@@ -11,7 +11,7 @@ $tipos_label = [
   'vida'=>'Vida','saude'=>'Saúde','veiculo'=>'Veículo','residencial'=>'Residencial',
   'imovel'=>'Imóvel','embarcacao'=>'Embarcação','empresarial'=>'Empresarial','viagem'=>'Viagem','outro'=>'Outro',
 ];
-$tipo_icone = ['vida'=>'❤️','saude'=>'🩺','veiculo'=>'🚗','residencial'=>'🏠','imovel'=>'🏛️','embarcacao'=>'🛥️','empresarial'=>'🏢','viagem'=>'✈️','outro'=>'🛡️'];
+$tipo_icone = ['vida'=>'bi-heart','saude'=>'bi-heart-pulse','veiculo'=>'bi-car-front','residencial'=>'bi-house','imovel'=>'bi-building','embarcacao'=>'bi-water','empresarial'=>'bi-building','viagem'=>'bi-airplane','outro'=>'bi-shield-check'];
 $status_op  = ['vigente'=>'Vigente','em_cotacao'=>'Em cotação','vencida'=>'Vencida','cancelada'=>'Cancelada'];
 $status_cor = ['vigente'=>'#1a7a45','em_cotacao'=>'#b45309','vencida'=>'#b82020','cancelada'=>'#64748b'];
 // Prêmio anual somado (só vigentes) para o resumo.
@@ -22,7 +22,7 @@ $total_premio = array_sum(array_map(fn($s) => $s['status'] === 'vigente' ? (floa
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)">🛡️ Seguros — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-shield-check" style="color:var(--secondary)"></i> Seguros — <?= h($cli['nome']) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($seguros) ?> apólice(s)</div>
       </div>
     </div>
@@ -78,7 +78,7 @@ $total_premio = array_sum(array_map(fn($s) => $s['status'] === 'vigente' ? (floa
     <a href="<?= base_url('seguros/editar?id=' . $s['id']) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
-          <span style="font-size:1.15rem"><?= $tipo_icone[$s['tipo']] ?? '🛡️' ?></span>
+          <i class="bi <?= $tipo_icone[$s['tipo']] ?? 'bi-shield-check' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
           <?= h($s['codigo']) ?> · <?= $tipos_label[$s['tipo']] ?? $s['tipo'] ?>
           <span class="tag" style="margin-left:auto;color:#fff;background:<?= $status_cor[$s['status']] ?? '#64748b' ?>"><?= $status_op[$s['status']] ?? $s['status'] ?></span>
         </div>
@@ -107,7 +107,7 @@ $total_premio = array_sum(array_map(fn($s) => $s['status'] === 'vigente' ? (floa
   </div>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem">🛡️</div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-shield-check"></i></div>
     <p style="color:var(--cor-secundario)">Nenhum seguro cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
     <a href="<?= base_url('seguros/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro seguro</a>

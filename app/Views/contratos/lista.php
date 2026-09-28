@@ -10,7 +10,7 @@ $tipos_label = [
   'compra_venda'=>'Compra e venda','sociedade'=>'Sociedade','emprestimo'=>'Empréstimo',
   'financiamento'=>'Financiamento','seguro'=>'Seguro','trabalho'=>'Trabalho','outro'=>'Outro',
 ];
-$tipo_icone = ['locacao'=>'🔑','prestacao_servico'=>'🛠️','fornecimento'=>'📦','compra_venda'=>'🤝','sociedade'=>'🏢','emprestimo'=>'💰','financiamento'=>'🏦','seguro'=>'🛡️','trabalho'=>'👔','outro'=>'📜'];
+$tipo_icone = ['locacao'=>'bi-key','prestacao_servico'=>'bi-tools','fornecimento'=>'bi-box-seam','compra_venda'=>'bi-cart-check','sociedade'=>'bi-building','emprestimo'=>'bi-cash-coin','financiamento'=>'bi-bank','seguro'=>'bi-shield-check','trabalho'=>'bi-person-badge','outro'=>'bi-file-earmark-text'];
 $status_op  = ['ativo'=>'Ativo','em_negociacao'=>'Em negociação','suspenso'=>'Suspenso','encerrado'=>'Encerrado','rescindido'=>'Rescindido'];
 $status_cor = ['ativo'=>'#1a7a45','em_negociacao'=>'#b45309','suspenso'=>'#64748b','encerrado'=>'#64748b','rescindido'=>'#b82020'];
 $total_ativos = count(array_filter($contratos, fn($c) => $c['status'] === 'ativo'));
@@ -20,7 +20,7 @@ $total_ativos = count(array_filter($contratos, fn($c) => $c['status'] === 'ativo
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)">📜 Contratos — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-file-earmark-text" style="color:var(--secondary)"></i> Contratos — <?= h($cli['nome']) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($contratos) ?> contrato(s) · <?= $total_ativos ?> ativo(s)</div>
       </div>
     </div>
@@ -70,7 +70,7 @@ $total_ativos = count(array_filter($contratos, fn($c) => $c['status'] === 'ativo
     <a href="<?= base_url('contratos/editar?id=' . $c['id']) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
-          <span style="font-size:1.15rem"><?= $tipo_icone[$c['tipo']] ?? '📜' ?></span>
+          <i class="bi <?= $tipo_icone[$c['tipo']] ?? 'bi-file-earmark-text' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
           <?= h($c['codigo']) ?> · <?= $tipos_label[$c['tipo']] ?? $c['tipo'] ?>
           <span class="tag" style="margin-left:auto;color:#fff;background:<?= $status_cor[$c['status']] ?? '#64748b' ?>"><?= $status_op[$c['status']] ?? $c['status'] ?></span>
         </div>
@@ -99,7 +99,7 @@ $total_ativos = count(array_filter($contratos, fn($c) => $c['status'] === 'ativo
   </div>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem">📜</div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-file-earmark-text"></i></div>
     <p style="color:var(--cor-secundario)">Nenhum contrato cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
     <a href="<?= base_url('contratos/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro contrato</a>

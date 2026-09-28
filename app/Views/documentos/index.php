@@ -26,9 +26,9 @@ $fmt_tam = function (?int $b): string {
 // Ícone por extensão do arquivo.
 $ico_ext = function (string $nome): string {
     $e = strtolower(pathinfo($nome, PATHINFO_EXTENSION));
-    if ($e === 'pdf') return '📄';
-    if (in_array($e, ['jpg','jpeg','png','webp','gif'])) return '🖼️';
-    return '📎';
+    if ($e === 'pdf') return 'bi-file-earmark-pdf';
+    if (in_array($e, ['jpg','jpeg','png','webp','gif'])) return 'bi-file-earmark-image';
+    return 'bi-paperclip';
 };
 
 // Resumo rápido (para os chips do topo).
@@ -45,7 +45,7 @@ foreach ($docs as $d) {
 
   <div class="doc-head">
     <div>
-      <h2 style="font-size:1.4rem;color:var(--cor-primaria);font-family:var(--fonte-titulo)">Documentos</h2>
+      <h2 style="font-size:1.4rem;color:var(--cor-primaria);font-family:var(--fonte-titulo)"><i class="bi bi-folder2-open" style="color:var(--secondary)"></i> Documentos</h2>
       <div style="font-size:.88rem;color:var(--cor-secundario)">
         <?= $geral ? 'Todos os clientes' : h($escopo_nome) ?> · repositório central de arquivos
       </div>
@@ -59,7 +59,7 @@ foreach ($docs as $d) {
 
   <!-- Filtros -->
   <form method="get" action="<?= base_url('documentos') ?>" class="doc-filtros">
-    <input type="search" name="q" value="<?= h($filtros['q']) ?>" placeholder="🔎 Buscar por nome ou descrição…" class="doc-busca">
+    <input type="search" name="q" value="<?= h($filtros['q']) ?>" placeholder="Buscar por nome ou descrição…" class="doc-busca">
     <select name="categoria" class="doc-select">
       <option value="">Todas as categorias</option>
       <?php foreach ($categorias as $val => $rot): ?>
@@ -105,13 +105,13 @@ foreach ($docs as $d) {
         }
       ?>
       <div class="doc-item">
-        <span class="doc-ico"><?= $ico_ext($d['nome_arquivo']) ?></span>
+        <span class="doc-ico"><i class="bi <?= $ico_ext($d['nome_arquivo']) ?>"></i></span>
         <div class="doc-info">
           <div class="doc-nome"><?= h($d['nome_arquivo']) ?></div>
           <div class="doc-meta">
             <span class="doc-tag doc-tag-cat"><?= h($cat) ?></span>
             <span class="doc-tag"><?= h($vin['label']) ?><?php if ($vin['nome'] !== ''): ?>: <?= h($vin['nome']) ?><?php endif; ?></span>
-            <?php if ($geral): ?><span class="doc-tag doc-tag-cli">👤 <?= h($d['cliente_nome']) ?></span><?php endif; ?>
+            <?php if ($geral): ?><span class="doc-tag doc-tag-cli"><i class="bi bi-person"></i> <?= h($d['cliente_nome']) ?></span><?php endif; ?>
             <span class="doc-sz"><?= $fmt_tam($d['tamanho_bytes'] !== null ? (int) $d['tamanho_bytes'] : null) ?></span>
             <?php if (!empty($d['data_emissao'])): ?><span class="doc-sz">emissão <?= h(data_br($d['data_emissao'])) ?></span><?php endif; ?>
           </div>
@@ -119,14 +119,14 @@ foreach ($docs as $d) {
           <?= $venc_badge ?>
         </div>
         <div class="doc-acoes">
-          <a class="doc-btn" href="<?= url_documento($d) ?>" target="_blank" rel="noopener" title="Abrir/baixar">⤓ Abrir</a>
+          <a class="doc-btn" href="<?= url_documento($d) ?>" target="_blank" rel="noopener" title="Abrir/baixar"><i class="bi bi-download"></i> Abrir</a>
           <?php if ($vin['link'] !== ''): ?>
-            <a class="doc-btn doc-btn-ghost" href="<?= base_url($vin['link']) ?>" title="Ir ao cadastro">↗ Cadastro</a>
+            <a class="doc-btn doc-btn-ghost" href="<?= base_url($vin['link']) ?>" title="Ir ao cadastro"><i class="bi bi-box-arrow-up-right"></i> Cadastro</a>
           <?php endif; ?>
           <?php if ($is_admin): ?>
             <form method="post" action="<?= base_url('documentos/excluir?id=' . (int) $d['id']) ?>"
                   onsubmit="return confirm('Excluir este documento? O arquivo será removido.');" style="display:inline">
-              <button type="submit" class="doc-btn doc-btn-del" title="Excluir">🗑</button>
+              <button type="submit" class="doc-btn doc-btn-del" title="Excluir"><i class="bi bi-trash"></i></button>
             </form>
           <?php endif; ?>
         </div>
