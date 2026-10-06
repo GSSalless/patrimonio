@@ -153,6 +153,67 @@
 
 <script>
 const DADOS = [
+  { id:'o1', nome:'Reunião 01/10 · Nível 1 — Ajustes rápidos de tela', icone:'🎨', cor:'#0ea5e9', sub:'mais fácil · só view/CSS · sem banco', itens:[
+    {t:'1.1 Tirar a grade de clientes da Gestão Geral (César concordou) · bloco gg-clientes + cálculo no GestaoGeralController', done:false},
+    {t:'1.2 Relógio do topo mais leve (.topo-data .t peso 700 → 400/500, tipografia do DS)', done:false},
+    {t:'1.3 Rosca: números invadindo o anel → abreviar valor central (R$ 4,2 mi), furo maior, rótulos fora do anel', done:false},
+    {t:'1.4 Renomear Agenda → Tarefas (menu, título, bloco Notion) · /agenda continua + alias /tarefas', done:false},
+    {t:'1.5 Ícones como logos: dicionário central icone_modulo() + terminar emoji→bi (formulários, imoveis/ficha, listas imóveis/veículos/outros, login)', done:false},
+    {t:'1.5b (opcional) cor fixa por categoria via tokens --cat-*', done:false},
+  ]},
+  { id:'o2', nome:'Reunião 01/10 · Nível 2 — Mesmo menu, dois modos', icone:'🧭', cor:'#168BFF', sub:'header + controllers · sem banco · o pedido central do César', itens:[
+    {t:'2.1 Clicar no cliente → entra na gestão dele (dashboard?cliente_id), não no cadastro · "Cadastro" vira item do menu do cliente', done:false},
+    {t:'2.2 Faixa "Você está em: Marcos" + botão "Sair do cliente" (rota clientes/limpar) para voltar ao modo gestor', done:false},
+    {t:'2.3 Menu único: sem cliente = todos os clientes; com cliente = só ele · modal de cliente só para CADASTRAR', done:false},
+    {t:'2.4 Modo "todos os clientes" nos 11 módulos que hoje redirecionam (imóveis, veículos, outros, patrimônio, empresas, contas, investimentos, seguros, contratos, fornecedores, colaboradores) · etiqueta Cliente + agrupar por cliente', done:false},
+    {t:'2.4b Tarefas: ordem cronológica agrupada por cliente', done:false},
+    {t:'2.5 Reorganizar o menu pelo mockup: Clientes · Teia · Ativos · Financeiro · Documentos · Tarefas · Pessoas · Fornecedores · Projetos · Relatórios · IA · Configurações · Ajuda (não construídos = "em breve"?)', done:false},
+  ]},
+  { id:'o3', nome:'Reunião 01/10 · Nível 3 — Configurações + Mercados', icone:'💱', cor:'#22C7F2', sub:'tabelas novas pequenas · rede externa', itens:[
+    {t:'3.1 Tela /configuracoes por usuário (tabela usuario_preferencias) · 1ª preferência: quais cotações exibir (até 4)', done:false},
+    {t:'3.2 Painel Mercados com abas Moedas · Bolsas · Commodities · Relógio mundial · franco suíço (CHF) do dia', done:false},
+    {t:'3.2b Tabela cotacoes com cache diário (BCB PTAX para moedas; bolsas/commodities com provedor a definir) · atualiza 1x/dia ou via n8n', done:false},
+    {t:'3.3 Enviar relatório (ex.: imóveis) ao cliente pelo WhatsApp · PDF + link (wa.me) · anexo de verdade via n8n/WhatsApp Business', done:false},
+  ]},
+  { id:'o4', nome:'Reunião 01/10 · Nível 4 — Family office nos cadastros', icone:'👨‍👩‍👧', cor:'#a855f7', sub:'ALTER / tabelas novas', itens:[
+    {t:'4.1 Família dependente (Carol, Laura Catarina, Lohan): flag dependente financeiro + regime de bens + certidão de casamento · familiar como titular de despesa', done:false},
+    {t:'4.2 Co-propriedade/sociedade estruturada: tabela bem_coproprietarios (bem_tipo, bem_id, pessoa/empresa, %) p/ imóveis, veículos e outros', done:false},
+    {t:'4.3 Herdeiros por bem (herdeiro + %), reaproveitando a 4.2', done:false},
+    {t:'4.4 Imóvel na planta: situação + data prevista da matrícula/entrega → gera tarefa', done:false},
+  ]},
+  { id:'o5', nome:'Reunião 01/10 · Nível 5 — Financeiro: caixa-mãe + caixas', icone:'🏦', cor:'#F59E0B', sub:'⛔ aguarda PDF de especificação do César · refatora lancamentos_financeiros', itens:[
+    {t:'5.0 BLOQUEANTE: receber o PDF do financeiro (projeto do ChatGPT do César, escrito para programador)', done:false},
+    {t:'5.1 Caixa-mãe = soma de todas as contas do cliente (só leitura, ganho rápido, sem ALTER)', done:false},
+    {t:'5.2 Refatorar lançamentos: vínculo polimórfico (bem_tipo/bem_id) + conta_origem_id + titular + categorias ampliadas · migração preserva imovel_id', done:false},
+    {t:'5.3 Caixa por patrimônio (Jet Ski, Van, apto Balneário…): custos desde a aquisição, total gasto, % no custo de vida', done:false},
+    {t:'5.4 Caixas de pessoas/empresas (Marcos, Prime, SMK, César pessoal, César+Prime)', done:false},
+    {t:'5.5 Relatórios financeiros (por bem, categoria, pessoa e período) em PDF', done:false},
+    {t:'5.6 Roteamento das contas que chegam (e-mail/WhatsApp → n8n → lançamento no bem certo) · Izarley', done:false},
+  ]},
+  { id:'o6', nome:'Reunião 01/10 · Nível 6 — Teia Patrimonial', icone:'🕸️', cor:'#6366f1', sub:'visual · depende do nível 5 para o caixa', itens:[
+    {t:'6.1 Teia do cliente (cliente no centro → bens, empresas, contas, família) · tornar hub-grafo.js genérico (JSON de nós)', done:false},
+    {t:'6.2 Teia por bem (documentação, caixa, seguro, IPVA/CRLV, manutenções) · generalizar o hub do imóvel', done:false},
+  ]},
+  { id:'o7', nome:'Reunião 01/10 · Nível 7 — Evolução patrimonial real', icone:'📈', cor:'#22C55E', sub:'fontes externas · job a cada 15/30 dias', itens:[
+    {t:'7.1 Imóveis por índice (FipeZap/IVG-R; INCC na planta) · veículos pela FIPE mensal · investimentos pelo valor atual · liquidez por classe', done:false},
+    {t:'7.2 Recalcular a cada 15/30 dias (não por login) · tabela patrimonio_snapshots com data e fonte de cada valor', done:false},
+  ]},
+  { id:'o8', fora:true, nome:'Reunião 01/10 · Nível 8 — IA', icone:'🤖', cor:'#64748B', sub:'fora do escopo inicial · tokens na conta do César', itens:[
+    {t:'8.1 Upload com extração por IA dentro de cada cadastro (matrícula, contrato de compra e venda) preenchendo os campos', done:false},
+    {t:'8.2 Assistente via WhatsApp (plano principal · Izarley, n8n/MCP)', done:false},
+    {t:'8.3 IA Assistente dentro do app', done:false},
+    {t:'8.4 Projetos: projeções de ROI de investimentos', done:false},
+    {t:'8.5 Área do cliente: solicitações/atendimento', done:false},
+  ]},
+  { id:'o9', nome:'Reunião 01/10 · Decisões com o César', icone:'❓', cor:'#EF4444', sub:'fechar antes dos níveis 2.5, 3 e 5', itens:[
+    {t:'Lista final do menu e o que aparece em cada modo · não construídos: ocultos ou "em breve"?', done:false},
+    {t:'Onde editar o cadastro do cliente depois da 2.1', done:false},
+    {t:'Cores por categoria: sim/não e quais', done:false},
+    {t:'Quais cotações, bolsas e commodities + fonte paga ou gratuita', done:false},
+    {t:'Enviar o PDF do financeiro (bloqueia o nível 5)', done:false},
+    {t:'Frequência da evolução (15 ou 30 dias) e quem paga APIs/tokens', done:false},
+    {t:'Confirmar o acesso do César ao repositório no GitHub (na reunião deu erro de permissão)', done:false},
+  ]},
   { id:'mvp1', nome:'🎯 MVP · M1 — Núcleo e testes', icone:'🧩', cor:'#166534', sub:'reunião 27/08 · entrega 08/09 · Gilson', itens:[
     {t:'15 módulos base implementados (Pessoas…Dashboard)', done:true},
     {t:'Varredura estática (05/09): php -l nos 125 arquivos (0 erro) + auditoria form↔Model↔schema (11 módulos)', done:true},

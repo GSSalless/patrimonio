@@ -13,6 +13,7 @@
 | F1 — MVP (substituir Excel) | 🟢 Base concluída | Blocos A–J concluídos · falta K: testes com César |
 | F2 — Cadastro completo | 🟡 Iniciada | Matrícula+site cartório, características físicas, co-propriedade já adiantados no módulo Imóveis |
 | F3 — Family Office | ⏳ Aguardando F2 | — |
+| **🧭 Plano da reunião 01/10/2026** | 🔵 A fazer | 8 níveis, do mais fácil ao mais difícil — ver seção **"Reunião com César — 01/10/2026"** |
 
 > **Visão expandida (26/06/2026):** o sistema deixou de ser "cadastros separados" e passou a ser
 > uma **Arquitetura de Dados de ERP Patrimonial / Family Office** com 15 módulos relacionáveis entre si.
@@ -470,6 +471,154 @@
 
 ---
 
+## Reunião com César — 01/10/2026 (transcrições 2, 3 e 4 · César + Gilson + Izarley)
+
+> **Uma reunião só, em 3 arquivos:** a transcrição 2 é a 1ª hora (telas, menu, Gestão Geral, mercados,
+> evolução patrimonial); a 3 é só a reconexão (4 min, sem conteúdo); a 4 é a 2ª hora (financeiro:
+> caixa-mãe, caixa por patrimônio, família, teia, IA).
+>
+> **O que o César quer, em uma frase:** usar o sistema no dia a dia como **gestor de vários clientes**.
+> Por isso o menu é o mesmo sempre e só **muda o escopo**: sem cliente selecionado, cada botão mostra os
+> dados de **todos** os clientes; com cliente selecionado, os **mesmos botões** mostram só os dados dele
+> ("Você está em Marcos").
+>
+> **Princípio dele nesta reunião:** *"não pense em multi, não pense em vender — só quero conseguir
+> utilizar"*. Para ele, a evolução patrimonial e o financeiro (caixas) fazem parte do dia a dia; a versão
+> de hoje ele chama de *"gestão cadastral"*.
+>
+> **As três visões do César:** (1) gestor de vários clientes; (2) operador (lança e cadastra); (3) ele
+> mesmo como cliente PF comum, com o próprio patrimônio.
+>
+> **Prazo citado pelo Gilson:** entregar as modificações de layout e navegação "até domingo" (04/10).
+> Financeiro, evolução e IA ficaram para depois desse prazo.
+
+### Como ler este plano
+A ordem vai do **mais fácil e de menor impacto** para o **mais difícil e de maior impacto**. Cada item
+mostra três coisas: **o que ele pediu → o que já temos → o que precisa mudar**, e se mexe no banco.
+Os níveis 1 e 2 não mexem no banco. A partir do nível 3 entram tabelas novas. O nível 5 refatora
+uma tabela que já existe.
+
+### Nível 1 — Ajustes rápidos de tela *(horas · só view/CSS · sem banco)*
+- [ ] **1.1 Tirar a grade de clientes da Gestão Geral.** Na reunião ele disse "Concordo".
+  Hoje existe o bloco `gg2-clientes-h`/`gg-clientes` no fim de `gestao_geral/index.php`.
+  Mudar: remover o bloco e o cálculo do patrimônio por cliente no `GestaoGeralController`, porque os clientes já ficam em /clientes.
+- [ ] **1.2 Relógio do topo mais leve.** Ele achou a fonte pesada e pediu para seguir o DS.
+  Hoje está em `.topo-data .t` com `font-weight:700`. Mudar para peso 400–500, de acordo com o documento de tipografia do DS (Inter).
+- [ ] **1.3 Rosca da distribuição:** os números estão "entrando para dentro da cor".
+  Hoje o texto central (`$moeda_curta`) é largo demais para o raio interno.
+  Mudar: diminuir ou abreviar o valor (ex.: "R$ 4,2 mi"), aumentar o furo da rosca e tirar os rótulos de cima do anel.
+- [ ] **1.4 Renomear "Agenda" → "Tarefas".** Já tinha sido combinado: toda pendência é uma tarefa.
+  Mudar o rótulo no menu, o título da tela e o bloco do Notion. A rota `/agenda` continua funcionando, com um alias `/tarefas`.
+- [ ] **1.5 Ícones como "logos": um ícone fixo por atividade, nunca reaproveitado.**
+  Hoje as listas principais já usam Bootstrap Icons. Ainda têm emoji: os formulários (📄🧾📎), `imoveis/ficha.php`, as listas de imóveis/veículos/outros bens e o login.
+  Mudar: criar um **dicionário central** `icone_modulo('imoveis')` em `functions.php`, usado pelo menu, títulos, cards e hub, e terminar a troca dos emoji.
+  - [ ] *(opcional — "se não der, não deu")* uma **cor fixa por categoria** via tokens (`--cat-imoveis`, `--cat-veiculos`…).
+
+### Nível 2 — Navegação: o mesmo menu com dois modos *(dias · header + controllers · sem banco)*
+- [ ] **2.1 Clicar no cliente leva para a gestão dele, não para o cadastro.**
+  Hoje o card em `clientes/lista.php` leva para `clientes/editar?id=`.
+  Mudar: o clique leva para `dashboard?cliente_id=`. O **"Cadastro"** vira um item dentro do menu do cliente, com um lápis secundário no card.
+- [ ] **2.2 Faixa de contexto "Você está em: Marcos"** e um botão **"Sair do cliente"** que volta ao modo gestor.
+  Hoje o chip do topo só oferece "Trocar cliente" e não há como limpar a seleção.
+  Mudar: criar a rota `clientes/limpar` (ou `?cliente_id=0`) e destacar a faixa.
+- [ ] **2.3 Menu único (mesmos botões, muda o escopo).**
+  Hoje o menu tem o grupo "Gestão" e o grupo do cliente. Os itens do cliente abrem o modal quando não há cliente selecionado.
+  Mudar `includes/header.php` para uma lista só. Sem cliente, o botão mostra "todos os clientes". O modal de cliente fica só para **cadastrar** (o `novo` precisa de dono).
+- [ ] **2.4 Modo "todos os clientes" em cada módulo.** É o item mais trabalhoso do nível 2.
+  Hoje só Agenda e Documentos funcionam sem cliente. **11 controllers** redirecionam para o dashboard quando não há cliente: Imóveis, Veículos, Outros, Patrimônio, Empresas, Contas, Investimentos, Seguros, Contratos, Fornecedores e Colaboradores.
+  Mudar, um módulo por vez:
+  - o Model ganha `listar(?cliente_id)` com `JOIN clientes`;
+  - a lista mostra a etiqueta **Cliente** e agrupa por cliente;
+  - "+ Cadastrar" sem cliente abre o modal para escolher o dono;
+  - em **Tarefas**, a ordem é cronológica, agrupada por cliente.
+- [ ] **2.5 Reorganizar o menu como no mockup do César:** Clientes · Teia Patrimonial · **Ativos** (Imóveis, Veículos, Outros bens, Investimentos, Empresas) · **Financeiro** (Contas…) · Documentos · Tarefas · **Pessoas** (Colaboradores/RH) · Fornecedores · Projetos · Relatórios · IA Assistente · Configurações · Ajuda.
+  O que ainda não existe aparece como "em breve" (desabilitado) ou fica oculto. **A decidir com o César.**
+
+### Nível 3 — Configurações + painel de mercados *(dias · tabelas novas pequenas · rede externa)*
+- [ ] **3.1 Tela Configurações (por usuário).** Hoje não existe.
+  Mudar: criar a tabela `usuario_preferencias` (usuario_id, chave, valor JSON) e a rota `/configuracoes`.
+  A primeira preferência é **quais cotações exibir** (até 4, ideia do Gilson na reunião).
+- [ ] **3.2 Painel "Mercados" com abas: Moedas · Bolsas · Commodities · Relógio mundial.** Ele precisa do **franco suíço (CHF)** do dia, porque o Marcos se baseia nele.
+  Hoje a Gestão Geral só tem os relógios.
+  Mudar:
+  - criar a tabela `cotacoes` (código, data, valor, fonte) com **cache diário**, atualizada 1x/dia (na 1ª visita do dia ou pelo n8n);
+  - moedas pelo **BCB PTAX** (inclui CHF); bolsas e commodities com provedor **a definir**;
+  - cada usuário vê as cotações que escolheu na 3.1.
+- [ ] **3.3 Enviar relatório ao cliente pelo WhatsApp** (ex.: relatório dos imóveis do Marcos).
+  Hoje já existem PDF + WhatsApp das **pendências**.
+  Mudar: generalizar para um "relatório de imóveis/bens" em PDF. Pelo link `wa.me` só dá para mandar texto + link, então o anexo de verdade vem pelo n8n/WhatsApp Business (Izarley).
+
+### Nível 4 — Family office nos cadastros *(dias–semanas · ALTER/tabelas novas)*
+- [ ] **4.1 Núcleo familiar dependente:** Carol (cônjuge), Laura Catarina (filha), Lohan (enteado, sustentado pelo Marcos).
+  Hoje existe `pessoa_familiares`.
+  Mudar:
+  - campo **dependente financeiro**;
+  - **regime de bens** + upload da **certidão de casamento**;
+  - permitir que o familiar seja o **titular** de uma despesa (contas pagas em nome de outros → total por pessoa).
+- [ ] **4.2 Co-propriedade / sociedade por bem.**
+  Hoje o imóvel tem `percentual_participacao` e coproprietários em texto.
+  Mudar: criar a tabela `bem_coproprietarios` (bem_tipo, bem_id, pessoa/empresa, %), que serve para imóveis, veículos e outros bens.
+- [ ] **4.3 Herdeiros por bem.**
+  Hoje o testamento está no cadastro do cliente (Módulo 01).
+  Mudar: vincular herdeiro + % a cada bem, reaproveitando a estrutura da 4.2.
+- [ ] **4.4 Imóvel na planta:** situação "na planta" + **data prevista da matrícula/entrega**, que gera uma tarefa automática.
+
+### Nível 5 — Financeiro: caixa-mãe + caixa por patrimônio *(semanas · refatora `lancamentos_financeiros`)*
+- [ ] **5.0 ⛔ Bloqueante:** receber do César o **PDF da especificação do financeiro**, escrito para programador, que ele montou no projeto do ChatGPT.
+  Foi combinado na reunião. Não codar o 5.2 em diante sem esse documento.
+- [ ] **5.1 Caixa-mãe (visão).** É a soma do saldo de **todas as contas** do cliente (Santander, Itaú…).
+  Hoje já existem `contas_financeiras` + `conta_saldos`.
+  Mudar: só uma tela/indicador de leitura, sem ALTER. É um ganho rápido que pode sair antes do resto.
+- [ ] **5.2 Refatorar os lançamentos.** Hoje `lancamentos_financeiros.imovel_id` é `NOT NULL` e as categorias são só de imóvel.
+  Mudar:
+  - **vínculo polimórfico** (`bem_tipo`/`bem_id`: imóvel, veículo, outro bem, empresa, pessoa);
+  - **`conta_origem_id`** (de qual conta saiu, para dar baixa no caixa-mãe);
+  - **titular/beneficiado**;
+  - categorias ampliadas.
+  A migração preserva os dados (`imovel_id` → `bem_tipo='imovel'`).
+- [ ] **5.3 Caixa por patrimônio:** extrato de custos **desde a aquisição** de cada bem (Jet Ski, Van, apto Balneário…), com total gasto e **% no custo de vida**.
+  O pagamento sai do caixa-mãe e é alocado no caixa do bem.
+- [ ] **5.4 Caixas de pessoas e empresas:** Marcos, Prime, SMK, César pessoal, César+Prime.
+- [ ] **5.5 Relatórios financeiros:** por bem, por categoria, por pessoa e por período, em PDF.
+- [ ] **5.6 Roteamento das contas que chegam:** e-mail/WhatsApp → n8n → lançamento no bem certo *(Izarley)*.
+
+### Nível 6 — Teia Patrimonial *(semanas · visual · depende do nível 5 para mostrar o caixa)*
+- [ ] **6.1 Teia do cliente:** o cliente no centro, com bens, empresas, contas e família em volta. Abre pelo item "Teia Patrimonial" do menu.
+  Hoje o grafo d3 (`hub-grafo.js`) só existe na ficha do imóvel.
+  Mudar: tornar o grafo **genérico**, alimentado por um JSON de nós.
+- [ ] **6.2 Teia por bem:** o bem no centro, com documentação, caixa/financeiro, seguro, IPVA/CRLV e manutenções. Generaliza o hub do imóvel para veículos e outros bens.
+
+### Nível 7 — Evolução patrimonial real *(semanas · fontes externas · job periódico)*
+- [ ] **7.1 Valorização e depreciação por fontes confiáveis.** Hoje o sistema reconstrói a evolução a partir de avaliações e saldos **cadastrados** à mão.
+  Mudar:
+  - **imóveis** por índice (FipeZap/IVG-R; INCC para imóvel na planta);
+  - **veículos** pela **tabela FIPE** mensal (ele lembrou que a FIPE dos carros já subiu);
+  - **investimentos** pelo valor atual;
+  - **liquidez** por classe.
+- [ ] **7.2 Recalcular a cada 15/30 dias, e não a cada login,** para controlar o custo de token/API.
+  Criar a tabela `patrimonio_snapshots` (data, cliente, categoria, valor, fonte) e mostrar a data e a fonte de cada valor.
+
+### Nível 8 — IA *(fora do escopo inicial · custo de token na conta do César)*
+- [ ] **8.1 Upload com extração por IA dentro de cada cadastro** (matrícula, contrato de compra e venda) que **preenche os campos**.
+- [ ] **8.2 Assistente via WhatsApp** é o plano principal *(Izarley, n8n/MCP — ver M4)*.
+- [ ] **8.3 "IA Assistente" dentro do app** (item do menu do mockup).
+- [ ] **8.4 Projetos:** projeções de ROI de investimentos. O Gilson deixou fora do escopo inicial.
+- [ ] **8.5 Área do cliente: solicitações/atendimento** (o cliente pede, o César atende).
+
+### ❓ Decisões para fechar com o César (antes dos níveis 2.5, 3 e 5)
+- [ ] Lista final de botões do menu e o que aparece em cada modo (sem cliente × com cliente). Itens não construídos ficam ocultos ou como "em breve"?
+- [ ] Onde editar o cadastro do cliente depois da mudança 2.1 (item "Cadastro" no menu do cliente?).
+- [ ] Cores por categoria: sim/não e quais.
+- [ ] Quais cotações, bolsas e commodities (lista inicial) e qual a fonte paga/gratuita aceitável.
+- [ ] **Enviar o PDF do financeiro** (caixa-mãe/caixas): bloqueia o nível 5.
+- [ ] Frequência da evolução patrimonial (15 ou 30 dias) e quem paga as APIs/tokens.
+
+### 🛠️ Processo (combinado na reunião)
+- [ ] Confirmar o acesso do César como **colaborador do repositório** no GitHub. Na reunião deu erro de permissão; conferir se o convite foi aceito.
+- [ ] Sequência sugerida: **Sprint 1** = níveis 1 + 2.1–2.3 · **Sprint 2** = 2.4–2.5 + 5.1 · **Sprint 3** = nível 3 · depois 4 → 5 (com a especificação) → 6 → 7 → 8.
+
+---
+
 ## Reunião com César — 21/07/2026 (2 chamadas · transcrições 6 e 7)
 
 > César viu a plataforma em produção ("Patri Control") e o local (com Módulo 09 — Contas).
@@ -594,6 +743,7 @@
 
 | Data | O que foi feito |
 |------|----------------|
+| 06/10/2026 | **Plano de ação da reunião de 01/10/2026** (transcrições 2, 3 e 4; uma reunião só). Cruzei o que o César pediu com o que o código já tem e montei **8 níveis, do mais fácil ao mais difícil**: (1) ajustes de tela: tirar a grade de clientes da Gestão Geral, relógio mais leve, rosca, Agenda→Tarefas, dicionário de ícones; (2) navegação: mesmo menu com dois modos, todos os clientes × cliente selecionado, "Você está em X", clique no cliente leva à gestão e não ao cadastro, modo geral nos 11 módulos; (3) Configurações por usuário + painel de mercados com CHF; (4) família, co-propriedade, herdeiros e imóvel na planta; (5) financeiro com caixa-mãe e caixa por patrimônio, **bloqueado pelo PDF de especificação do César**; (6) Teia Patrimonial do cliente e por bem; (7) evolução patrimonial real (FIPE e índices, job a cada 15/30 dias); (8) IA. Registrado em `TAREFAS.md` (seção nova) e `tarefas.html` (cartões "Reunião 01/10"). Nenhum código alterado. |
 | 28/09/2026 | **Integração Notion (envio de tarefas/pendências) — ✅ testada e funcionando em produção.** Botão **"Vincular Notion"** na `/agenda` (que é a central de tarefas: toda pendência = tarefa). Fluxo **OAuth** nativo (PHP+cURL, sem lib): `NotionClient` (Core) + `NotionIntegracao` (Model) + `NotionController` (conectar/callback/sincronizar/desvincular) + rotas `agenda/notion/*`. Ao conectar, cria um **board padrão** ("Tarefas & Pendências — CZR") na 1ª página compartilhada e **envia as pendências** (`alertas_consolidado`) como páginas, com **idempotência** (`notion_tarefas_map`: chave estável → page_id; re-sync atualiza, não duplica). Só ENVIO (sistema → Notion), por usuário/gestor. Migração **006** (`notion_integracoes` + `notion_tarefas_map`) + schema.sql. Credenciais no `.env` (`NOTION_CLIENT_ID/SECRET/REDIRECT`). **Testado localmente:** migração aplica, model CRUD, guard do sync, render da Agenda com o botão. ⚠️ **Pendente (César/Gilson):** criar a integração pública em notion.so/my-integrations (redirect `https://czrsolucoes.com.br/agenda/notion/callback`), colar Client ID/Secret no `.env` e **testar o OAuth em produção** (sandbox não tem internet). |
 | 08/09/2026 | **Módulos 13 e 15 finalizados.** **M13 — Documentos (repositório central):** nova tela `documentos` (`DocumentosController::index` + view `documentos/index.php`) que reúne **todos** os arquivos anexados nos módulos numa lista única, com filtros (busca por nome/descrição, categoria, módulo/tipo_referencia, validade: vencidos/30d/vigentes), chips de resumo e badge de validade por urgência. `Documento` model ganhou `listar()`, `resolverVinculos()` (mostra a que entidade cada doc pertence + link ao cadastro, resolvido em lote sem N+1), `categorias()`, `tiposLabel()`, `buscar()`, `excluir()`, `contar()`. Download autenticado via `ArquivoController` (sem link direto p/ /uploads), exclusão pelo repositório (admin, com escopo, apaga registro + arquivo). Item 📁 no menu (admin+cliente) + app no dashboard com badge. **M15 — Dashboard Executivo:** novo helper `indicadores_gestao(?cliente_id)` (defensivo) com 4 KPIs por área — Financeiro (saldo contas BRL + investimentos, nº contas/aplicações), RH (colaboradores ativos, férias/treinamentos em 60d), Contratos (ativos, vencendo 30d), Seguros (vigentes, vencendo 30d) — exibidos como cards clicáveis na Gestão Geral (consolidado) e no Dashboard do cliente. Testado E2E contra o banco (M13: 9/9 filtros+vínculos; M15: indicadores nos 2 escopos) + render das telas documentos/gestão-geral/dashboard sem erros PHP. Sem migração nova (usa tabelas existentes). |
 | 08/09/2026 | **Módulo 14 — Agenda e Alertas finalizado.** Ligadas as três fontes de vencimento que faltavam no motor `alertas_consolidado()`: **colaboradores** (novo ramo no UNION lendo `colaborador_historico` — férias e treinamentos com `data >= CURDATE()` de colaborador ativo, categoria `colaborador` 👔 com link para `colaboradores/editar`), **investimentos** (vencimento de renda fixa ativa já no UNION, categoria `investimento` 📈) e **CNH/passaporte** (coberto pelo ramo genérico "Documentos com validade" — campos estruturados de validade na pessoa ficam p/ F3). Ícone `colaborador` adicionado ao mapa da view `agenda/index.php`. Testado E2E contra o MariaDB do sandbox (colaborador + histórico de férias/treinamento futuros → 2 eventos `colaborador` na agenda com data/título/link corretos). Verificado que M01/M03 têm só "Relacionamentos" em aberto (→ F3, Teia Patrimonial), fora do MVP. |
