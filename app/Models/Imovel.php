@@ -6,14 +6,18 @@
  */
 class Imovel
 {
-    public static function listar(int $clienteId, array $f = []): array
+    public static function listar(?int $clienteId, array $f = []): array
     {
-        $sql    = 'SELECT * FROM imoveis WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if (!empty($f['tipo']))     { $sql .= ' AND tipo = ?';              $params[] = $f['tipo']; }
-        if (!empty($f['situacao'])) { $sql .= ' AND situacao = ?';          $params[] = $f['situacao']; }
-        if (!empty($f['busca']))    { $sql .= ' AND nome_referencia LIKE ?'; $params[] = '%' . $f['busca'] . '%'; }
-        $sql .= ' ORDER BY nome_referencia';
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM imoveis t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if (!empty($f['tipo']))     { $sql .= ' AND t.tipo = ?';              $params[] = $f['tipo']; }
+        if (!empty($f['situacao'])) { $sql .= ' AND t.situacao = ?';          $params[] = $f['situacao']; }
+        if (!empty($f['busca']))    { $sql .= ' AND t.nome_referencia LIKE ?'; $params[] = '%' . $f['busca'] . '%'; }
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . 't.nome_referencia';
 
         $st = db()->prepare($sql);
         $st->execute($params);

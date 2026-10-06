@@ -5,18 +5,22 @@
  */
 class Seguro
 {
-    public static function listar(int $clienteId, string $tipo = '', string $status = '', string $busca = ''): array
+    public static function listar(?int $clienteId, string $tipo = '', string $status = '', string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM seguros WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if ($tipo !== '')   { $sql .= ' AND tipo = ?';   $params[] = $tipo; }
-        if ($status !== '') { $sql .= ' AND status = ?'; $params[] = $status; }
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM seguros t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if ($tipo !== '')   { $sql .= ' AND t.tipo = ?';   $params[] = $tipo; }
+        if ($status !== '') { $sql .= ' AND t.status = ?'; $params[] = $status; }
         if ($busca !== '') {
-            $sql .= ' AND (seguradora LIKE ? OR corretora LIKE ? OR numero_apolice LIKE ?)';
+            $sql .= ' AND (t.seguradora LIKE ? OR t.corretora LIKE ? OR t.numero_apolice LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
         // Vigentes primeiro; dentro disso, os que vencem antes no topo.
-        $sql .= " ORDER BY FIELD(status,'vigente','em_cotacao','vencida','cancelada'), vigencia_fim IS NULL, vigencia_fim";
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . "FIELD(t.status,'vigente','em_cotacao','vencida','cancelada'), t.vigencia_fim IS NULL, t.vigencia_fim";
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

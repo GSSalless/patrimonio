@@ -30,7 +30,7 @@ class OutrosController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('outros');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -114,15 +114,15 @@ class OutrosController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_tipo  = $_GET['tipo'] ?? '';
         $filtro_busca = trim($_GET['busca'] ?? '');
-        $bens = OutroBem::listar($cli['id'], $filtro_tipo, $filtro_busca);
+        $bens = OutroBem::listar($cli['id'] ?? null, $filtro_tipo, $filtro_busca);
 
         $novo_ob = null; $novo_pend = []; $novo_pend_total = 0;
         $novo_id = (int) ($_GET['novo'] ?? 0);
-        if ($novo_id) {
+        if ($novo_id && $cli) {
             $novo_ob = OutroBem::buscarDoCliente($novo_id, $cli['id']);
             if ($novo_ob) {
                 $novo_pend       = pendencias_outro_bem($novo_ob);
@@ -138,7 +138,7 @@ class OutrosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('outros');
 
         $tipo = $_GET['tipo'] ?? $_POST['tipo'] ?? '';
         if (!in_array($tipo, self::TIPOS)) {
@@ -170,7 +170,7 @@ class OutrosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('outros');
 
         $id = (int) ($_GET['id'] ?? 0);
         $ob = OutroBem::buscarDoCliente($id, $cli['id']);
@@ -205,7 +205,7 @@ class OutrosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('outros');
 
         $bem_id = (int) ($_GET['bem_id'] ?? 0);
         $ob = OutroBem::buscarDoCliente($bem_id, $cli['id']);
@@ -245,7 +245,7 @@ class OutrosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('outros');
 
         $bem_id = (int) ($_GET['bem_id'] ?? 0);
         $ob = OutroBem::buscarDoCliente($bem_id, $cli['id']);

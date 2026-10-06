@@ -33,7 +33,7 @@ class EmpresasController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('empresas');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -85,11 +85,11 @@ class EmpresasController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_natureza = $_GET['natureza'] ?? '';
         $filtro_busca    = trim($_GET['busca'] ?? '');
-        $empresas = Empresa::listar($cli['id'], $filtro_natureza, $filtro_busca);
+        $empresas = Empresa::listar($cli['id'] ?? null, $filtro_natureza, $filtro_busca);
 
         $this->view('empresas/lista', compact('cli', 'empresas', 'filtro_natureza', 'filtro_busca'));
     }
@@ -99,7 +99,7 @@ class EmpresasController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('empresas');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -129,7 +129,7 @@ class EmpresasController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('empresas');
 
         $id = (int) ($_GET['id'] ?? 0);
         $empresa = Empresa::buscarDoCliente($id, $cli['id']);
@@ -167,7 +167,7 @@ class EmpresasController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('empresas');
 
         $empresa_id = (int) ($_GET['empresa_id'] ?? 0);
         $empresa = Empresa::buscarDoCliente($empresa_id, $cli['id']);
@@ -191,7 +191,7 @@ class EmpresasController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('empresas');
 
         $empresa_id = (int) ($_GET['empresa_id'] ?? 0);
         $socio_id   = (int) ($_GET['id'] ?? 0);

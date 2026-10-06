@@ -14,8 +14,10 @@ $router->get('logout',    [AuthController::class, 'logout']);
 $router->get('dashboard', [DashboardController::class, 'index']);
 $router->get('gestao-geral', [GestaoGeralController::class, 'index']);
 
-// Agenda e Alertas (Módulo 14)
-$router->get('agenda', [AgendaController::class, 'index']);
+// Tarefas e Pendências (Módulo 14 — antiga "Agenda"; renomeada na reunião de
+// 01/10/2026: toda pendência é uma tarefa). /agenda continua como alias.
+$router->get('tarefas', [AgendaController::class, 'index']);
+$router->get('agenda',  [AgendaController::class, 'index']);
 
 // Integração Notion (envia as tarefas/pendências para o board do gestor)
 $router->get('agenda/notion/conectar',     [NotionController::class, 'conectar']);

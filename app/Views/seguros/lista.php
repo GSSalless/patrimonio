@@ -22,12 +22,12 @@ $total_premio = array_sum(array_map(fn($s) => $s['status'] === 'vigente' ? (floa
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-shield-check" style="color:var(--secondary)"></i> Seguros — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('seguros') ?>" style="color:var(--secondary)"></i> Seguros — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($seguros) ?> apólice(s)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('seguros/novo') ?>" class="btn btn-primario">+ Cadastrar seguro</a>
+    <a href="<?= base_url('seguros/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="seguros/novo">+ Cadastrar seguro</a>
     <?php endif; ?>
   </div>
 
@@ -67,15 +67,17 @@ $total_premio = array_sum(array_map(fn($s) => $s['status'] === 'vigente' ? (floa
     <strong style="font-size:1.15rem;color:var(--cor-primaria)"><?= moeda($total_premio) ?></strong>
   </div>
   <?php endif; ?>
+  <?php foreach (agrupar_por_cliente($seguros, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($seguros as $s):
+    <?php foreach ($grp['itens'] as $s):
       $vinc = Seguro::descreverVinculo($s['item_tipo'], $s['item_id'] ? (int)$s['item_id'] : null);
       $rel = '';
       if ($s['status'] === 'vigente' && $s['vigencia_fim']) {
         [$cl, $cor, $rel] = alerta_status(dias_ate($s['vigencia_fim']));
       }
     ?>
-    <a href="<?= base_url('seguros/editar?id=' . $s['id']) ?>" class="imovel-card">
+    <a href="<?= link_item('seguros/editar?id=' . $s['id'], $s, $cli) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
           <i class="bi <?= $tipo_icone[$s['tipo']] ?? 'bi-shield-check' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
@@ -105,12 +107,13 @@ $total_premio = array_sum(array_map(fn($s) => $s['status'] === 'vigente' ? (floa
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
     <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-shield-check"></i></div>
     <p style="color:var(--cor-secundario)">Nenhum seguro cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('seguros/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro seguro</a>
+    <a href="<?= base_url('seguros/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="seguros/novo" style="margin-top:1rem">+ Cadastrar primeiro seguro</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

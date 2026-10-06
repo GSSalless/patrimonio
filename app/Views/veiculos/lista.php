@@ -15,12 +15,12 @@ require APP_ROOT . '/includes/header.php';
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('patrimonio') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)">Veículos — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('veiculos') ?>" style="color:var(--secondary)"></i> Veículos — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($veiculos) ?> veículo(s)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('veiculos/novo') ?>" class="btn btn-primario">+ Cadastrar veículo</a>
+    <a href="<?= base_url('veiculos/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="veiculos/novo">+ Cadastrar veículo</a>
     <?php endif; ?>
   </div>
 
@@ -36,13 +36,15 @@ require APP_ROOT . '/includes/header.php';
   </div>
 
   <?php if ($veiculos): ?>
+  <?php foreach (agrupar_por_cliente($veiculos, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($veiculos as $ve): ?>
-    <a href="<?= base_url('veiculos/editar?id=' . $ve['id']) ?>" class="imovel-card">
+    <?php foreach ($grp['itens'] as $ve): ?>
+    <a href="<?= link_item('veiculos/editar?id=' . $ve['id'], $ve, $cli) ?>" class="imovel-card">
       <div class="imovel-card-foto">
         <?php if ($ve['foto_principal']): ?>
           <img src="<?= url_arquivo($ve['foto_principal']) ?>" alt="">
-        <?php else: ?>🚗<?php endif; ?>
+        <?php else: ?><?= icone('veiculos') ?><?php endif; ?>
       </div>
       <div class="imovel-card-body">
         <div class="imovel-card-codigo"><?= h($ve['codigo']) ?><?= $ve['placa'] ? ' &middot; ' . h($ve['placa']) : '' ?></div>
@@ -60,12 +62,13 @@ require APP_ROOT . '/includes/header.php';
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem">🚗</div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><?= icone('veiculos') ?></div>
     <p style="color:var(--cor-secundario)">Nenhum veículo cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('veiculos/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro veículo</a>
+    <a href="<?= base_url('veiculos/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="veiculos/novo" style="margin-top:1rem">+ Cadastrar primeiro veículo</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>
@@ -83,7 +86,7 @@ require APP_ROOT . '/includes/header.php';
   <div class="modal-box">
     <div class="modal-head">
       <div>
-        <div style="font-size:.8rem;color:var(--cor-secundario);font-weight:600"><?= h($novo_ve['codigo']) ?> · Veículo cadastrado ✅</div>
+        <div style="font-size:.8rem;color:var(--cor-secundario);font-weight:600"><?= h($novo_ve['codigo']) ?> · Veículo cadastrado <i class="bi bi-check-circle-fill" style="color:var(--success)"></i></div>
         <h3 style="font-size:1.15rem;color:var(--cor-primaria);margin-top:.15rem"><?= h($subt) ?></h3>
       </div>
       <button type="button" class="modal-fechar" onclick="fecharModalPendencias()" aria-label="Fechar">&times;</button>
@@ -91,12 +94,12 @@ require APP_ROOT . '/includes/header.php';
     <div class="modal-body">
       <?php if ($novo_pend_total === 0): ?>
         <div style="text-align:center;padding:1.5rem 0">
-          <div style="font-size:2.5rem">🎉</div>
+          <div style="font-size:2.5rem;color:var(--success)"><i class="bi bi-check2-circle"></i></div>
           <p style="color:#1a7a45;font-weight:600;margin-top:.5rem">Cadastro completo! Nenhum campo pendente.</p>
         </div>
       <?php else: ?>
         <div class="alerta-pendencias">
-          ⚠️ <strong><?= $novo_pend_total ?></strong> campo(s) ficaram sem preencher. Você pode completar depois editando o veículo.
+          <i class="bi bi-exclamation-triangle"></i> <strong><?= $novo_pend_total ?></strong> campo(s) ficaram sem preencher. Você pode completar depois editando o veículo.
         </div>
         <div class="pendencias-lista">
           <?php foreach ($novo_pend as $grupo => $campos): ?>
@@ -109,9 +112,9 @@ require APP_ROOT . '/includes/header.php';
       <?php endif; ?>
     </div>
     <div class="modal-rodape">
-      <a href="<?= h($pdf_url) ?>" target="_blank" class="btn btn-secundario">📄 Gerar PDF</a>
-      <a href="<?= h($wa_url) ?>" target="_blank" class="btn btn-whatsapp">📱 Enviar por WhatsApp</a>
-      <a href="<?= base_url('veiculos/editar?id=' . $novo_ve['id']) ?>" class="btn btn-primario" style="margin-left:auto">Editar veículo →</a>
+      <a href="<?= h($pdf_url) ?>" target="_blank" class="btn btn-secundario"><i class="bi bi-file-earmark-pdf"></i> Gerar PDF</a>
+      <a href="<?= h($wa_url) ?>" target="_blank" class="btn btn-whatsapp"><i class="bi bi-whatsapp"></i> Enviar por WhatsApp</a>
+      <a href="<?= link_item('veiculos/editar?id=' . $novo_ve['id'], $novo_ve, $cli) ?>" class="btn btn-primario" style="margin-left:auto">Editar veículo →</a>
     </div>
   </div>
 </div>

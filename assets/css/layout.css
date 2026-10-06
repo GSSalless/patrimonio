@@ -97,10 +97,24 @@
 .topo-cliente-vazio { background: rgba(34, 199, 242, .1); border-color: rgba(34, 199, 242, .35); }
 .topo-cliente-vazio i { color: var(--secondary); }
 
+/* Contexto "Você está em X" + botão Sair do cliente (reunião 01/10/2026) */
+.topo-contexto { display: inline-flex; align-items: center; gap: .3rem; }
+.topo-cliente-txt { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; text-align: left; }
+.topo-cliente-txt small { font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); font-weight: 600; }
+.topo-cliente-txt b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topo-cliente-sair {
+  width: 30px; height: 30px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: .8rem; color: var(--text-2);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 50%;
+  text-decoration: none;
+}
+.topo-cliente-sair:hover { color: var(--danger); border-color: rgba(239, 68, 68, .45); text-decoration: none; }
+
 /* Data / hora */
 .topo-data { text-align: right; line-height: 1.2; }
 .topo-data .d { font-size: .76rem; color: var(--text-2); white-space: nowrap; }
-.topo-data .t { font-size: 1.05rem; font-weight: 700; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.topo-data .t { font-size: 1rem; font-weight: 500; letter-spacing: .01em; font-variant-numeric: tabular-nums; }
 
 /* ── Menu lateral (sidebar) ─────────────────────────────── */
 .menu-overlay {
@@ -160,7 +174,7 @@ body.menu-aberto .menu-lateral { transform: translateX(0); }
 .menu-item {
   display: flex; align-items: center; gap: .75rem;
   width: 100%;
-  padding: .6rem .7rem; margin-bottom: .12rem;
+  padding: .5rem .7rem; margin-bottom: .1rem;
   border-radius: var(--raio-sm);
   color: var(--text-2);
   font-size: .87rem; font-weight: 500;
@@ -187,6 +201,21 @@ body.menu-aberto .menu-lateral { transform: translateX(0); }
   padding: .3rem .75rem; margin: .9rem 0 .35rem;
 }
 .menu-grupo-tit:first-child { margin-top: .2rem; }
+
+/* Modo do menu: "Exibindo: Todos os clientes" ou o cliente selecionado */
+.menu-modo {
+  display: flex; flex-direction: column; gap: .1rem;
+  padding: .55rem .75rem; margin: .1rem 0 .6rem;
+  border-radius: var(--raio-sm);
+  background: rgba(34, 199, 242, .07); border: 1px solid rgba(34, 199, 242, .22);
+}
+.menu-modo span { font-size: .62rem; text-transform: uppercase; letter-spacing: .09em; color: var(--text-3); font-weight: 700; }
+.menu-modo b { font-size: .84rem; color: var(--text); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.menu-modo-cli { background: rgba(22, 139, 255, .12); border-color: rgba(22, 139, 255, .4); }
+
+/* Itens do mockup ainda não construídos */
+.menu-item-off { opacity: .42; cursor: default; }
+.menu-item-off:hover { background: transparent; color: var(--text-2); }
 
 /* Rodapé: usuário + sair */
 .menu-lateral-rodape {
@@ -241,6 +270,13 @@ body.menu-aberto .menu-lateral { transform: translateX(0); }
   .container { padding: 1.1rem 1rem; }
 }
 @media (max-width: 560px) {
+  /* No celular a prioridade do topo é o contexto ("Você está em…"). */
+  .topo-busca { display: none; }
+  .topo-dir { gap: .5rem; }
   .topo-data .d { display: none; }
-  .topo-cliente { max-width: 130px; }
+  .topo-cliente { max-width: 180px; padding: .4rem .7rem; }
+  .topo-cliente-txt small { display: none; }
+}
+@media (max-width: 420px) {
+  .topo-data { display: none; }
 }

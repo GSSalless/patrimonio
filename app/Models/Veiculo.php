@@ -5,15 +5,19 @@
  */
 class Veiculo
 {
-    public static function listar(int $clienteId, string $busca = ''): array
+    public static function listar(?int $clienteId, string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM veiculos WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM veiculos t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
         if ($busca !== '') {
-            $sql .= ' AND (modelo LIKE ? OR marca LIKE ? OR placa LIKE ?)';
+            $sql .= ' AND (t.modelo LIKE ? OR t.marca LIKE ? OR t.placa LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
-        $sql .= ' ORDER BY marca, modelo';
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . 't.marca, t.modelo';
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

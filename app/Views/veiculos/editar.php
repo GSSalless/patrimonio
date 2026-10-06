@@ -86,7 +86,7 @@ $v = fn($k) => h($d[$k] ?? '');
   <!-- HISTÓRICO: ABASTECIMENTOS -->
   <div class="card" id="abastecimentos" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
-      <h3 class="card-titulo">⛽ Abastecimentos</h3>
+      <h3 class="card-titulo"><?= icone('abastecimentos') ?> Abastecimentos</h3>
       <a href="<?= base_url('veiculos/abastecimento?veiculo_id='.$ve_id) ?>" class="btn btn-primario btn-sm">+ Abastecimento</a>
     </div>
     <?php if ($abastecimentos): ?>
@@ -116,7 +116,7 @@ $v = fn($k) => h($d[$k] ?? '');
   <?php $vm_tipos = ['revisao'=>'Revisão','troca_oleo'=>'Troca de óleo','pneus'=>'Pneus','freios'=>'Freios','bateria'=>'Bateria','suspensao'=>'Suspensão','eletrica'=>'Elétrica','funilaria'=>'Funilaria/Pintura','peca'=>'Troca de peça','outro'=>'Outro']; ?>
   <div class="card" id="manutencoes" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
-      <h3 class="card-titulo">🔧 Manutenções</h3>
+      <h3 class="card-titulo"><?= icone('manutencoes') ?> Manutenções</h3>
       <a href="<?= base_url('veiculos/manutencao?veiculo_id='.$ve_id) ?>" class="btn btn-primario btn-sm">+ Manutenção</a>
     </div>
     <?php if ($manutencoes): ?>
@@ -151,7 +151,7 @@ $v = fn($k) => h($d[$k] ?? '');
   ?>
   <div class="card" id="sinistros" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
-      <h3 class="card-titulo">⚠️ Sinistros / ocorrências</h3>
+      <h3 class="card-titulo"><?= icone('sinistros') ?> Sinistros / ocorrências</h3>
       <a href="<?= base_url('veiculos/sinistro?veiculo_id='.$ve_id) ?>" class="btn btn-primario btn-sm">+ Sinistro</a>
     </div>
     <?php if ($sinistros): ?>

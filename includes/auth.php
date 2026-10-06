@@ -36,6 +36,8 @@ function login(string $email, string $senha): bool {
     }
     session_init();
     session_regenerate_id(true);
+    // Todo login começa no modo gestor (todos os clientes) — reunião 01/10/2026.
+    unset($_SESSION['cliente_selecionado']);
     $_SESSION['usuario'] = [
         'id'    => $usuario['id'],
         'nome'  => $usuario['nome'],

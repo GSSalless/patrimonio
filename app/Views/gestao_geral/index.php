@@ -2,14 +2,14 @@
 /**
  * Gestão Geral — layout Design System CZR (mockup, tela 1).
  * Saudação · faixa de KPIs · evolução (SVG) + donut de composição (SVG) ·
- * tarefas/pendências + relógios mundiais · indicadores por área · carteira.
+ * tarefas/pendências + relógios mundiais · indicadores por área.
+ * (A carteira de clientes saiu daqui na reunião de 01/10/2026 — fica em /clientes.)
  *
  * Todos os valores vêm do banco (patrimônio, lançamentos, agenda). O gráfico
  * de evolução é reconstruído do histórico real (avaliações/saldos/movimentos)
  * pelos últimos 6 meses — ver patrimonio_evolucao() em includes/functions.php.
  *
  * @var array      $usuario
- * @var int        $total_clientes
  * @var array      $pat        patrimonio_consolidado()
  * @var array      $ind        indicadores_gestao()
  * @var array      $alertas    alertas_resumo()
@@ -17,7 +17,6 @@
  * @var array      $evolucao   [ ['competencia','total'], ... ]
  * @var array      $pendencias tarefas_pendencias()
  * @var float|null $variacao   % vs mês anterior (null se sem histórico)
- * @var array      $clientes
  */
 $page_title = 'Gestão Geral';
 require APP_ROOT . '/includes/header.php';
@@ -25,10 +24,11 @@ require APP_ROOT . '/includes/header.php';
 $primeiro_nome = trim(explode(' ', trim($usuario['nome'] ?? 'César'))[0]);
 $total_pat = (float) $pat['total'];
 
-// Valor monetário compacto (R$ 1,2 MM) — usado no centro do donut e no eixo.
+// Valor monetário compacto (R$ 1,2 mi) — usado no centro do donut e no eixo.
 $moeda_curta = function (float $v): string {
     $abs = abs($v);
-    if ($abs >= 1_000_000) return 'R$ ' . number_format($v / 1_000_000, $abs >= 10_000_000 ? 0 : 1, ',', '.') . ' MM';
+    if ($abs >= 1_000_000_000) return 'R$ ' . number_format($v / 1_000_000_000, 1, ',', '.') . ' bi';
+    if ($abs >= 1_000_000) return 'R$ ' . number_format($v / 1_000_000, $abs >= 100_000_000 ? 0 : 1, ',', '.') . ' mi';
     if ($abs >= 1_000)     return 'R$ ' . number_format($v / 1_000, 0, ',', '.') . ' mil';
     return moeda($v);
 };
@@ -83,7 +83,7 @@ $delta_html = function (?float $pct): string {
       <div class="gg2-kpi-n"><?= moeda((float) $fluxo['despesas']) ?></div>
       <span class="gg2-kpi-delta gg2-mut">lançamentos de <?= h(strftime_pt_mes()) ?></span>
     </div>
-    <a class="gg2-kpi" href="<?= base_url('agenda') ?>">
+    <a class="gg2-kpi" href="<?= base_url('tarefas') ?>">
       <div class="gg2-kpi-ico" style="color:var(--danger)"><i class="bi bi-exclamation-triangle"></i></div>
       <div class="gg2-kpi-l">Pendências críticas</div>
       <div class="gg2-kpi-n"><?= (int) ($alertas['urgentes'] ?? 0) ?></div>
@@ -157,7 +157,7 @@ $delta_html = function (?float $pct): string {
     <section class="card gg2-panel">
       <div class="gg2-panel-h"><h3>Distribuição por categoria</h3></div>
       <?php if ($total_pat > 0):
-        $R = 60; $SW = 22; $C = 2 * M_PI * $R; $off = 0; // circunferência e offset acumulado
+        $R = 64; $SW = 16; $C = 2 * M_PI * $R; $off = 0; // circunferência e offset acumulado
       ?>
       <div class="gg2-donut">
         <svg viewBox="0 0 160 160" class="gg2-donut-svg" role="img" aria-label="Composição do patrimônio">
@@ -174,8 +174,8 @@ $delta_html = function (?float $pct): string {
                     stroke-dasharray="<?= $dash ?>" stroke-dashoffset="<?= $doff ?>"/>
             <?php endforeach; ?>
           </g>
-          <text x="80" y="76" text-anchor="middle" class="gg2-donut-t"><?= h($moeda_curta($total_pat)) ?></text>
-          <text x="80" y="94" text-anchor="middle" class="gg2-donut-s">Total</text>
+          <text x="80" y="80" text-anchor="middle" class="gg2-donut-t"><?= h($moeda_curta($total_pat)) ?></text>
+          <text x="80" y="97" text-anchor="middle" class="gg2-donut-s">Total</text>
         </svg>
         <div class="gg2-donut-leg">
           <?php foreach ($comp as $seg): if ($seg['valor'] <= 0) continue;
@@ -199,7 +199,7 @@ $delta_html = function (?float $pct): string {
     <section class="card gg2-panel">
       <div class="gg2-panel-h">
         <h3>Tarefas e Pendências</h3>
-        <a class="gg2-vertodas" href="<?= base_url('agenda') ?>">Ver todas →</a>
+        <a class="gg2-vertodas" href="<?= base_url('tarefas') ?>">Ver todas →</a>
       </div>
       <?php if ($pendencias): ?>
       <ul class="gg2-tarefas">
@@ -214,7 +214,7 @@ $delta_html = function (?float $pct): string {
         <?php endforeach; ?>
       </ul>
       <?php else: ?>
-      <div class="gg2-vazio gg2-vazio-sm"><i class="bi bi-check2-circle"></i><p>Nenhuma pendência no radar. 🎉</p></div>
+      <div class="gg2-vazio gg2-vazio-sm"><i class="bi bi-check2-circle"></i><p>Nenhuma pendência no radar.</p></div>
       <?php endif; ?>
     </section>
 
@@ -261,40 +261,6 @@ $delta_html = function (?float $pct): string {
       <div class="gg2-ind-s <?= $ind['seguros']['vencendo'] ? 'gg2-warn' : '' ?>"><?= $ind['seguros']['vencendo'] ? (int) $ind['seguros']['vencendo'] . ' vencendo em 30d' : 'vigentes' ?></div>
     </a>
   </div>
-
-  <!-- Carteira de clientes -->
-  <div class="gg2-clientes-h">
-    <h3>Clientes <span class="gg2-chip"><?= $total_clientes ?></span></h3>
-    <a href="<?= base_url('clientes/novo') ?>" class="btn btn-primario btn-sm">+ Nova pessoa</a>
-  </div>
-
-  <?php if ($clientes): ?>
-    <div class="gg-clientes">
-      <?php foreach ($clientes as $c):
-        $nome = $c['nome_completo'] ?: $c['nome'];
-        $ini  = mb_strtoupper(mb_substr(trim($c['nome']), 0, 1));
-      ?>
-      <a class="gg-cli-card" href="<?= base_url('dashboard?cliente_id=' . $c['id']) ?>">
-        <div class="gg-cli-avatar"><?= h($ini) ?></div>
-        <div class="gg-cli-corpo">
-          <div class="gg-cli-nome"><?= h($nome) ?></div>
-          <div class="gg-cli-sub"><span class="tag"><?= h($c['tipo_pessoa']) ?></span> <?= h($c['cpf_cnpj']) ?></div>
-          <div class="gg-cli-pat"><?= moeda($c['patrimonio']['total']) ?></div>
-          <div class="gg-cli-meta">
-            <i class="bi bi-building"></i> <?= (int)$c['patrimonio']['imoveis_qtd'] ?> ·
-            <i class="bi bi-car-front"></i> <?= (int)$c['patrimonio']['veiculos_qtd'] ?> ·
-            <i class="bi bi-gem"></i> <?= (int)$c['patrimonio']['outros_qtd'] ?> ·
-            <i class="bi bi-graph-up"></i> <?= (int)$c['patrimonio']['invest_qtd'] ?> ·
-            <i class="bi bi-bank"></i> <?= (int)$c['patrimonio']['contas_qtd'] ?>
-          </div>
-        </div>
-        <i class="bi bi-chevron-right gg-cli-chev"></i>
-      </a>
-      <?php endforeach; ?>
-    </div>
-  <?php else: ?>
-    <div class="card"><p class="gg2-mut" style="text-align:center;padding:2rem">Nenhum cliente cadastrado. <a href="<?= base_url('clientes/novo') ?>">Cadastrar o primeiro</a>.</p></div>
-  <?php endif; ?>
 
 </div>
 <?php require APP_ROOT . '/includes/footer.php'; ?>

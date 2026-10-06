@@ -40,7 +40,7 @@ class InvestimentosController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('investimentos');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -97,12 +97,12 @@ class InvestimentosController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_classe = $_GET['classe'] ?? '';
         $filtro_status = $_GET['status'] ?? '';
         $filtro_busca  = trim($_GET['busca'] ?? '');
-        $investimentos = Investimento::listar($cli['id'], $filtro_classe, $filtro_status, $filtro_busca);
+        $investimentos = Investimento::listar($cli['id'] ?? null, $filtro_classe, $filtro_status, $filtro_busca);
 
         $this->view('investimentos/lista', compact('cli', 'investimentos', 'filtro_classe', 'filtro_status', 'filtro_busca'));
     }
@@ -112,7 +112,7 @@ class InvestimentosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('investimentos');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -143,7 +143,7 @@ class InvestimentosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('investimentos');
 
         $id = (int) ($_GET['id'] ?? 0);
         $inv = Investimento::buscarDoCliente($id, $cli['id']);
@@ -180,7 +180,7 @@ class InvestimentosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('investimentos');
 
         $inv_id = (int) ($_GET['investimento_id'] ?? 0);
         $inv = Investimento::buscarDoCliente($inv_id, $cli['id']);
@@ -203,7 +203,7 @@ class InvestimentosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('investimentos');
 
         $inv_id = (int) ($_GET['investimento_id'] ?? 0);
         $mov_id = (int) ($_GET['id'] ?? 0);

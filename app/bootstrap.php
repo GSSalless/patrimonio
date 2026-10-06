@@ -31,17 +31,30 @@ session_init();
 // controllers, para funcionar mesmo em ações que redirecionam antes de
 // renderizar a view (ex.: Dashboard → Gestão Geral). Depois redireciona para
 // a URL limpa (sem o parâmetro).
+//   ?cliente_id=N  → entra no contexto do cliente N;
+//   ?cliente_id=0  → "Sair do cliente": volta ao modo gestor (todos os clientes).
+// Os demais parâmetros da URL são preservados (ex.: imoveis/ficha?id=5&cliente_id=2
+// → imoveis/ficha?id=5 já no contexto do cliente 2 — usado nas listas do modo gestor).
 if (isset($_GET['cliente_id']) && ($u = usuario_logado()) && $u['nivel'] === 'admin') {
-    selecionar_cliente((int) $_GET['cliente_id']);
-    header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
+    $novo_cli = (int) $_GET['cliente_id'];
+    if ($novo_cli > 0) {
+        selecionar_cliente($novo_cli);
+    } else {
+        unset($_SESSION['cliente_selecionado']);
+    }
+    $partes = parse_url($_SERVER['REQUEST_URI'] ?? '') ?: [];
+    parse_str($partes['query'] ?? '', $qs);
+    unset($qs['cliente_id'], $qs['url']);
+    // '/' + ltrim: impede "//host" (redirect para outro domínio).
+    $destino = '/' . ltrim($partes['path'] ?? BASE_URL, '/');
+    header('Location: ' . $destino . ($qs ? '?' . http_build_query($qs) : ''));
     exit;
 }
 
-// Nota: o cliente selecionado PERMANECE na sessão ao navegar pelas telas do
-// gestor (Gestão Geral, Clientes, Agenda). O menu lateral do admin aparece
-// sempre completo; os itens do cliente, quando não há cliente setado, abrem o
-// modal de seleção (ver includes/header.php + assets/js/main.js). A troca de
-// cliente é sempre via ?cliente_id (bloco acima).
+// Nota: o cliente selecionado PERMANECE na sessão até ser trocado ou até o
+// gestor clicar em "Sair do cliente" (chip do topo → ?cliente_id=0). O menu é
+// único: sem cliente as telas mostram todos os clientes; com cliente, só ele
+// (ver includes/header.php e Controller::escopoCliente()).
 
 // Usuário CLIENTE: a seleção fica travada no próprio registro em toda requisição
 // (segurança — não pode ver outro cliente — e navegação consistente). Um cliente

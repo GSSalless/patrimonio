@@ -101,8 +101,8 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
       <div id="preview-localizacao" style="display:none;margin-bottom:1rem;padding:.85rem 1rem;background:var(--surface-2);border-radius:8px;border-left:4px solid var(--cor-acento)">
         <div style="font-size:.78rem;color:var(--cor-secundario);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Links gerados automaticamente</div>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap">
-          <a id="btn-preview-maps" href="#" target="_blank" class="btn btn-secundario btn-sm">📍 Google Maps</a>
-          <a id="btn-preview-sv"   href="#" target="_blank" class="btn btn-secundario btn-sm">🏙️ Street View</a>
+          <a id="btn-preview-maps" href="#" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-geo-alt"></i> Google Maps</a>
+          <a id="btn-preview-sv"   href="#" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-binoculars"></i> Street View</a>
         </div>
         <div id="preview-endereco" style="font-size:.82rem;color:var(--cor-secundario);margin-top:.4rem"></div>
       </div>
@@ -248,17 +248,17 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
       <div style="display:flex;flex-direction:column;gap:.6rem" id="upload-lista">
         <?php
         $upload_items = [
-          ['field'=>'escritura',            'label'=>'Escritura',              'icon'=>'📜', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'matricula',            'label'=>'Matrícula do imóvel',    'icon'=>'📋', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'certidao_negativa',    'label'=>'Certidão negativa',      'icon'=>'✅', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'doc_iptu',             'label'=>'IPTU / Carnê',           'icon'=>'🧾', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'contrato_compra',      'label'=>'Contrato de compra',     'icon'=>'🤝', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'laudo',                'label'=>'Laudo de avaliação',     'icon'=>'📊', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'habite_se',            'label'=>'Habite-se',              'icon'=>'🏛️', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'convencao_condominio', 'label'=>'Convenção de condomínio','icon'=>'📑', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'planta',               'label'=>'Planta aprovada',        'icon'=>'📐', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'alvara',               'label'=>'Alvará',                 'icon'=>'🏢', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'fotos',                'label'=>'Fotos do imóvel',        'icon'=>'📷', 'accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>true ],
+          ['field'=>'escritura',            'label'=>'Escritura',              'icon'=>'bi-file-earmark-ruled', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'matricula',            'label'=>'Matrícula do imóvel',    'icon'=>'bi-journal-bookmark', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'certidao_negativa',    'label'=>'Certidão negativa',      'icon'=>'bi-patch-check', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'doc_iptu',             'label'=>'IPTU / Carnê',           'icon'=>'bi-receipt', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'contrato_compra',      'label'=>'Contrato de compra',     'icon'=>'bi-file-earmark-text', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'laudo',                'label'=>'Laudo de avaliação',     'icon'=>'bi-clipboard-data', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'habite_se',            'label'=>'Habite-se',              'icon'=>'bi-house-check', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'convencao_condominio', 'label'=>'Convenção de condomínio','icon'=>'bi-building', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'planta',               'label'=>'Planta aprovada',        'icon'=>'bi-rulers', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'alvara',               'label'=>'Alvará',                 'icon'=>'bi-file-earmark-check', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'fotos',                'label'=>'Fotos do imóvel',        'icon'=>'bi-camera', 'accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>true ],
         ];
         foreach ($upload_items as $item):
         ?>
@@ -269,7 +269,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
               <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
-          <span style="font-size:1.15rem"><?= $item['icon'] ?></span>
+          <span style="font-size:1.15rem"><i class="bi <?= $item['icon'] ?>"></i></span>
           <div style="flex:1;min-width:0">
             <div style="font-size:.9rem;font-weight:600;color:#1e2530"><?= $item['label'] ?></div>
             <div class="upload-filename" style="font-size:.78rem;color:var(--cor-secundario);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
@@ -307,7 +307,7 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
     </div>
     <div class="modal-body">
       <div class="alerta-pendencias" style="margin-bottom:0">
-        ⚠️ Há <strong id="conf-num">0</strong> campo(s) sem preencher neste cadastro. Deseja salvar assim mesmo?
+        <i class="bi bi-exclamation-triangle"></i> Há <strong id="conf-num">0</strong> campo(s) sem preencher neste cadastro. Deseja salvar assim mesmo?
       </div>
     </div>
     <div class="modal-rodape">

@@ -1,24 +1,25 @@
 <?php
 /**
- * Agenda e Alertas (Módulo 14) — linha do tempo de vencimentos.
+ * Tarefas e Pendências (Módulo 14, antiga "Agenda") — linha do tempo de vencimentos.
  * @var array       $baldes       baldes agrupados por proximidade
  * @var array       $resumo       ['vencidos','proximos','total']
  * @var string|null $escopo_nome  nome do cliente, ou null = agenda geral
  * @var array|null  $cli
+ * @var string      $agrupar      'cliente' (modo gestor, padrão) | 'prazo'
  */
-$page_title = 'Agenda e Alertas';
+$page_title = 'Tarefas e Pendências';
 require APP_ROOT . '/includes/header.php';
 
-// Emoji por categoria de vencimento.
+// Ícone por categoria de vencimento (dicionário central — icone_modulo()).
 $icones = [
-    'iptu'          => '🧾',
-    'licenciamento' => '🚗',
-    'seguro'        => '🛡️',
-    'contrato'      => '📜',
-    'revisao'       => '🛠️',
-    'investimento'  => '📈',
-    'colaborador'   => '👔',
-    'documento'     => '🗂️',
+    'iptu'          => 'iptu',
+    'licenciamento' => 'licenciamento',
+    'seguro'        => 'seguros',
+    'contrato'      => 'contratos',
+    'revisao'       => 'manutencoes',
+    'investimento'  => 'investimentos',
+    'colaborador'   => 'colaboradores',
+    'documento'     => 'documentos',
 ];
 $geral = ($escopo_nome === null);
 ?>
@@ -26,7 +27,7 @@ $geral = ($escopo_nome === null);
 
   <div class="ag-head">
     <div>
-      <h2 style="font-size:1.4rem;color:var(--cor-primaria);font-family:var(--fonte-titulo)">Agenda e Alertas</h2>
+      <h2 style="font-size:1.4rem;color:var(--cor-primaria);font-family:var(--fonte-titulo)"><i class="bi <?= icone_modulo('tarefas') ?>" style="color:var(--secondary)"></i> Tarefas e Pendências</h2>
       <div style="font-size:.88rem;color:var(--cor-secundario)">
         <?= $geral ? 'Todos os clientes' : h($escopo_nome) ?> · vencimentos de IPTU, seguros, licenciamento, contratos e documentos
       </div>
@@ -41,7 +42,7 @@ $geral = ($escopo_nome === null);
   <?php if (($usuario['nivel'] ?? '') === 'admin'):
     // Mensagens de retorno da integração Notion.
     $nmsgs = [
-      'conectado'    => ['ok',  'Notion conectado e tarefas enviadas para o seu board! ✅'],
+      'conectado'    => ['ok',  'Notion conectado e tarefas enviadas para o seu board!'],
       'desvinculado' => ['ok',  'Notion desvinculado.'],
       'sem_config'   => ['erro','Integração do Notion ainda não configurada no servidor (falta o Client ID/Secret).'],
       'sem_pagina'   => ['erro','Notion conectado, mas você ainda não compartilhou uma página com a integração. No Notion: abra a página onde quer o board → menu “•••” (canto superior) → Conexões → adicione “CZR Patrimonial”. Depois volte aqui e clique em Sincronizar.'],
@@ -98,35 +99,49 @@ $geral = ($escopo_nome === null);
 
   <?php if ($resumo['total'] === 0): ?>
     <div class="card"><p style="color:var(--cor-secundario);text-align:center;padding:2.5rem">
-      🎉 Nenhum vencimento cadastrado. Conforme você preencher datas de IPTU, seguros,
+      <i class="bi bi-check2-circle"></i> Nenhum vencimento cadastrado. Conforme você preencher datas de IPTU, seguros,
       licenciamento e contratos, os alertas aparecem aqui automaticamente.
     </p></div>
+  <?php endif; ?>
+
+  <?php if ($geral && $resumo['total'] > 0): ?>
+  <div class="ag-agrupar">
+    <span>Agrupar por</span>
+    <a href="<?= base_url('tarefas') ?>" class="<?= $agrupar === 'cliente' ? 'ativo' : '' ?>"><?= icone('clientes') ?> Cliente</a>
+    <a href="<?= base_url('tarefas?agrupar=prazo') ?>" class="<?= $agrupar === 'prazo' ? 'ativo' : '' ?>"><i class="bi bi-hourglass-split"></i> Prazo</a>
+  </div>
   <?php endif; ?>
 
   <?php foreach ($baldes as $chave => $balde):
     if (!$balde['itens']) continue;
     $venc = ($chave === 'vencido');
+    $por_cliente = isset($balde['cliente_id']);
   ?>
     <section class="ag-secao">
       <h3 class="ag-secao-tit <?= $venc ? 'ag-secao-venc' : '' ?>">
-        <?= h($balde['titulo']) ?>
+        <?php if ($por_cliente): ?>
+          <a href="<?= base_url('dashboard?cliente_id=' . $balde['cliente_id']) ?>" class="ag-secao-cli" title="Entrar na gestão deste cliente"><?= icone('clientes') ?> <?= h($balde['titulo']) ?></a>
+        <?php else: ?>
+          <?= h($balde['titulo']) ?>
+        <?php endif; ?>
         <span class="ag-secao-n"><?= count($balde['itens']) ?></span>
       </h3>
 
       <div class="ag-lista">
         <?php foreach ($balde['itens'] as $a):
           [$classe, $cor, $rotulo] = alerta_status($a['dias']);
-          $emoji = $icones[$a['categoria']] ?? '📌';
+          $ico = icone_modulo($icones[$a['categoria']] ?? 'tarefas');
           $tag = 'div'; $href = '';
-          if (!empty($a['link'])) { $tag = 'a'; $href = 'href="' . base_url($a['link']) . '"'; }
+          // No modo gestor o link leva o cliente dono junto (entra no contexto dele).
+          if (!empty($a['link'])) { $tag = 'a'; $href = 'href="' . h(link_item($a['link'], $a, $cli)) . '"'; }
         ?>
         <<?= $tag ?> class="ag-item" <?= $href ?> style="--st:<?= $cor ?>">
-          <span class="ag-ico"><?= $emoji ?></span>
+          <span class="ag-ico"><i class="bi <?= $ico ?>"></i></span>
           <div class="ag-info">
             <div class="ag-tit"><?= h($a['titulo']) ?></div>
             <div class="ag-sub">
               <?= h($a['bem'] ?: '—') ?>
-              <?php if ($geral): ?><span class="ag-cli">· <?= h($a['cliente_nome']) ?></span><?php endif; ?>
+              <?php if ($geral && !$por_cliente): ?><span class="ag-cli">· <?= h($a['cliente_nome']) ?></span><?php endif; ?>
             </div>
           </div>
           <div class="ag-quando">

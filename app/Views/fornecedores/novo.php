@@ -26,9 +26,9 @@ require APP_ROOT . '/includes/header.php';
       <!-- DOCUMENTOS -->
       <div class="form-secao"><div class="form-secao-titulo">6. Documentos</div></div>
       <div class="form-grid form-grid-3">
-        <div class="form-grupo"><label>📄 Contrato</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>🧾 Nota fiscal</label><input type="file" name="doc_nf" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>📎 Certidão</label><input type="file" name="doc_certidao" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-file-earmark"></i> Contrato</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-receipt-cutoff"></i> Nota fiscal</label><input type="file" name="doc_nf" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-paperclip"></i> Certidão</label><input type="file" name="doc_certidao" accept=".pdf,.jpg,.jpeg,.png"></div>
       </div>
       <div style="font-size:.8rem;color:var(--cor-secundario)">Formatos aceitos: PDF, JPG, PNG · Máx. 30 MB por arquivo</div>
 

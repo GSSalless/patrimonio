@@ -61,8 +61,8 @@ $estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA
       <div id="preview-localizacao" style="display:none;margin-bottom:1rem;padding:.85rem 1rem;background:var(--surface-2);border-radius:8px;border-left:4px solid var(--cor-acento)">
         <div style="font-size:.78rem;color:var(--cor-secundario);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.5rem">Links gerados automaticamente</div>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap">
-          <a id="btn-preview-maps" href="<?= h($im['link_maps'] ?? '#') ?>" target="_blank" class="btn btn-secundario btn-sm">📍 Google Maps</a>
-          <a id="btn-preview-sv"   href="<?= h($im['link_street_view'] ?? '#') ?>" target="_blank" class="btn btn-secundario btn-sm">🏙️ Street View</a>
+          <a id="btn-preview-maps" href="<?= h($im['link_maps'] ?? '#') ?>" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-geo-alt"></i> Google Maps</a>
+          <a id="btn-preview-sv"   href="<?= h($im['link_street_view'] ?? '#') ?>" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-binoculars"></i> Street View</a>
         </div>
         <div id="preview-endereco" style="font-size:.82rem;color:var(--cor-secundario);margin-top:.4rem"></div>
       </div>

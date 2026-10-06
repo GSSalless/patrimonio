@@ -58,7 +58,7 @@ $val = fn($k) => h($d[$k] ?? '');
   <div class="form-grupo"><label>Valor (R$)</label><input type="text" name="contrato_valor" placeholder="0,00" value="<?= $val('contrato_valor') ?>"></div>
   <div class="form-grupo"><label>Forma de pagamento</label><input type="text" name="forma_pagamento" placeholder="Mensal, por serviço…" value="<?= $val('forma_pagamento') ?>"></div>
   <div class="form-grupo" style="grid-column:span 2"><label>Reajuste</label><input type="text" name="contrato_reajuste" placeholder="Ex.: IPCA anual" value="<?= $val('contrato_reajuste') ?>"></div>
-  <div style="align-self:end;font-size:.8rem;color:var(--cor-secundario);padding-bottom:.6rem;grid-column:span 2">O fim do contrato aparece na Agenda.</div>
+  <div style="align-self:end;font-size:.8rem;color:var(--cor-secundario);padding-bottom:.6rem;grid-column:span 2">O fim do contrato aparece em Tarefas.</div>
 </div>
 
 <!-- BLOCO 4 — PAGAMENTO -->

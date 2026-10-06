@@ -5,16 +5,20 @@
  */
 class OutroBem
 {
-    public static function listar(int $clienteId, string $tipo = '', string $busca = ''): array
+    public static function listar(?int $clienteId, string $tipo = '', string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM outros_bens WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if ($tipo !== '')  { $sql .= ' AND tipo = ?'; $params[] = $tipo; }
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM outros_bens t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if ($tipo !== '')  { $sql .= ' AND t.tipo = ?'; $params[] = $tipo; }
         if ($busca !== '') {
-            $sql .= ' AND (nome LIKE ? OR marca LIKE ? OR modelo LIKE ?)';
+            $sql .= ' AND (t.nome LIKE ? OR t.marca LIKE ? OR t.modelo LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
-        $sql .= ' ORDER BY tipo, nome';
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . 't.tipo, t.nome';
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

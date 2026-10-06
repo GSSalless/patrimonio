@@ -33,16 +33,16 @@ $conta_id = (int) $conta['id'];
       <!-- DOCUMENTOS -->
       <div class="form-secao"><div class="form-secao-titulo">6. Documentos</div></div>
       <div class="form-grid form-grid-3">
-        <div class="form-grupo"><label>📄 Contrato de abertura</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>🧾 Extrato</label><input type="file" name="doc_extrato" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>📎 Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-file-earmark"></i> Contrato de abertura</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-receipt-cutoff"></i> Extrato</label><input type="file" name="doc_extrato" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-paperclip"></i> Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
       </div>
       <?php if ($docs_list): ?>
       <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
         <?php foreach ($docs_list as $doc): ?>
         <a href="<?= url_documento($doc) ?>" target="_blank"
            style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:var(--surface);font-size:.85rem;text-decoration:none;color:inherit">
-          <span><?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? '🖼️' : '📄' ?></span>
+          <span><i class="bi <?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? 'bi-file-earmark-image' : 'bi-file-earmark' ?>"></i></span>
           <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= h($doc['nome_arquivo']) ?></span>
           <span class="tag"><?= h($doc['categoria']) ?></span>
           <span style="color:var(--cor-secundario)"><?= data_br($doc['criado_em']) ?></span>
@@ -67,7 +67,7 @@ $conta_id = (int) $conta['id'];
   <div class="card" id="saldos" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
       <div>
-        <h3 class="card-titulo">💰 Saldos (histórico)</h3>
+        <h3 class="card-titulo"><?= icone('saldos') ?> Saldos (histórico)</h3>
         <?php if ($conta['saldo_atual'] !== null): ?>
         <div style="font-size:.85rem;color:var(--cor-secundario)">Saldo atual: <strong style="color:<?= (float)$conta['saldo_atual'] >= 0 ? '#1a7a45' : '#b82020' ?>"><?= moeda((float)$conta['saldo_atual']) ?></strong> em <?= data_br($conta['saldo_data']) ?></div>
         <?php endif; ?>

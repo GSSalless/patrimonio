@@ -5,16 +5,20 @@
  */
 class Colaborador
 {
-    public static function listar(int $clienteId, string $status = '', string $busca = ''): array
+    public static function listar(?int $clienteId, string $status = '', string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM colaboradores WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if ($status !== '') { $sql .= ' AND status = ?'; $params[] = $status; }
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM colaboradores t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if ($status !== '') { $sql .= ' AND t.status = ?'; $params[] = $status; }
         if ($busca !== '') {
-            $sql .= ' AND (nome LIKE ? OR cargo LIKE ? OR departamento LIKE ?)';
+            $sql .= ' AND (t.nome LIKE ? OR t.cargo LIKE ? OR t.departamento LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
-        $sql .= " ORDER BY FIELD(status,'ativo','experiencia','ferias','afastado','desligado'), nome";
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . "FIELD(t.status,'ativo','experiencia','ferias','afastado','desligado'), t.nome";
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

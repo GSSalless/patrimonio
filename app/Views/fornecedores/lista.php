@@ -12,19 +12,19 @@ $cat_label = [
   'saude'=>'Saúde','tecnologia'=>'Tecnologia','rh'=>'RH','imobiliaria'=>'Imobiliária',
   'manutencao'=>'Manutenção','construcao'=>'Construção','financeiro'=>'Financeiro','transporte'=>'Transporte','outro'=>'Outro',
 ];
-$cat_icone = ['contabilidade'=>'bi-calculator','juridico'=>'bi-bank2','seguros'=>'bi-shield-check','marina'=>'bi-water','saude'=>'bi-heart-pulse','tecnologia'=>'bi-laptop','rh'=>'bi-people','imobiliaria'=>'bi-house','manutencao'=>'bi-wrench','construcao'=>'bi-cone-striped','financeiro'=>'bi-cash-coin','transporte'=>'bi-truck','outro'=>'bi-people-fill'];
+$cat_icone = ['contabilidade'=>'bi-calculator','juridico'=>'bi-bank2','seguros'=>'bi-shield-check','marina'=>'bi-water','saude'=>'bi-heart-pulse','tecnologia'=>'bi-laptop','rh'=>'bi-people','imobiliaria'=>'bi-house','manutencao'=>'bi-wrench','construcao'=>'bi-cone-striped','financeiro'=>'bi-cash-coin','transporte'=>'bi-truck','outro'=>'bi-shop'];
 ?>
 <div class="container">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-people-fill" style="color:var(--secondary)"></i> Fornecedores — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('fornecedores') ?>" style="color:var(--secondary)"></i> Fornecedores — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($fornecedores) ?> fornecedor(es)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('fornecedores/novo') ?>" class="btn btn-primario">+ Cadastrar fornecedor</a>
+    <a href="<?= base_url('fornecedores/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="fornecedores/novo">+ Cadastrar fornecedor</a>
     <?php endif; ?>
   </div>
 
@@ -49,12 +49,14 @@ $cat_icone = ['contabilidade'=>'bi-calculator','juridico'=>'bi-bank2','seguros'=
   </div>
 
   <?php if ($fornecedores): ?>
+  <?php foreach (agrupar_por_cliente($fornecedores, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($fornecedores as $f): ?>
-    <a href="<?= base_url('fornecedores/editar?id=' . $f['id']) ?>" class="imovel-card">
+    <?php foreach ($grp['itens'] as $f): ?>
+    <a href="<?= link_item('fornecedores/editar?id=' . $f['id'], $f, $cli) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
-          <i class="bi <?= $cat_icone[$f['categoria']] ?? 'bi-people-fill' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
+          <i class="bi <?= $cat_icone[$f['categoria']] ?? icone_modulo('fornecedores') ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
           <?= h($f['codigo']) ?> · <?= $cat_label[$f['categoria']] ?? $f['categoria'] ?>
           <?php if ($f['avaliacao_nota']): ?><span style="margin-left:auto;color:var(--secondary);font-size:.85rem"><?= str_repeat('★', (int)$f['avaliacao_nota']) ?></span><?php endif; ?>
         </div>
@@ -75,12 +77,13 @@ $cat_icone = ['contabilidade'=>'bi-calculator','juridico'=>'bi-bank2','seguros'=
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-people-fill"></i></div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><?= icone('fornecedores') ?></div>
     <p style="color:var(--cor-secundario)">Nenhum fornecedor cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('fornecedores/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro fornecedor</a>
+    <a href="<?= base_url('fornecedores/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="fornecedores/novo" style="margin-top:1rem">+ Cadastrar primeiro fornecedor</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

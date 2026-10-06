@@ -23,12 +23,12 @@ $tipo_icone = ['corrente'=>'bi-bank','poupanca'=>'bi-piggy-bank','pagamento'=>'b
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)">Contas Financeiras — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('contas') ?>" style="color:var(--secondary)"></i> Contas Financeiras — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($contas) ?> conta(s)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('contas/novo') ?>" class="btn btn-primario">+ Cadastrar conta</a>
+    <a href="<?= base_url('contas/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="contas/novo">+ Cadastrar conta</a>
     <?php endif; ?>
   </div>
 
@@ -58,9 +58,11 @@ $tipo_icone = ['corrente'=>'bi-bank','poupanca'=>'bi-piggy-bank','pagamento'=>'b
     <span style="font-size:.9rem;color:var(--cor-secundario)">Saldo consolidado (contas em BRL)</span>
     <strong style="font-size:1.15rem;color:<?= $total >= 0 ? '#1a7a45' : '#b82020' ?>"><?= moeda($total) ?></strong>
   </div>
+  <?php foreach (agrupar_por_cliente($contas, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($contas as $c): ?>
-    <a href="<?= base_url('contas/editar?id=' . $c['id']) ?>" class="imovel-card">
+    <?php foreach ($grp['itens'] as $c): ?>
+    <a href="<?= link_item('contas/editar?id=' . $c['id'], $c, $cli) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
           <i class="bi <?= $tipo_icone[$c['tipo']] ?? 'bi-bank' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
@@ -85,12 +87,13 @@ $tipo_icone = ['corrente'=>'bi-bank','poupanca'=>'bi-piggy-bank','pagamento'=>'b
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
     <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-bank"></i></div>
     <p style="color:var(--cor-secundario)">Nenhuma conta cadastrada.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('contas/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeira conta</a>
+    <a href="<?= base_url('contas/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="contas/novo" style="margin-top:1rem">+ Cadastrar primeira conta</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

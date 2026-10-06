@@ -5,18 +5,22 @@
  */
 class Investimento
 {
-    public static function listar(int $clienteId, string $classe = '', string $status = '', string $busca = ''): array
+    public static function listar(?int $clienteId, string $classe = '', string $status = '', string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM investimentos WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if ($classe !== '') { $sql .= ' AND classe = ?'; $params[] = $classe; }
-        if ($status !== '') { $sql .= ' AND status = ?'; $params[] = $status; }
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM investimentos t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if ($classe !== '') { $sql .= ' AND t.classe = ?'; $params[] = $classe; }
+        if ($status !== '') { $sql .= ' AND t.status = ?'; $params[] = $status; }
         if ($busca !== '') {
-            $sql .= ' AND (nome LIKE ? OR instituicao LIKE ? OR emissor LIKE ?)';
+            $sql .= ' AND (t.nome LIKE ? OR t.instituicao LIKE ? OR t.emissor LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
         // Ativos primeiro; dentro disso, maior valor no topo.
-        $sql .= " ORDER BY FIELD(status,'ativo','vencido','resgatado'), valor_atual DESC";
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . "FIELD(t.status,'ativo','vencido','resgatado'), t.valor_atual DESC";
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

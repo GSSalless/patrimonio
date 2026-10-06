@@ -17,11 +17,11 @@ $qtd_contas  = $pat['contas_qtd'] ?? 0;
 $total_pat   = (float) ($pat['total'] ?? 0);
 // [rótulo, ícone (Bootstrap Icons), valor, qtd, cor da categoria]
 $linhas = [
-    ['Imóveis',       'bi-building',        $pat['imoveis_valor']  ?? 0, $pat['imoveis_qtd']  ?? 0, '#168BFF'],
-    ['Veículos',      'bi-car-front',       $pat['veiculos_valor'] ?? 0, $pat['veiculos_qtd'] ?? 0, '#F59E0B'],
-    ['Outros bens',   'bi-gem',             $pat['outros_valor']   ?? 0, $pat['outros_qtd']   ?? 0, '#A855F7'],
-    ['Investimentos', 'bi-graph-up-arrow',  $pat['invest_valor']   ?? 0, $pat['invest_qtd']   ?? 0, '#22C7F2'],
-    ['Contas',        'bi-bank',            $pat['contas_saldo']   ?? 0, $pat['contas_qtd']   ?? 0, '#22C55E'],
+    ['Imóveis',       icone_modulo('imoveis'), $pat['imoveis_valor']  ?? 0, $pat['imoveis_qtd']  ?? 0, '#168BFF'],
+    ['Veículos',      icone_modulo('veiculos'), $pat['veiculos_valor'] ?? 0, $pat['veiculos_qtd'] ?? 0, '#F59E0B'],
+    ['Outros bens',   icone_modulo('outros'), $pat['outros_valor']   ?? 0, $pat['outros_qtd']   ?? 0, '#A855F7'],
+    ['Investimentos', icone_modulo('investimentos'), $pat['invest_valor']   ?? 0, $pat['invest_qtd']   ?? 0, '#22C7F2'],
+    ['Contas',        icone_modulo('contas'), $pat['contas_saldo']   ?? 0, $pat['contas_qtd']   ?? 0, '#22C55E'],
 ];
 ?>
 <div class="container">
@@ -66,22 +66,22 @@ $linhas = [
   <?php if (!empty($ind)): ?>
   <div class="db-kpis">
     <a class="db-kpi" href="<?= base_url('contas') ?>">
-      <div class="db-kpi-top"><i class="bi bi-cash-coin"></i> Financeiro</div>
+      <div class="db-kpi-top"><?= icone('financeiro') ?> Financeiro</div>
       <div class="db-kpi-n"><?= moeda((float) ($ind['financeiro']['contas_saldo'] + $ind['financeiro']['invest_valor'])) ?></div>
-      <div class="db-kpi-sub"><i class="bi bi-bank"></i> <?= (int) $ind['financeiro']['contas_qtd'] ?> · <i class="bi bi-graph-up-arrow"></i> <?= (int) $ind['financeiro']['invest_qtd'] ?></div>
+      <div class="db-kpi-sub"><?= icone('contas') ?> <?= (int) $ind['financeiro']['contas_qtd'] ?> · <?= icone('investimentos') ?> <?= (int) $ind['financeiro']['invest_qtd'] ?></div>
     </a>
     <a class="db-kpi" href="<?= base_url('colaboradores') ?>">
-      <div class="db-kpi-top"><i class="bi bi-person-badge"></i> RH</div>
+      <div class="db-kpi-top"><?= icone('colaboradores') ?> RH</div>
       <div class="db-kpi-n"><?= (int) $ind['rh']['colaboradores'] ?></div>
       <div class="db-kpi-sub"><?php if ($ind['rh']['ferias'] || $ind['rh']['treinamentos']): ?><i class="bi bi-umbrella"></i> <?= (int) $ind['rh']['ferias'] ?> · <i class="bi bi-mortarboard"></i> <?= (int) $ind['rh']['treinamentos'] ?><?php else: ?>ativos<?php endif; ?></div>
     </a>
     <a class="db-kpi" href="<?= base_url('contratos') ?>">
-      <div class="db-kpi-top"><i class="bi bi-file-earmark-text"></i> Contratos</div>
+      <div class="db-kpi-top"><?= icone('contratos') ?> Contratos</div>
       <div class="db-kpi-n"><?= (int) $ind['contratos']['ativos'] ?></div>
       <div class="db-kpi-sub<?= $ind['contratos']['vencendo'] ? ' db-kpi-warn' : '' ?>"><?= $ind['contratos']['vencendo'] ? '<i class="bi bi-clock"></i> ' . (int) $ind['contratos']['vencendo'] . ' vencendo' : 'ativos' ?></div>
     </a>
     <a class="db-kpi" href="<?= base_url('seguros') ?>">
-      <div class="db-kpi-top"><i class="bi bi-shield-check"></i> Seguros</div>
+      <div class="db-kpi-top"><?= icone('seguros') ?> Seguros</div>
       <div class="db-kpi-n"><?= (int) $ind['seguros']['vigentes'] ?></div>
       <div class="db-kpi-sub<?= $ind['seguros']['vencendo'] ? ' db-kpi-warn' : '' ?>"><?= $ind['seguros']['vencendo'] ? '<i class="bi bi-clock"></i> ' . (int) $ind['seguros']['vencendo'] . ' vencendo' : 'vigentes' ?></div>
     </a>
@@ -91,7 +91,7 @@ $linhas = [
   <div class="app-grid">
     <a href="<?= base_url('patrimonio') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
-        <i class="bi bi-buildings"></i>
+        <?= icone('patrimonio') ?>
         <?php if ($qtd_imoveis > 0): ?><span class="app-icon-badge"><?= $qtd_imoveis ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Patrimônios</span>
@@ -99,7 +99,7 @@ $linhas = [
 
     <a href="<?= base_url('contas') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-verde">
-        <i class="bi bi-bank"></i>
+        <?= icone('contas') ?>
         <?php if (($qtd_contas ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_contas ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Contas</span>
@@ -107,7 +107,7 @@ $linhas = [
 
     <a href="<?= base_url('empresas') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
-        <i class="bi bi-briefcase"></i>
+        <?= icone('empresas') ?>
         <?php if (($qtd_empresas ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_empresas ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Empresas</span>
@@ -115,7 +115,7 @@ $linhas = [
 
     <a href="<?= base_url('investimentos') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-verde">
-        <i class="bi bi-graph-up-arrow"></i>
+        <?= icone('investimentos') ?>
         <?php if (($qtd_investimentos ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_investimentos ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Investimentos</span>
@@ -123,7 +123,7 @@ $linhas = [
 
     <a href="<?= base_url('seguros') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
-        <i class="bi bi-shield-check"></i>
+        <?= icone('seguros') ?>
         <?php if (($qtd_seguros ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_seguros ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Seguros</span>
@@ -131,7 +131,7 @@ $linhas = [
 
     <a href="<?= base_url('contratos') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-roxo">
-        <i class="bi bi-file-earmark-text"></i>
+        <?= icone('contratos') ?>
         <?php if (($qtd_contratos ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_contratos ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Contratos</span>
@@ -139,7 +139,7 @@ $linhas = [
 
     <a href="<?= base_url('fornecedores') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-laranja">
-        <i class="bi bi-people-fill"></i>
+        <?= icone('fornecedores') ?>
         <?php if (($qtd_fornecedores ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_fornecedores ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Fornecedores</span>
@@ -147,7 +147,7 @@ $linhas = [
 
     <a href="<?= base_url('colaboradores') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-laranja">
-        <i class="bi bi-person-badge"></i>
+        <?= icone('colaboradores') ?>
         <?php if (($qtd_colaboradores ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_colaboradores ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Colaboradores</span>
@@ -155,29 +155,24 @@ $linhas = [
 
     <a href="<?= base_url('documentos') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-azul">
-        <i class="bi bi-folder2-open"></i>
+        <?= icone('documentos') ?>
         <?php if (($qtd_documentos ?? 0) > 0): ?><span class="app-icon-badge"><?= $qtd_documentos ?></span><?php endif; ?>
       </span>
       <span class="app-icon-label">Documentos</span>
     </a>
 
     <?php $ag_urg = $alertas['urgentes'] ?? 0; ?>
-    <a href="<?= base_url('agenda') ?>" class="app-icon">
+    <a href="<?= base_url('tarefas') ?>" class="app-icon">
       <span class="app-icon-tile app-tile-laranja">
-        <i class="bi bi-calendar-check"></i>
+        <?= icone('tarefas') ?>
         <?php if ($ag_urg > 0): ?><span class="app-icon-badge"><?= $ag_urg ?></span><?php endif; ?>
       </span>
-      <span class="app-icon-label">Agenda</span>
+      <span class="app-icon-label">Tarefas</span>
     </a>
 
     <span class="app-icon app-icon-off">
-      <span class="app-icon-tile app-tile-verde"><i class="bi bi-cash-stack"></i></span>
+      <span class="app-icon-tile app-tile-verde"><?= icone('financeiro') ?></span>
       <span class="app-icon-label">Caixa</span>
-    </span>
-
-    <span class="app-icon app-icon-off">
-      <span class="app-icon-tile app-tile-laranja"><i class="bi bi-check2-square"></i></span>
-      <span class="app-icon-label">Tarefas</span>
     </span>
   </div>
   <?php endif; ?>

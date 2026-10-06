@@ -3,7 +3,8 @@
  * Gestão Geral — visão do gestor (César): consolidado de TODOS os clientes.
  * Layout inspirado no Design System CZR (mockup, tela 1): saudação, faixa de
  * KPIs, gráfico de evolução + donut de composição, tarefas/pendências e
- * relógios mundiais, seguido da carteira de clientes.
+ * relógios mundiais e indicadores por área. A carteira de clientes fica em
+ * /clientes (reunião 01/10/2026).
  *
  * Todos os números vêm do banco (patrimônio, lançamentos, agenda) — sem dados
  * fictícios. O gráfico de evolução é reconstruído do histórico real do banco
@@ -15,9 +16,11 @@ class GestaoGeralController extends Controller
     public function index(): void
     {
         exige_admin();
+        // Mesmo botão "Dashboard", dois modos: com cliente selecionado o painel
+        // é o do cliente; a visão consolidada é a do modo gestor (sem cliente).
+        if (cliente_selecionado()) $this->redirect('dashboard');
 
         $usuario        = usuario_logado();
-        $total_clientes = (int) db()->query('SELECT COUNT(*) FROM clientes WHERE ativo = 1')->fetchColumn();
 
         // Consolidados (Módulo 15) — patrimônio, indicadores por área, agenda.
         $pat        = patrimonio_consolidado();
@@ -36,18 +39,9 @@ class GestaoGeralController extends Controller
             if ($ant > 0) $variacao = ($atu - $ant) / $ant * 100;
         }
 
-        // Clientes com o patrimônio de cada um (para os cards + ordenação).
-        $clientes = db()->query(
-            'SELECT c.* FROM clientes c WHERE c.ativo = 1 ORDER BY c.nome'
-        )->fetchAll();
-        foreach ($clientes as &$c) {
-            $c['patrimonio'] = patrimonio_consolidado((int) $c['id']);
-        }
-        unset($c);
-
         $this->view('gestao_geral/index', compact(
-            'usuario', 'total_clientes', 'pat', 'ind', 'alertas',
-            'fluxo', 'evolucao', 'pendencias', 'variacao', 'clientes'
+            'usuario', 'pat', 'ind', 'alertas',
+            'fluxo', 'evolucao', 'pendencias', 'variacao'
         ));
     }
 }

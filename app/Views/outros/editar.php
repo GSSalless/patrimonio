@@ -23,7 +23,7 @@ require APP_ROOT . '/includes/header.php';
   </div>
 
   <?php if ($erro): ?><div class="alerta alerta-erro"><?= h($erro) ?></div><?php endif; ?>
-  <?php if ($ok):   ?><div class="alerta alerta-sucesso">✅ <?= h($ok) ?></div><?php endif; ?>
+  <?php if ($ok):   ?><div class="alerta alerta-sucesso"><i class="bi bi-check-circle"></i> <?= h($ok) ?></div><?php endif; ?>
 
   <div class="card">
     <form method="post" enctype="multipart/form-data">
@@ -65,7 +65,7 @@ require APP_ROOT . '/includes/header.php';
         <?php foreach ($docs_list as $doc): ?>
         <a href="<?= url_documento($doc) ?>" target="_blank" class="card"
            style="padding:.6rem .9rem;display:flex;align-items:center;gap:.5rem;text-decoration:none;font-size:.85rem;min-width:0">
-          <?= in_array(pathinfo($doc['nome_arquivo'],PATHINFO_EXTENSION), ['jpg','jpeg','png','webp']) ? '🖼️' : '📄' ?>
+          <?= in_array(pathinfo($doc['nome_arquivo'],PATHINFO_EXTENSION), ['jpg','jpeg','png','webp']) ? '<i class="bi bi-file-earmark-image"></i>' : '<i class="bi bi-file-earmark"></i>' ?>
           <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px"><?= h($doc['nome_arquivo']) ?></span>
         </a>
         <?php endforeach; ?>
@@ -77,10 +77,10 @@ require APP_ROOT . '/includes/header.php';
       <div style="display:flex;flex-direction:column;gap:.6rem">
         <?php
         $upload_items = [
-          ['field'=>'foto_principal','label'=>'Nova foto principal', 'icon'=>'📷','accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>false],
-          ['field'=>'doc_laudo',     'label'=>'Laudo / Avaliação',  'icon'=>'📄','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'doc_apolice',   'label'=>'Apólice de seguro',  'icon'=>'🛡️','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'doc_outros',    'label'=>'Outros documentos',  'icon'=>'📎','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
+          ['field'=>'foto_principal','label'=>'Nova foto principal', 'icon'=>'bi-camera','accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>false],
+          ['field'=>'doc_laudo',     'label'=>'Laudo / Avaliação',  'icon'=>'bi-clipboard-data','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'doc_apolice',   'label'=>'Apólice de seguro',  'icon'=>'bi-shield-check','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'doc_outros',    'label'=>'Outros documentos',  'icon'=>'bi-paperclip','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
         ];
         foreach ($upload_items as $item): ?>
         <div class="upload-row" id="row-<?= $item['field'] ?>"
@@ -88,7 +88,7 @@ require APP_ROOT . '/includes/header.php';
           <div class="upload-check" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s">
             <svg class="check-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <span style="font-size:1.15rem"><?= $item['icon'] ?></span>
+          <span style="font-size:1.15rem"><i class="bi <?= $item['icon'] ?>"></i></span>
           <div style="flex:1;min-width:0">
             <div style="font-size:.9rem;font-weight:600;color:#1e2530"><?= $item['label'] ?></div>
             <div class="upload-filename" style="font-size:.78rem;color:var(--cor-secundario);margin-top:.1rem">Nenhum arquivo selecionado</div>
@@ -124,7 +124,7 @@ require APP_ROOT . '/includes/header.php';
   <?php $bm_tipos = ['revisao'=>'Revisão','motor'=>'Motor','casco'=>'Casco','pintura'=>'Pintura','eletrica'=>'Elétrica','limpeza'=>'Limpeza','peca'=>'Troca de peça','outro'=>'Outro']; ?>
   <div class="card" id="manutencoes" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
-      <h3 class="card-titulo">🛥️ Manutenções / revisões</h3>
+      <h3 class="card-titulo"><?= icone('manutencoes') ?> Manutenções / revisões</h3>
       <a href="<?= base_url('outros/manutencao?bem_id='.$bem_id) ?>" class="btn btn-primario btn-sm">+ Manutenção</a>
     </div>
     <?php if ($manutencoes): ?>
@@ -155,7 +155,7 @@ require APP_ROOT . '/includes/header.php';
   <!-- HISTÓRICO: AVALIAÇÕES -->
   <div class="card" id="avaliacoes" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
-      <h3 class="card-titulo">📈 Avaliações (histórico de valor)</h3>
+      <h3 class="card-titulo"><?= icone('avaliacoes') ?> Avaliações (histórico de valor)</h3>
       <a href="<?= base_url('outros/avaliacao?bem_id='.$bem_id) ?>" class="btn btn-primario btn-sm">+ Avaliação</a>
     </div>
     <?php if ($avaliacoes): ?>

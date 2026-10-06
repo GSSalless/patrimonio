@@ -153,21 +153,22 @@
 
 <script>
 const DADOS = [
-  { id:'o1', nome:'Reunião 01/10 · Nível 1 — Ajustes rápidos de tela', icone:'🎨', cor:'#0ea5e9', sub:'mais fácil · só view/CSS · sem banco', itens:[
-    {t:'1.1 Tirar a grade de clientes da Gestão Geral (César concordou) · bloco gg-clientes + cálculo no GestaoGeralController', done:false},
-    {t:'1.2 Relógio do topo mais leve (.topo-data .t peso 700 → 400/500, tipografia do DS)', done:false},
-    {t:'1.3 Rosca: números invadindo o anel → abreviar valor central (R$ 4,2 mi), furo maior, rótulos fora do anel', done:false},
-    {t:'1.4 Renomear Agenda → Tarefas (menu, título, bloco Notion) · /agenda continua + alias /tarefas', done:false},
-    {t:'1.5 Ícones como logos: dicionário central icone_modulo() + terminar emoji→bi (formulários, imoveis/ficha, listas imóveis/veículos/outros, login)', done:false},
-    {t:'1.5b (opcional) cor fixa por categoria via tokens --cat-*', done:false},
+  { id:'o1', nome:'Reunião 01/10 · Nível 1 — Ajustes rápidos de tela', icone:'🎨', cor:'#0ea5e9', sub:'✅ concluído 06/10 · só view/CSS · sem banco', itens:[
+    {t:'1.1 Grade de clientes removida da Gestão Geral (view + controller + CSS morto)', done:true},
+    {t:'1.2 Relógio do topo mais leve (peso 700 → 500)', done:true},
+    {t:'1.3 Rosca: anel mais fino, furo maior, valor abreviado ("R$ 2,8 mi") — números não invadem a cor', done:true},
+    {t:'1.4 Agenda → Tarefas (menu, título, dashboard, links) · rota /tarefas + alias /agenda · Notion mantém o callback', done:true},
+    {t:'1.5 Dicionário central icone_modulo()/icone() (1 ícone por atividade) + 159 emoji → Bootstrap Icons (formulários, ficha/hub d3, listas, tarefas, login)', done:true},
+    {t:'1.5b (opcional) cor fixa por categoria via tokens --cat-* — aguarda decisão do César', done:false},
   ]},
-  { id:'o2', nome:'Reunião 01/10 · Nível 2 — Mesmo menu, dois modos', icone:'🧭', cor:'#168BFF', sub:'header + controllers · sem banco · o pedido central do César', itens:[
-    {t:'2.1 Clicar no cliente → entra na gestão dele (dashboard?cliente_id), não no cadastro · "Cadastro" vira item do menu do cliente', done:false},
-    {t:'2.2 Faixa "Você está em: Marcos" + botão "Sair do cliente" (rota clientes/limpar) para voltar ao modo gestor', done:false},
-    {t:'2.3 Menu único: sem cliente = todos os clientes; com cliente = só ele · modal de cliente só para CADASTRAR', done:false},
-    {t:'2.4 Modo "todos os clientes" nos 11 módulos que hoje redirecionam (imóveis, veículos, outros, patrimônio, empresas, contas, investimentos, seguros, contratos, fornecedores, colaboradores) · etiqueta Cliente + agrupar por cliente', done:false},
-    {t:'2.4b Tarefas: ordem cronológica agrupada por cliente', done:false},
-    {t:'2.5 Reorganizar o menu pelo mockup: Clientes · Teia · Ativos · Financeiro · Documentos · Tarefas · Pessoas · Fornecedores · Projetos · Relatórios · IA · Configurações · Ajuda (não construídos = "em breve"?)', done:false},
+  { id:'o2', nome:'Reunião 01/10 · Nível 2 — Mesmo menu, dois modos', icone:'🧭', cor:'#168BFF', sub:'✅ concluído 06/10 · header + controllers · sem banco', itens:[
+    {t:'2.1 Clicar no cliente → entra na gestão dele · cadastro no lápis do card + item "Cadastro do cliente" no menu', done:true},
+    {t:'2.2 Chip "Você está em: X" + ✕ Sair do cliente (?cliente_id=0 volta à mesma tela no modo gestor) · login sempre começa no modo gestor', done:true},
+    {t:'2.3 Menu único: sem cliente = todos; com cliente = só ele · Dashboard muda de significado · modal só p/ "+ Cadastrar"', done:true},
+    {t:'2.4 Modo "todos os clientes" nos 11 módulos (escopoCliente + listar(?int) com JOIN + agrupar_por_cliente + link_item que entra no cliente dono)', done:true},
+    {t:'2.4b Tarefas: agrupadas por cliente em ordem cronológica (alterna com "Prazo")', done:true},
+    {t:'2.5 Menu pelo mockup: Ativos · Financeiro · Gestão + "Em breve" (Teia, Projetos, Relatórios, IA, Configurações, Ajuda) — ordem/nomes a validar c/ César', done:true},
+    {t:'Testado no sandbox: 200 sem erro PHP nos 2 modos + usuário cliente · celular 390px sem rolagem lateral · hub d3 com ícones', done:true},
   ]},
   { id:'o3', nome:'Reunião 01/10 · Nível 3 — Configurações + Mercados', icone:'💱', cor:'#22C7F2', sub:'tabelas novas pequenas · rede externa', itens:[
     {t:'3.1 Tela /configuracoes por usuário (tabela usuario_preferencias) · 1ª preferência: quais cotações exibir (até 4)', done:false},

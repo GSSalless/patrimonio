@@ -33,7 +33,7 @@ class ContratosController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('contratos');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -85,12 +85,12 @@ class ContratosController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_tipo   = $_GET['tipo'] ?? '';
         $filtro_status = $_GET['status'] ?? '';
         $filtro_busca  = trim($_GET['busca'] ?? '');
-        $contratos = Contrato::listar($cli['id'], $filtro_tipo, $filtro_status, $filtro_busca);
+        $contratos = Contrato::listar($cli['id'] ?? null, $filtro_tipo, $filtro_status, $filtro_busca);
 
         $this->view('contratos/lista', compact('cli', 'contratos', 'filtro_tipo', 'filtro_status', 'filtro_busca'));
     }
@@ -100,7 +100,7 @@ class ContratosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('contratos');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -131,7 +131,7 @@ class ContratosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('contratos');
 
         $id = (int) ($_GET['id'] ?? 0);
         $contrato = Contrato::buscarDoCliente($id, $cli['id']);

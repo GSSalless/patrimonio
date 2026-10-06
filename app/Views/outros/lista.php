@@ -11,19 +11,19 @@
 $page_title = 'Outros Bens';
 require APP_ROOT . '/includes/header.php';
 $tipos_label = ['embarcacao'=>'Embarcação','joia'=>'Joia','obra_de_arte'=>'Obra de Arte','outro'=>'Outro'];
-$tipo_icone  = ['embarcacao'=>'🛥️','joia'=>'💎','obra_de_arte'=>'🖼️','outro'=>'📦'];
+$tipo_icone  = ['embarcacao'=>'bi-water','joia'=>'bi-gem','obra_de_arte'=>'bi-palette','outro'=>'bi-box-seam'];
 ?>
 <div class="container">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('patrimonio') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)">Outros Bens — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('outros') ?>" style="color:var(--secondary)"></i> Outros Bens — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($bens) ?> item(ns)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('outros/novo') ?>" class="btn btn-primario">+ Cadastrar bem</a>
+    <a href="<?= base_url('outros/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="outros/novo">+ Cadastrar bem</a>
     <?php endif; ?>
   </div>
 
@@ -48,13 +48,15 @@ $tipo_icone  = ['embarcacao'=>'🛥️','joia'=>'💎','obra_de_arte'=>'🖼️'
   </div>
 
   <?php if ($bens): ?>
+  <?php foreach (agrupar_por_cliente($bens, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($bens as $ob): ?>
-    <a href="<?= base_url('outros/editar?id=' . $ob['id']) ?>" class="imovel-card">
+    <?php foreach ($grp['itens'] as $ob): ?>
+    <a href="<?= link_item('outros/editar?id=' . $ob['id'], $ob, $cli) ?>" class="imovel-card">
       <div class="imovel-card-foto">
         <?php if ($ob['foto_principal']): ?>
           <img src="<?= url_arquivo($ob['foto_principal']) ?>" alt="">
-        <?php else: ?><?= $tipo_icone[$ob['tipo']] ?? '📦' ?><?php endif; ?>
+        <?php else: ?><i class="bi <?= $tipo_icone[$ob['tipo']] ?? 'bi-box-seam' ?>"></i><?php endif; ?>
       </div>
       <div class="imovel-card-body">
         <div class="imovel-card-codigo"><?= h($ob['codigo']) ?> · <?= $tipos_label[$ob['tipo']] ?? $ob['tipo'] ?></div>
@@ -69,12 +71,13 @@ $tipo_icone  = ['embarcacao'=>'🛥️','joia'=>'💎','obra_de_arte'=>'🖼️'
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
-    <div style="font-size:3rem;margin-bottom:1rem">📦</div>
+    <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><?= icone('outros') ?></div>
     <p style="color:var(--cor-secundario)">Nenhum bem cadastrado nesta categoria.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('outros/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro bem</a>
+    <a href="<?= base_url('outros/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="outros/novo" style="margin-top:1rem">+ Cadastrar primeiro bem</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>
@@ -90,7 +93,7 @@ $tipo_icone  = ['embarcacao'=>'🛥️','joia'=>'💎','obra_de_arte'=>'🖼️'
   <div class="modal-box">
     <div class="modal-head">
       <div>
-        <div style="font-size:.8rem;color:var(--cor-secundario);font-weight:600"><?= h($novo_ob['codigo']) ?> · Bem cadastrado ✅</div>
+        <div style="font-size:.8rem;color:var(--cor-secundario);font-weight:600"><?= h($novo_ob['codigo']) ?> · Bem cadastrado <i class="bi bi-check-circle-fill" style="color:var(--success)"></i></div>
         <h3 style="font-size:1.15rem;color:var(--cor-primaria);margin-top:.15rem"><?= h($subt) ?></h3>
       </div>
       <button type="button" class="modal-fechar" onclick="fecharModalPendencias()" aria-label="Fechar">&times;</button>
@@ -98,11 +101,11 @@ $tipo_icone  = ['embarcacao'=>'🛥️','joia'=>'💎','obra_de_arte'=>'🖼️'
     <div class="modal-body">
       <?php if ($novo_pend_total === 0): ?>
         <div style="text-align:center;padding:1.5rem 0">
-          <div style="font-size:2.5rem">🎉</div>
+          <div style="font-size:2.5rem;color:var(--success)"><i class="bi bi-check2-circle"></i></div>
           <p style="color:#1a7a45;font-weight:600;margin-top:.5rem">Cadastro completo! Nenhum campo pendente.</p>
         </div>
       <?php else: ?>
-        <div class="alerta-pendencias">⚠️ <strong><?= $novo_pend_total ?></strong> campo(s) ficaram em branco. Você pode completar depois editando o bem.</div>
+        <div class="alerta-pendencias"><i class="bi bi-exclamation-triangle"></i> <strong><?= $novo_pend_total ?></strong> campo(s) ficaram em branco. Você pode completar depois editando o bem.</div>
         <div class="pendencias-lista">
           <?php foreach ($novo_pend as $grupo => $campos): ?>
           <div class="pendencias-grupo">
@@ -114,8 +117,8 @@ $tipo_icone  = ['embarcacao'=>'🛥️','joia'=>'💎','obra_de_arte'=>'🖼️'
       <?php endif; ?>
     </div>
     <div class="modal-rodape">
-      <a href="<?= h($wa_url) ?>" target="_blank" class="btn btn-whatsapp">📱 Enviar por WhatsApp</a>
-      <a href="<?= base_url('outros/editar?id=' . $novo_ob['id']) ?>" class="btn btn-primario" style="margin-left:auto">Editar bem →</a>
+      <a href="<?= h($wa_url) ?>" target="_blank" class="btn btn-whatsapp"><i class="bi bi-whatsapp"></i> Enviar por WhatsApp</a>
+      <a href="<?= link_item('outros/editar?id=' . $novo_ob['id'], $novo_ob, $cli) ?>" class="btn btn-primario" style="margin-left:auto">Editar bem →</a>
     </div>
   </div>
 </div>

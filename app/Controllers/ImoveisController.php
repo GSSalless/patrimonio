@@ -32,7 +32,7 @@ class ImoveisController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('imoveis');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -168,20 +168,20 @@ class ImoveisController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_tipo     = $_GET['tipo']     ?? '';
         $filtro_situacao = $_GET['situacao'] ?? '';
         $filtro_busca    = trim($_GET['busca'] ?? '');
 
-        $imoveis = Imovel::listar($cli['id'], [
+        $imoveis = Imovel::listar($cli['id'] ?? null, [
             'tipo' => $filtro_tipo, 'situacao' => $filtro_situacao, 'busca' => $filtro_busca,
         ]);
 
         // Modal de pendências após cadastro (?novo=ID)
         $novo_im = null; $novo_pend = []; $novo_pend_total = 0;
         $novo_id = (int) ($_GET['novo'] ?? 0);
-        if ($novo_id) {
+        if ($novo_id && $cli) {
             $novo_im = Imovel::buscarDoCliente($novo_id, $cli['id']);
             if ($novo_im) {
                 $novo_pend       = pendencias_imovel($novo_im);
@@ -200,7 +200,7 @@ class ImoveisController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('imoveis');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

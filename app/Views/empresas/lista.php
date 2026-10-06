@@ -20,12 +20,12 @@ $total_capital = array_sum(array_map(fn($e) => (float)($e['capital_social'] ?? 0
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-briefcase" style="color:var(--secondary)"></i> Empresas — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('empresas') ?>" style="color:var(--secondary)"></i> Empresas — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($empresas) ?> empresa(s)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('empresas/novo') ?>" class="btn btn-primario">+ Cadastrar empresa</a>
+    <a href="<?= base_url('empresas/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="empresas/novo">+ Cadastrar empresa</a>
     <?php endif; ?>
   </div>
 
@@ -56,9 +56,11 @@ $total_capital = array_sum(array_map(fn($e) => (float)($e['capital_social'] ?? 0
     <strong style="font-size:1.15rem;color:var(--cor-primaria)"><?= moeda($total_capital) ?></strong>
   </div>
   <?php endif; ?>
+  <?php foreach (agrupar_por_cliente($empresas, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($empresas as $e): ?>
-    <a href="<?= base_url('empresas/editar?id=' . $e['id']) ?>" class="imovel-card">
+    <?php foreach ($grp['itens'] as $e): ?>
+    <a href="<?= link_item('empresas/editar?id=' . $e['id'], $e, $cli) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
           <i class="bi <?= $nat_icone[$e['natureza']] ?? 'bi-briefcase' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
@@ -82,12 +84,13 @@ $total_capital = array_sum(array_map(fn($e) => (float)($e['capital_social'] ?? 0
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
     <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-briefcase"></i></div>
     <p style="color:var(--cor-secundario)">Nenhuma empresa cadastrada.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('empresas/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeira empresa</a>
+    <a href="<?= base_url('empresas/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="empresas/novo" style="margin-top:1rem">+ Cadastrar primeira empresa</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

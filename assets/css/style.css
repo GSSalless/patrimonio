@@ -542,6 +542,10 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); }
 .hg-node:hover .hg-tile { stroke: rgba(34,199,242,.7); }
 
 .hg-emoji { font-size: 30px; text-anchor: middle; dominant-baseline: central; }
+.hg-ico-fo { pointer-events: none; overflow: visible; }
+.hg-ico { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
+  font-size: 26px; color: var(--secondary); }
+.hg-node.on .hg-ico { color: var(--text); }
 .hg-label { font-size: 12px; font-weight: 700; text-anchor: middle; fill: var(--cor-primaria); }
 
 .hg-centro-c { fill: url(#hg-centro); stroke: rgba(34,199,242,.6); stroke-width: 2;
@@ -556,7 +560,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); }
 .hub-fb { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .4rem; width: 84px; }
 .hub-fb-tile { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center;
   background: linear-gradient(160deg, #12263c, #0b1726); border: 1px solid rgba(34,199,242,.3); box-shadow: 0 6px 16px rgba(0,0,0,.3); }
-.hub-fb-emoji { font-size: 1.7rem; }
+.hub-fb-emoji { font-size: 1.7rem; color: var(--secondary); display: inline-flex; }
 .hub-fb-lb { font-size: .74rem; font-weight: 700; color: var(--cor-primaria); }
 
 .modal-box.modal-lg { max-width: 880px; }
@@ -870,3 +874,16 @@ body.modal-aberto { overflow: hidden; }
 .mc-item > .bi { color: var(--text-3); flex-shrink: 0; }
 .mc-check { color: var(--primary) !important; }
 .mc-vazio { color: var(--text-2); text-align: center; padding: 1.5rem; }
+
+/* ── Grupo por cliente nas listas (modo gestor — todos os clientes) ───── */
+.grupo-cli {
+  display: flex; align-items: center; gap: .6rem;
+  margin: 1.4rem 0 .75rem; padding-bottom: .45rem;
+  border-bottom: 1px solid var(--border);
+}
+.grupo-cli:first-of-type { margin-top: .4rem; }
+.grupo-cli a { display: inline-flex; align-items: center; gap: .45rem; font-weight: 700; font-size: 1rem; color: var(--text); text-decoration: none; }
+.grupo-cli a i { color: var(--secondary); }
+.grupo-cli a:hover { color: var(--secondary); text-decoration: none; }
+.grupo-cli-n { font-size: .72rem; font-weight: 700; color: var(--text-2); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 999px; padding: .1rem .5rem; }

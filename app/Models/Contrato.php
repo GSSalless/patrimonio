@@ -6,18 +6,22 @@
  */
 class Contrato
 {
-    public static function listar(int $clienteId, string $tipo = '', string $status = '', string $busca = ''): array
+    public static function listar(?int $clienteId, string $tipo = '', string $status = '', string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM contratos WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if ($tipo !== '')   { $sql .= ' AND tipo = ?';   $params[] = $tipo; }
-        if ($status !== '') { $sql .= ' AND status = ?'; $params[] = $status; }
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM contratos t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if ($tipo !== '')   { $sql .= ' AND t.tipo = ?';   $params[] = $tipo; }
+        if ($status !== '') { $sql .= ' AND t.status = ?'; $params[] = $status; }
         if ($busca !== '') {
-            $sql .= ' AND (numero LIKE ? OR objeto LIKE ? OR contraparte_nome LIKE ?)';
+            $sql .= ' AND (t.numero LIKE ? OR t.objeto LIKE ? OR t.contraparte_nome LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
         // Ativos primeiro; dentro disso, os que vencem antes no topo.
-        $sql .= " ORDER BY FIELD(status,'ativo','em_negociacao','suspenso','encerrado','rescindido'), data_fim IS NULL, data_fim";
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . "FIELD(t.status,'ativo','em_negociacao','suspenso','encerrado','rescindido'), t.data_fim IS NULL, t.data_fim";
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

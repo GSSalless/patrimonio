@@ -20,16 +20,16 @@ require APP_ROOT . '/includes/header.php';
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem">
       <?php
       $opcoes = [
-        'embarcacao'  => ['🛥️', 'Embarcação', 'Jet ski, lancha, barco, veleiro…'],
-        'joia'        => ['💎', 'Joia',        'Anel, colar, relógio, pulseira…'],
-        'obra_de_arte'=> ['🖼️', 'Obra de Arte','Pintura, escultura, fotografia…'],
-        'outro'       => ['📦', 'Outro',       'Qualquer outro bem de valor'],
+        'embarcacao'  => ['bi-water', 'Embarcação', 'Jet ski, lancha, barco, veleiro…'],
+        'joia'        => ['bi-gem', 'Joia',        'Anel, colar, relógio, pulseira…'],
+        'obra_de_arte'=> ['bi-palette', 'Obra de Arte','Pintura, escultura, fotografia…'],
+        'outro'       => ['bi-box-seam', 'Outro',       'Qualquer outro bem de valor'],
       ];
       foreach ($opcoes as $val => [$icon, $label, $desc]): ?>
       <a href="<?= base_url('outros/novo?tipo=' . $val) ?>" class="card" style="text-align:center;padding:1.5rem 1rem;text-decoration:none;transition:border-color .2s,box-shadow .2s;cursor:pointer;border:2px solid var(--cor-borda)"
          onmouseover="this.style.borderColor='#1a6fba';this.style.boxShadow='0 4px 12px rgba(26,111,186,.15)'"
          onmouseout="this.style.borderColor='var(--cor-borda)';this.style.boxShadow=''">
-        <div style="font-size:2.5rem;margin-bottom:.5rem"><?= $icon ?></div>
+        <div style="font-size:2.5rem;margin-bottom:.5rem;color:var(--secondary)"><i class="bi <?= $icon ?>"></i></div>
         <div style="font-weight:700;color:var(--cor-primaria);margin-bottom:.25rem"><?= $label ?></div>
         <div style="font-size:.78rem;color:var(--cor-secundario)"><?= $desc ?></div>
       </a>

@@ -5,16 +5,20 @@
  */
 class Empresa
 {
-    public static function listar(int $clienteId, string $natureza = '', string $busca = ''): array
+    public static function listar(?int $clienteId, string $natureza = '', string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM empresas WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if ($natureza !== '') { $sql .= ' AND natureza = ?'; $params[] = $natureza; }
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM empresas t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if ($natureza !== '') { $sql .= ' AND t.natureza = ?'; $params[] = $natureza; }
         if ($busca !== '') {
-            $sql .= ' AND (razao_social LIKE ? OR nome_fantasia LIKE ? OR cnpj LIKE ?)';
+            $sql .= ' AND (t.razao_social LIKE ? OR t.nome_fantasia LIKE ? OR t.cnpj LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
-        $sql .= ' ORDER BY razao_social';
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . 't.razao_social';
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

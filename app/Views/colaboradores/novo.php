@@ -26,9 +26,9 @@ require APP_ROOT . '/includes/header.php';
       <!-- DOCUMENTOS -->
       <div class="form-secao"><div class="form-secao-titulo">6. Documentos</div></div>
       <div class="form-grid form-grid-3">
-        <div class="form-grupo"><label>📄 Contrato de trabalho</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>🪪 Documento de identidade</label><input type="file" name="doc_identidade" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>📎 Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-file-earmark"></i> Contrato de trabalho</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-card-text"></i> Documento de identidade</label><input type="file" name="doc_identidade" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-paperclip"></i> Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
       </div>
       <div style="font-size:.8rem;color:var(--cor-secundario)">Formatos aceitos: PDF, JPG, PNG · Máx. 30 MB por arquivo · Dependentes e histórico após salvar.</div>
 

@@ -24,12 +24,12 @@ $total_ganho    = ($total_atual > 0 && $total_aplicado > 0) ? $total_atual - $to
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-graph-up-arrow" style="color:var(--secondary)"></i> Investimentos — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('investimentos') ?>" style="color:var(--secondary)"></i> Investimentos — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($investimentos) ?> aplicação(ões)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('investimentos/novo') ?>" class="btn btn-primario">+ Cadastrar investimento</a>
+    <a href="<?= base_url('investimentos/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="investimentos/novo">+ Cadastrar investimento</a>
     <?php endif; ?>
   </div>
 
@@ -75,12 +75,14 @@ $total_ganho    = ($total_atual > 0 && $total_aplicado > 0) ? $total_atual - $to
     </div>
   </div>
   <?php endif; ?>
+  <?php foreach (agrupar_por_cliente($investimentos, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($investimentos as $i):
+    <?php foreach ($grp['itens'] as $i):
       $ap = (float)($i['valor_aplicado'] ?? 0); $at = (float)($i['valor_atual'] ?? 0);
       $g = ($ap > 0 && $at > 0) ? $at - $ap : null;
     ?>
-    <a href="<?= base_url('investimentos/editar?id=' . $i['id']) ?>" class="imovel-card">
+    <a href="<?= link_item('investimentos/editar?id=' . $i['id'], $i, $cli) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
           <i class="bi <?= $classe_icone[$i['classe']] ?? 'bi-graph-up-arrow' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
@@ -107,12 +109,13 @@ $total_ganho    = ($total_atual > 0 && $total_aplicado > 0) ? $total_atual - $to
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
     <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-graph-up-arrow"></i></div>
     <p style="color:var(--cor-secundario)">Nenhum investimento cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('investimentos/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro investimento</a>
+    <a href="<?= base_url('investimentos/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="investimentos/novo" style="margin-top:1rem">+ Cadastrar primeiro investimento</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

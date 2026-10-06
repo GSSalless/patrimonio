@@ -14,12 +14,7 @@ class DocumentosController extends Controller
         $usuario = usuario_logado();
 
         // Escopo: admin usa o cliente selecionado (ou todos); cliente vê o próprio.
-        $cli = ($usuario['nivel'] === 'admin') ? cliente_selecionado() : null;
-        if ($usuario['nivel'] === 'cliente') {
-            $stmt = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
-            $stmt->execute([$usuario['id']]);
-            $cli = $stmt->fetch() ?: null;
-        }
+        $cli = $this->escopoCliente($usuario);
         $cliente_id = $cli['id'] ?? null;
 
         $filtros = [
@@ -39,6 +34,7 @@ class DocumentosController extends Controller
             'categorias'  => Documento::categorias(),
             'tipos'       => Documento::tiposLabel(),
             'escopo_nome' => $cli['nome'] ?? null,
+            'cli'         => $cli,
             'is_admin'    => $usuario['nivel'] === 'admin',
         ]);
     }

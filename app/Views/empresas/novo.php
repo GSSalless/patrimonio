@@ -26,9 +26,9 @@ require APP_ROOT . '/includes/header.php';
       <!-- DOCUMENTOS -->
       <div class="form-secao"><div class="form-secao-titulo">5. Documentos</div></div>
       <div class="form-grid form-grid-3">
-        <div class="form-grupo"><label>📄 Contrato social</label><input type="file" name="doc_contrato_social" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>🧾 Cartão CNPJ</label><input type="file" name="doc_cnpj" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>📎 Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-file-earmark"></i> Contrato social</label><input type="file" name="doc_contrato_social" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-receipt-cutoff"></i> Cartão CNPJ</label><input type="file" name="doc_cnpj" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-paperclip"></i> Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
       </div>
       <div style="font-size:.8rem;color:var(--cor-secundario)">Formatos aceitos: PDF, JPG, PNG · Máx. 30 MB por arquivo · Sócios/administradores após salvar.</div>
 

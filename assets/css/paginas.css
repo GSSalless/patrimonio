@@ -16,6 +16,15 @@
   .ag-secao-tit{display:flex;align-items:center;gap:.55rem;font-size:1rem;color:var(--cor-primaria);
     font-weight:700;margin:0 0 .7rem;padding-bottom:.4rem;border-bottom:1px solid var(--cor-borda,var(--border))}
   .ag-secao-venc{color:var(--danger)}
+  .ag-secao-cli{display:inline-flex;align-items:center;gap:.45rem;color:inherit;text-decoration:none}
+  .ag-secao-cli i{color:var(--secondary)}
+  .ag-secao-cli:hover{color:var(--secondary);text-decoration:none}
+  /* Alternar agrupamento (modo gestor): por cliente × por prazo */
+  .ag-agrupar{display:flex;align-items:center;gap:.4rem;margin:-.4rem 0 1.2rem;font-size:.82rem;color:var(--text-3)}
+  .ag-agrupar a{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:999px;
+    color:var(--text-2);border:1px solid var(--border);text-decoration:none}
+  .ag-agrupar a:hover{color:var(--text);text-decoration:none}
+  .ag-agrupar a.ativo{color:#fff;background:rgba(22,139,255,.18);border-color:rgba(22,139,255,.45)}
   .ag-secao-n{font-size:.75rem;font-weight:700;color:var(--cor-secundario);background:var(--cor-fundo,var(--surface-2));
     border-radius:999px;padding:.05rem .5rem}
 
@@ -218,17 +227,6 @@
   .gg-alertas-sub{font-size:.83rem;color:var(--warning);margin-top:.1rem}
   .gg-alertas-cta{flex-shrink:0;font-weight:600;font-size:.85rem;color:var(--warning);white-space:nowrap}
 
-  .gg-clientes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.9rem}
-  .gg-cli-card{display:flex;align-items:center;gap:.85rem;padding:1rem 1.1rem;text-decoration:none;color:inherit;
-    background:var(--cor-branco,var(--surface));border:1px solid var(--cor-borda,var(--border));border-radius:14px;
-    box-shadow:0 3px 10px rgba(0,0,0,.05);transition:box-shadow .2s,transform .2s}
-  .gg-cli-card:hover{box-shadow:0 8px 22px rgba(0,0,0,.1);transform:translateY(-2px);text-decoration:none}
-  .gg-cli-avatar{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-    font-weight:700;font-size:1.25rem;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-h));border:1px solid rgba(34,199,242,.4)}
-  .gg-cli-nome{font-weight:700;font-size:1.02rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gg-cli-sub{color:var(--cor-secundario);font-size:.82rem;margin-top:.2rem}
-  .gg-cli-pat{font-family:var(--fonte-titulo);font-weight:800;font-size:1.05rem;color:var(--cor-primaria);margin-top:.4rem}
-  .gg-cli-meta{color:var(--cor-secundario);font-size:.8rem;margin-top:.15rem}
 
 /* ═══ imoveis/novo.php ═══════════════════════════════════════════ */
 .upload-row.tem-arquivo { border-color: var(--success); background: rgba(34,197,94,.14) !important; }
@@ -316,7 +314,7 @@
   /* Donut */
   .gg2-donut { display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
   .gg2-donut-svg { width:160px; height:160px; flex-shrink:0; }
-  .gg2-donut-t { fill:var(--text); font-family:var(--fonte-titulo); font-size:19px; font-weight:800; }
+  .gg2-donut-t { fill:var(--text); font-family:var(--fonte-titulo); font-size:15px; font-weight:700; }
   .gg2-donut-s { fill:var(--text-3); font-size:11px; }
   .gg2-donut-leg { flex:1; min-width:150px; display:flex; flex-direction:column; gap:.5rem; }
   .gg2-leg { display:flex; align-items:center; gap:.5rem; font-size:.85rem; }
@@ -360,12 +358,6 @@
   .gg2-ind-s { font-size:.78rem; color:var(--text-2); }
   .gg2-warn { color:var(--warning); font-weight:600; }
 
-  /* Cabeçalho da carteira + ajustes dos cards de cliente */
-  .gg2-clientes-h { display:flex; align-items:center; justify-content:space-between; gap:1rem;
-    margin:.4rem 0 1rem; }
-  .gg2-clientes-h h3 { font-size:1.1rem; color:var(--text); margin:0; display:flex; align-items:center; gap:.5rem; }
-  .gg-cli-corpo { min-width:0; flex:1; }
-  .gg-cli-chev { color:var(--text-3); }
 
   /* Responsivo */
   @media (max-width:1000px){

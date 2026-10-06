@@ -42,7 +42,7 @@ class ColaboradoresController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('colaboradores');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -101,11 +101,11 @@ class ColaboradoresController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_status = $_GET['status'] ?? '';
         $filtro_busca  = trim($_GET['busca'] ?? '');
-        $colaboradores = Colaborador::listar($cli['id'], $filtro_status, $filtro_busca);
+        $colaboradores = Colaborador::listar($cli['id'] ?? null, $filtro_status, $filtro_busca);
 
         $this->view('colaboradores/lista', compact('cli', 'colaboradores', 'filtro_status', 'filtro_busca'));
     }
@@ -115,7 +115,7 @@ class ColaboradoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('colaboradores');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -145,7 +145,7 @@ class ColaboradoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('colaboradores');
 
         $id = (int) ($_GET['id'] ?? 0);
         $colaborador = Colaborador::buscarDoCliente($id, $cli['id']);
@@ -183,7 +183,7 @@ class ColaboradoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('colaboradores');
 
         $co_id = (int) ($_GET['colaborador_id'] ?? 0);
         $co = Colaborador::buscarDoCliente($co_id, $cli['id']);
@@ -206,7 +206,7 @@ class ColaboradoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('colaboradores');
 
         $co_id  = (int) ($_GET['colaborador_id'] ?? 0);
         $dep_id = (int) ($_GET['id'] ?? 0);
@@ -219,7 +219,7 @@ class ColaboradoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('colaboradores');
 
         $co_id = (int) ($_GET['colaborador_id'] ?? 0);
         $co = Colaborador::buscarDoCliente($co_id, $cli['id']);
@@ -243,7 +243,7 @@ class ColaboradoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('colaboradores');
 
         $co_id   = (int) ($_GET['colaborador_id'] ?? 0);
         $hist_id = (int) ($_GET['id'] ?? 0);

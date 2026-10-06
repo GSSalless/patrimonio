@@ -67,15 +67,31 @@ if ($usuario):
       <i class="bi bi-bell"></i><span class="ponto ambar"></span>
     </button>
 
-    <?php if ($eh_admin): ?>
+    <?php if ($eh_admin):
+      // "Sair do cliente" volta para a mesma tela no modo gestor (todos os
+      // clientes) quando ela tem esse modo; senão, para o Dashboard geral.
+      $seg = explode('/', $rota_atual)[0];
+      $modo_geral = ['patrimonio','imoveis','veiculos','outros','empresas','contas','investimentos',
+                     'seguros','contratos','fornecedores','colaboradores','documentos','tarefas','clientes'];
+      if ($seg === 'agenda') $seg = 'tarefas';
+      $sair_rota = in_array($seg, $modo_geral, true) ? $seg : 'gestao-geral';
+    ?>
       <?php if ($cliente_sel): ?>
-      <button type="button" class="topo-cliente js-abre-clientes" data-next="<?= h($rota_atual ?: 'dashboard') ?>" title="Trocar cliente">
-        <i class="bi bi-person-circle"></i><span><?= h($cliente_sel['nome']) ?></span>
-        <i class="bi bi-chevron-down topo-cliente-seta"></i>
-      </button>
+      <div class="topo-contexto">
+        <button type="button" class="topo-cliente js-abre-clientes" data-next="<?= h($rota_atual ?: 'dashboard') ?>" title="Trocar cliente">
+          <i class="bi bi-person-circle"></i>
+          <span class="topo-cliente-txt"><small>Você está em</small><b><?= h($cliente_sel['nome']) ?></b></span>
+          <i class="bi bi-chevron-down topo-cliente-seta"></i>
+        </button>
+        <a class="topo-cliente-sair" href="<?= base_url($sair_rota . '?cliente_id=0') ?>" title="Sair do cliente (ver todos os clientes)" aria-label="Sair do cliente">
+          <i class="bi bi-x-lg"></i>
+        </a>
+      </div>
       <?php else: ?>
-      <button type="button" class="topo-cliente topo-cliente-vazio js-abre-clientes" data-next="<?= h($rota_atual ?: 'dashboard') ?>" title="Selecionar cliente">
-        <i class="bi bi-person-plus"></i><span>Selecionar cliente</span>
+      <button type="button" class="topo-cliente topo-cliente-vazio js-abre-clientes" data-next="<?= h(($rota_atual === 'gestao-geral' || $rota_atual === '') ? 'dashboard' : $rota_atual) ?>" title="Selecionar um cliente">
+        <?= icone('clientes') ?>
+        <span class="topo-cliente-txt"><small>Exibindo</small><b>Todos os clientes</b></span>
+        <i class="bi bi-chevron-down topo-cliente-seta"></i>
       </button>
       <?php endif; ?>
     <?php endif; ?>
@@ -105,61 +121,81 @@ if ($usuario):
 
   <nav class="menu-nav">
     <?php
-    // Grupos de navegação: [título, [ [rota, rótulo, ícone, mostrar?], ... ], precisa_cliente]
-    // precisa_cliente = itens que dependem de um cliente selecionado. Para o admin,
-    // o menu aparece SEMPRE completo; se nenhum cliente estiver setado, esses itens
-    // abrem o modal de seleção (em vez de navegar direto).
-    $itens_cliente = [
-      ['dashboard',  'Dashboard',   'bi-speedometer2', true],
-      ['patrimonio', 'Patrimônios', 'bi-buildings',    true],
-      ['empresas',   'Empresas',    'bi-briefcase',    true],
-      ['contas',     'Contas',      'bi-bank',         true],
-      ['investimentos','Investimentos','bi-graph-up-arrow', true],
-      ['seguros',    'Seguros',     'bi-shield-check', true],
-      ['contratos',  'Contratos',   'bi-file-earmark-text', true],
-      ['fornecedores','Fornecedores','bi-people-fill',  true],
-      ['colaboradores','Colaboradores','bi-person-badge', true],
-      ['documentos',  'Documentos',  'bi-folder2-open', true],
+    // Menu ÚNICO — "mesmos botões, dois modos" (reunião 01/10/2026):
+    // sem cliente selecionado cada item mostra os dados de TODOS os clientes;
+    // com cliente selecionado, os mesmos itens mostram só os dados dele.
+    // Ordem/grupos seguem o mockup do César. Itens: [rota, rótulo, chave do ícone].
+    $painel = ($eh_admin && !$cliente_sel) ? 'gestao-geral' : 'dashboard';
+    $grupos = [
+      ['', array_values(array_filter([
+        [$painel,    'Dashboard', 'dashboard'],
+        $eh_admin ? ['clientes', 'Clientes', 'clientes'] : null,
+        ($eh_admin && $cliente_sel) ? ['clientes/editar?id=' . (int) $cliente_sel['id'], 'Cadastro do cliente', 'cadastro'] : null,
+      ]))],
+      ['Ativos', [
+        ['patrimonio',    'Patrimônio',    'patrimonio'],
+        ['investimentos', 'Investimentos', 'investimentos'],
+        ['empresas',      'Empresas',      'empresas'],
+      ]],
+      ['Financeiro', [
+        ['contas',    'Contas',    'contas'],
+        ['seguros',   'Seguros',   'seguros'],
+        ['contratos', 'Contratos', 'contratos'],
+      ]],
+      ['Gestão', [
+        ['documentos',    'Documentos',   'documentos'],
+        ['tarefas',       'Tarefas',      'tarefas'],
+        ['colaboradores', 'Pessoas (RH)', 'colaboradores'],
+        ['fornecedores',  'Fornecedores', 'fornecedores'],
+      ]],
     ];
-    if ($eh_admin) {
-      $grupos = [
-        ['Gestão', [
-          ['gestao-geral', 'Gestão Geral', 'bi-columns-gap',    true],
-          ['clientes',     'Clientes',     'bi-people',         true],
-          ['agenda',       'Agenda',       'bi-calendar-check', true],
-        ], false],
-        [($cliente_sel['nome'] ?? 'Cliente'), $itens_cliente, true],
-      ];
-    } else {
-      // Cliente final: sempre no próprio contexto (nunca precisa selecionar).
-      $grupos = [
-        ['Meu patrimônio', array_merge($itens_cliente, [
-          ['agenda', 'Agenda', 'bi-calendar-check', true],
-        ]), false],
-      ];
-    }
-    foreach ($grupos as [$titulo, $itens, $precisa_cliente]):
-    ?>
-      <div class="menu-grupo-tit"><?= h($titulo) ?></div>
-      <?php foreach ($itens as [$rota, $rotulo, $icone, $mostrar]):
-        if (!$mostrar) continue;
-        $ativo = ($rota_atual === $rota || str_starts_with($rota_atual, $rota . '/')) ? ' ativo' : '';
-        // Patrimônios fica ativo também nas telas de imóveis/veículos/outros
-        if ($rota === 'patrimonio' && preg_match('#^(imoveis|veiculos|outros)#', $rota_atual)) $ativo = ' ativo';
+    // Itens do mockup ainda não construídos (aparecem desabilitados).
+    $em_breve = $eh_admin ? [
+      ['Teia Patrimonial', 'teia'], ['Projetos', 'projetos'], ['Relatórios', 'relatorios'],
+      ['IA Assistente', 'ia'], ['Configurações', 'configuracoes'], ['Ajuda', 'ajuda'],
+    ] : [];
 
-        // Item do cliente SEM cliente setado → botão que abre o modal de seleção.
-        if ($precisa_cliente && !$cliente_sel):
+    // Rotas que também acendem um item (sub-telas).
+    $acende = [
+      'dashboard'     => ['dashboard', 'gestao-geral'],
+      'gestao-geral'  => ['dashboard', 'gestao-geral'],
+      'patrimonio'    => ['patrimonio', 'imoveis', 'veiculos', 'outros', 'reformas', 'manutencoes', 'locacao', 'condominios', 'financeiro'],
+      'tarefas'       => ['tarefas', 'agenda'],
+    ];
+    $seg_atual = explode('/', $rota_atual)[0];
+    ?>
+    <?php if ($eh_admin): ?>
+    <div class="menu-modo <?= $cliente_sel ? 'menu-modo-cli' : '' ?>">
+      <span>Exibindo</span>
+      <b><?= $cliente_sel ? h($cliente_sel['nome']) : 'Todos os clientes' ?></b>
+    </div>
+    <?php endif; ?>
+    <?php foreach ($grupos as [$titulo, $itens]): ?>
+      <?php if ($titulo !== ''): ?><div class="menu-grupo-tit"><?= h($titulo) ?></div><?php endif; ?>
+      <?php foreach ($itens as [$rota, $rotulo, $ico]):
+        $base_rota = strtok($rota, '?');
+        if (str_contains($rota, '?')) {
+          // Item com parâmetro (Cadastro do cliente): acende só na própria tela.
+          $ativo = ($rota_atual === $base_rota && (int) ($_GET['id'] ?? 0) === (int) ($cliente_sel['id'] ?? -1));
+        } else {
+          $ativo = in_array($seg_atual, $acende[$rota] ?? [$rota], true);
+          if ($rota === 'clientes' && $ativo && $cliente_sel && $rota_atual === 'clientes/editar'
+              && (int) ($_GET['id'] ?? 0) === (int) $cliente_sel['id']) $ativo = false;
+        }
       ?>
-        <button type="button" class="menu-item js-abre-clientes" data-next="<?= h($rota) ?>">
-          <i class="bi <?= $icone ?>"></i><span><?= h($rotulo) ?></span>
-        </button>
-      <?php else: ?>
-        <a class="menu-item<?= $ativo ?>" href="<?= base_url($rota) ?>">
-          <i class="bi <?= $icone ?>"></i><span><?= h($rotulo) ?></span>
+        <a class="menu-item<?= $ativo ? ' ativo' : '' ?>" href="<?= base_url($rota) ?>">
+          <?= icone($ico) ?><span><?= h($rotulo) ?></span>
         </a>
-      <?php endif; ?>
       <?php endforeach; ?>
     <?php endforeach; ?>
+    <?php if ($em_breve): ?>
+      <div class="menu-grupo-tit">Em breve</div>
+      <?php foreach ($em_breve as [$rotulo, $ico]): ?>
+        <span class="menu-item menu-item-off" title="Em construção" aria-disabled="true">
+          <?= icone($ico) ?><span><?= h($rotulo) ?></span>
+        </span>
+      <?php endforeach; ?>
+    <?php endif; ?>
   </nav>
 
   <div class="menu-lateral-rodape">
@@ -177,8 +213,8 @@ if ($usuario):
 </aside>
 
 <?php if ($eh_admin):
-  // Lista de clientes ativos para o modal de seleção (aberto pelos itens do
-  // menu do cliente quando nenhum está setado, ou pelo chip do topo).
+  // Lista de clientes ativos para o modal de seleção (aberto pelo chip do
+  // topo e pelos botões "+ Cadastrar" no modo gestor, que precisam de um dono).
   $mc_clientes = db()->query(
     'SELECT id, nome, nome_completo, cpf_cnpj, tipo_pessoa FROM clientes WHERE ativo = 1 ORDER BY nome'
   )->fetchAll();

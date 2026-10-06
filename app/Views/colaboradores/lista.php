@@ -18,12 +18,12 @@ $ativos = count(array_filter($colaboradores, fn($c) => $c['status'] !== 'desliga
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-person-badge" style="color:var(--secondary)"></i> Colaboradores — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('colaboradores') ?>" style="color:var(--secondary)"></i> Colaboradores — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($colaboradores) ?> colaborador(es) · <?= $ativos ?> ativo(s)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('colaboradores/novo') ?>" class="btn btn-primario">+ Cadastrar colaborador</a>
+    <a href="<?= base_url('colaboradores/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="colaboradores/novo">+ Cadastrar colaborador</a>
     <?php endif; ?>
   </div>
 
@@ -54,11 +54,13 @@ $ativos = count(array_filter($colaboradores, fn($c) => $c['status'] !== 'desliga
     <strong style="font-size:1.15rem;color:var(--cor-primaria)"><?= moeda($total_folha) ?></strong>
   </div>
   <?php endif; ?>
+  <?php foreach (agrupar_por_cliente($colaboradores, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($colaboradores as $c):
+    <?php foreach ($grp['itens'] as $c):
       $ini = mb_strtoupper(mb_substr(trim($c['nome']), 0, 1));
     ?>
-    <a href="<?= base_url('colaboradores/editar?id=' . $c['id']) ?>" class="imovel-card">
+    <a href="<?= link_item('colaboradores/editar?id=' . $c['id'], $c, $cli) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
           <i class="bi bi-person" style="font-size:1.05rem;color:var(--secondary)"></i>
@@ -83,12 +85,13 @@ $ativos = count(array_filter($colaboradores, fn($c) => $c['status'] !== 'desliga
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
     <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-person-badge"></i></div>
     <p style="color:var(--cor-secundario)">Nenhum colaborador cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('colaboradores/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro colaborador</a>
+    <a href="<?= base_url('colaboradores/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="colaboradores/novo" style="margin-top:1rem">+ Cadastrar primeiro colaborador</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

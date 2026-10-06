@@ -362,9 +362,9 @@ function tarefas_pendencias(?int $cliente_id = null): array {
         }
     }
     $blocos = [
-        ['rotulo' => 'Vencimentos esta semana', 'n' => $esta_semana, 'cor' => 'danger',  'link' => 'agenda'],
+        ['rotulo' => 'Vencimentos esta semana', 'n' => $esta_semana, 'cor' => 'danger',  'link' => 'tarefas'],
         ['rotulo' => 'Documentos com validade', 'n' => $documentos,  'cor' => 'warning', 'link' => 'documentos'],
-        ['rotulo' => 'Revisões programadas',    'n' => $revisoes,    'cor' => 'secondary','link' => 'agenda'],
+        ['rotulo' => 'Revisões programadas',    'n' => $revisoes,    'cor' => 'secondary','link' => 'tarefas'],
         ['rotulo' => 'Contratos a renovar',     'n' => $contratos,   'cor' => 'primary', 'link' => 'contratos'],
     ];
     return array_values(array_filter($blocos, fn($b) => $b['n'] > 0));
@@ -808,6 +808,112 @@ function custo_mensal_total(array $imovel): float {
 
 function h(string $str): string {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Dicionário central de ícones (reunião 01/10/2026 — "ícones como logos"):
+ * cada atividade tem UM ícone fixo (Bootstrap Icons), o mesmo no menu, nos
+ * títulos, nos cards e nas listas — e nenhuma outra atividade reaproveita esse
+ * ícone. Para trocar o ícone de uma atividade no sistema inteiro, mude só aqui.
+ */
+function icone_modulo(string $chave): string {
+    static $mapa = [
+        // Navegação / gestão
+        'gestao-geral'   => 'bi-columns-gap',
+        'dashboard'      => 'bi-speedometer2',
+        'clientes'       => 'bi-people',
+        'cadastro'       => 'bi-person-vcard',
+        'tarefas'        => 'bi-check2-square',
+        'teia'           => 'bi-diagram-3',
+        'relatorios'     => 'bi-file-earmark-bar-graph',
+        'projetos'       => 'bi-kanban',
+        'ia'             => 'bi-stars',
+        'configuracoes'  => 'bi-gear',
+        'ajuda'          => 'bi-question-circle',
+        // Ativos
+        'patrimonio'     => 'bi-buildings',
+        'imoveis'        => 'bi-house-door',
+        'veiculos'       => 'bi-car-front',
+        'outros'         => 'bi-gem',
+        'investimentos'  => 'bi-graph-up-arrow',
+        'empresas'       => 'bi-briefcase',
+        // Financeiro
+        'contas'         => 'bi-bank',
+        'financeiro'     => 'bi-cash-coin',
+        'seguros'        => 'bi-shield-check',
+        'contratos'      => 'bi-file-earmark-text',
+        // Pessoas e operação
+        'colaboradores'  => 'bi-person-badge',
+        'fornecedores'   => 'bi-shop',
+        'documentos'     => 'bi-folder2-open',
+        // Atividades dos bens
+        'iptu'           => 'bi-receipt',
+        'licenciamento'  => 'bi-postcard',
+        'reformas'       => 'bi-hammer',
+        'manutencoes'    => 'bi-tools',
+        'condominio'     => 'bi-building',
+        'aluguel'        => 'bi-key',
+        'abastecimentos' => 'bi-fuel-pump',
+        'sinistros'      => 'bi-exclamation-octagon',
+        'avaliacoes'     => 'bi-clipboard-data',
+        'movimentos'     => 'bi-arrow-left-right',
+        'saldos'         => 'bi-wallet2',
+        'socios'         => 'bi-diagram-2',
+        'dependentes'    => 'bi-person-hearts',
+        'historico'      => 'bi-clock-history',
+    ];
+    return $mapa[$chave] ?? 'bi-dot';
+}
+
+/* ───── Modo gestor × modo cliente nas listagens (reunião 01/10/2026) ─────
+ * O menu é o mesmo; sem cliente selecionado, as listas mostram TODOS os
+ * clientes (agrupadas por cliente); com cliente, só os dados dele.          */
+
+/** Título do escopo: nome do cliente ou "Todos os clientes". */
+function escopo_nome(?array $cli): string {
+    return $cli ? (string) $cli['nome'] : 'Todos os clientes';
+}
+
+/**
+ * Agrupa as linhas por cliente (modo gestor). Com cliente em contexto devolve
+ * um único grupo sem título — a view itera do mesmo jeito nos dois modos.
+ */
+function agrupar_por_cliente(array $linhas, ?array $cli): array {
+    if ($cli) return [['cliente_id' => (int) $cli['id'], 'cliente_nome' => null, 'itens' => $linhas]];
+    $g = [];
+    foreach ($linhas as $l) {
+        $id = (int) ($l['cliente_id'] ?? 0);
+        $g[$id] ??= ['cliente_id' => $id, 'cliente_nome' => (string) ($l['cliente_nome'] ?? ''), 'itens' => []];
+        $g[$id]['itens'][] = $l;
+    }
+    return array_values($g);
+}
+
+/** Cabeçalho do grupo de um cliente (só no modo gestor). */
+function cabecalho_grupo(array $grp): string {
+    if ($grp['cliente_nome'] === null) return '';
+    $n = count($grp['itens']);
+    return '<div class="grupo-cli">'
+         . '<a href="' . h(base_url('dashboard?cliente_id=' . (int) $grp['cliente_id'])) . '" title="Entrar na gestão deste cliente">'
+         . icone('clientes') . ' ' . h($grp['cliente_nome']) . '</a>'
+         . '<span class="grupo-cli-n">' . $n . '</span></div>';
+}
+
+/**
+ * Link de um item da lista. No modo gestor leva junto o cliente dono
+ * (?cliente_id), então abrir o item já entra no contexto daquele cliente.
+ */
+function link_item(string $rota, array $linha, ?array $cli): string {
+    $url = base_url($rota);
+    if (!$cli && !empty($linha['cliente_id'])) {
+        $url .= (str_contains($rota, '?') ? '&' : '?') . 'cliente_id=' . (int) $linha['cliente_id'];
+    }
+    return $url;
+}
+
+/** Atalho: <i> do ícone da atividade (ver icone_modulo). */
+function icone(string $chave, string $classe_extra = ''): string {
+    return '<i class="bi ' . icone_modulo($chave) . ($classe_extra !== '' ? ' ' . $classe_extra : '') . '" aria-hidden="true"></i>';
 }
 
 function gerar_links_localizacao(array $im): array {

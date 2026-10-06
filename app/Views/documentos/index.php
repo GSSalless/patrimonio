@@ -11,6 +11,7 @@
  * @var array       $tipos       tipo_referencia => rótulo
  * @var string|null $escopo_nome nome do cliente (null = todos)
  * @var bool        $is_admin
+ * @var array|null  $cli         cliente em contexto (null = todos)
  */
 $page_title = 'Documentos';
 require APP_ROOT . '/includes/header.php';
@@ -45,7 +46,7 @@ foreach ($docs as $d) {
 
   <div class="doc-head">
     <div>
-      <h2 style="font-size:1.4rem;color:var(--cor-primaria);font-family:var(--fonte-titulo)"><i class="bi bi-folder2-open" style="color:var(--secondary)"></i> Documentos</h2>
+      <h2 style="font-size:1.4rem;color:var(--cor-primaria);font-family:var(--fonte-titulo)"><i class="bi <?= icone_modulo('documentos') ?>" style="color:var(--secondary)"></i> Documentos</h2>
       <div style="font-size:.88rem;color:var(--cor-secundario)">
         <?= $geral ? 'Todos os clientes' : h($escopo_nome) ?> · repositório central de arquivos
       </div>
@@ -101,7 +102,7 @@ foreach ($docs as $d) {
           $dias = dias_ate($d['data_validade']);
           [$vcls, $vcor, $vrot] = alerta_status($dias);
           $venc_badge = '<span class="doc-venc" style="color:' . $vcor . ';border-color:' . $vcor . '55">'
-                      . '⏱ ' . h(data_br($d['data_validade'])) . ' · ' . h($vrot) . '</span>';
+                      . '<i class="bi bi-hourglass-split"></i> ' . h(data_br($d['data_validade'])) . ' · ' . h($vrot) . '</span>';
         }
       ?>
       <div class="doc-item">
@@ -121,7 +122,7 @@ foreach ($docs as $d) {
         <div class="doc-acoes">
           <a class="doc-btn" href="<?= url_documento($d) ?>" target="_blank" rel="noopener" title="Abrir/baixar"><i class="bi bi-download"></i> Abrir</a>
           <?php if ($vin['link'] !== ''): ?>
-            <a class="doc-btn doc-btn-ghost" href="<?= base_url($vin['link']) ?>" title="Ir ao cadastro"><i class="bi bi-box-arrow-up-right"></i> Cadastro</a>
+            <a class="doc-btn doc-btn-ghost" href="<?= h(link_item($vin['link'], $d, $cli)) ?>" title="Ir ao cadastro"><i class="bi bi-box-arrow-up-right"></i> Cadastro</a>
           <?php endif; ?>
           <?php if ($is_admin): ?>
             <form method="post" action="<?= base_url('documentos/excluir?id=' . (int) $d['id']) ?>"

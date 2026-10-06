@@ -20,7 +20,7 @@
     el.classList.add('hub-graph-fallback');
     el.innerHTML = NOS.map(n =>
       `<button type="button" class="hub-fb" onclick="abrirModal('${n.modal}')">
-         <span class="hub-fb-tile"><span class="hub-fb-emoji">${n.emoji}</span></span>
+         <span class="hub-fb-tile"><span class="hub-fb-emoji">${n.icone ? `<i class="bi ${n.icone}"></i>` : (n.emoji || '')}</span></span>
          <span class="hub-fb-lb">${n.label}</span>
        </button>`).join('');
     return;
@@ -74,7 +74,11 @@
   // nós-módulo
   const m = nodeSel.filter(d => d.tipo === 'no');
   m.append('rect').attr('class', 'hg-tile').attr('x', -32).attr('y', -32).attr('width', 64).attr('height', 64).attr('rx', 18);
-  m.append('text').attr('class', 'hg-emoji').attr('y', 2).text(d => d.emoji);
+  // Ícone do Design System (Bootstrap Icons) via foreignObject; emoji só como legado.
+  m.filter(d => d.icone).append('foreignObject')
+    .attr('class', 'hg-ico-fo').attr('x', -32).attr('y', -32).attr('width', 64).attr('height', 64)
+    .append('xhtml:div').attr('class', 'hg-ico').html(d => `<i class="bi ${d.icone}"></i>`);
+  m.filter(d => !d.icone).append('text').attr('class', 'hg-emoji').attr('y', 2).text(d => d.emoji || '');
   m.append('text').attr('class', 'hg-label').attr('y', 50).text(d => d.label);
 
   // ---- Simulação de forças -------------------------------------------------

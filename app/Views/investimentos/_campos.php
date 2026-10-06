@@ -80,7 +80,7 @@ $val = fn($k) => h($d[$k] ?? '');
   </div>
   <div class="form-grupo"><label>Carência até</label><input type="date" name="carencia_ate" value="<?= $val('carencia_ate') ?>"></div>
   <div class="form-grupo"><label>Vencimento</label><input type="date" name="data_vencimento" value="<?= $val('data_vencimento') ?>"></div>
-  <div style="align-self:end;font-size:.8rem;color:var(--cor-secundario);padding-bottom:.6rem">O vencimento aparece na Agenda.</div>
+  <div style="align-self:end;font-size:.8rem;color:var(--cor-secundario);padding-bottom:.6rem">O vencimento aparece em Tarefas.</div>
 </div>
 
 <!-- BLOCO 4 — TRIBUTAÇÃO E CUSTOS -->

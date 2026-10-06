@@ -80,11 +80,11 @@ require APP_ROOT . '/includes/header.php';
       <div style="display:flex;flex-direction:column;gap:.6rem" id="upload-lista">
         <?php
         $upload_items = [
-          ['field'=>'crlv',        'label'=>'CRLV',              'icon'=>'📄', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'apolice_doc', 'label'=>'Apólice de seguro', 'icon'=>'🛡️', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'nf_servico',  'label'=>'NF de serviços',    'icon'=>'🧾', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
-          ['field'=>'nf_peca',     'label'=>'NF de peças',       'icon'=>'🔧', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
-          ['field'=>'fotos',       'label'=>'Fotos do veículo',  'icon'=>'📷', 'accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>true ],
+          ['field'=>'crlv',        'label'=>'CRLV',              'icon'=>'bi-postcard', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'apolice_doc', 'label'=>'Apólice de seguro', 'icon'=>'bi-shield-check', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'nf_servico',  'label'=>'NF de serviços',    'icon'=>'bi-receipt-cutoff', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
+          ['field'=>'nf_peca',     'label'=>'NF de peças',       'icon'=>'bi-gear-wide-connected', 'accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
+          ['field'=>'fotos',       'label'=>'Fotos do veículo',  'icon'=>'bi-camera', 'accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>true ],
         ];
         foreach ($upload_items as $item):
         ?>
@@ -95,7 +95,7 @@ require APP_ROOT . '/includes/header.php';
               <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
-          <span style="font-size:1.15rem"><?= $item['icon'] ?></span>
+          <span style="font-size:1.15rem"><i class="bi <?= $item['icon'] ?>"></i></span>
           <div style="flex:1;min-width:0">
             <div style="font-size:.9rem;font-weight:600;color:#1e2530"><?= $item['label'] ?></div>
             <div class="upload-filename" style="font-size:.78rem;color:var(--cor-secundario);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
@@ -130,7 +130,7 @@ require APP_ROOT . '/includes/header.php';
     <div class="modal-head"><h3 style="font-size:1.15rem;color:var(--cor-primaria)">Campos em aberto</h3></div>
     <div class="modal-body">
       <div class="alerta-pendencias" style="margin-bottom:0">
-        ⚠️ Há <strong id="conf-num">0</strong> campo(s) sem preencher neste cadastro. Deseja salvar assim mesmo?
+        <i class="bi bi-exclamation-triangle"></i> Há <strong id="conf-num">0</strong> campo(s) sem preencher neste cadastro. Deseja salvar assim mesmo?
       </div>
     </div>
     <div class="modal-rodape">

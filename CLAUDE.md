@@ -103,6 +103,15 @@ chama `exige_login`/`exige_admin`) + Views (`app/Views/<mod>/`, reusam header/fo
 partial `_campos.php`. **Testar as URLs limpas no Apache** (`curl http://localhost/cezar/…`) —
 o `php -S` embutido NÃO processa `.htaccess`.
 
+**Menu único, dois modos (reunião 01/10/2026):** sem cliente selecionado, cada tela mostra **todos os
+clientes** (modo gestor); com cliente, só os dados dele. Num módulo novo: o `index()` usa
+`$this->escopoCliente($usuario)` (null = todos), o `Model::listar(?int $clienteId)` faz `JOIN clientes`
+e devolve `cliente_nome`, e a lista itera `agrupar_por_cliente($linhas, $cli)` + `cabecalho_grupo()`,
+com os links via `link_item()` (no modo gestor leva `?cliente_id=` e já entra no cliente dono).
+Cadastro/edição continuam exigindo cliente (`clienteEmContexto`); o "+ Cadastrar" no modo gestor usa
+`class="js-abre-clientes" data-next="<mod>/novo"`, que abre o modal de escolha do cliente.
+`?cliente_id=0` sai do cliente. Todo login começa no modo gestor.
+
 ---
 
 ## Regras de Negócio Críticas
@@ -158,7 +167,7 @@ Carregados em camadas pelo `includes/header.php`, nesta ordem:
 - **Nada de `<style>` nem cores literais nas views.** Use as classes/variáveis. Ao criar tela nova, adicione o CSS específico em `paginas.css` (seção própria) usando os tokens.
 - Exceções permitidas com `<style>` inline: `auth/login.php` (tela isolada, sem header) e `*_pdf.php` (estilo de impressão em papel branco).
 - Botões: `.btn` + `.btn-primario|secundario|acao|perigo|desabilitado`. Badges de status: `.badge` + `.badge-ativo|andamento|pendente|vencido|concluido|cancelado`.
-- Ícones: **Bootstrap Icons** (`bi bi-*`).
+- Ícones: **Bootstrap Icons** (`bi bi-*`). **Um ícone fixo por atividade, nunca reaproveitado:** use o dicionário central `icone_modulo('chave')` / `icone('chave')` (`includes/functions.php`). Ícone novo de módulo entra lá. Emoji só em texto de WhatsApp e páginas `*_pdf.php`.
 
 ---
 

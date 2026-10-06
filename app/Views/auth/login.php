@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -74,7 +75,7 @@
   .left-body > p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
   .feature-list { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
   .feature { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-2); }
-  .feature span { font-size: 16px; }
+  .feature span { font-size: 16px; color: var(--secondary, #22C7F2); display: inline-flex; }
   .left-footer { font-size: 11px; color: var(--text-3); }
 
   /* Painel direito — formulário */
@@ -144,10 +145,10 @@
       <h2>Controle total do seu patrimônio em um só lugar</h2>
       <p>Gerencie imóveis, veículos, investimentos, documentos e fluxo financeiro de forma simples e organizada.</p>
       <div class="feature-list">
-        <div class="feature"><span>🏠</span> Cadastro completo de imóveis, veículos e bens</div>
-        <div class="feature"><span>💰</span> Controle financeiro e fluxo de caixa</div>
-        <div class="feature"><span>📁</span> Documentos e contratos centralizados</div>
-        <div class="feature"><span>📊</span> Dashboard com visão patrimonial consolidada</div>
+        <div class="feature"><span><i class="bi bi-house-door"></i></span> Cadastro completo de imóveis, veículos e bens</div>
+        <div class="feature"><span><i class="bi bi-cash-coin"></i></span> Controle financeiro e fluxo de caixa</div>
+        <div class="feature"><span><i class="bi bi-folder2-open"></i></span> Documentos e contratos centralizados</div>
+        <div class="feature"><span><i class="bi bi-speedometer2"></i></span> Dashboard com visão patrimonial consolidada</div>
       </div>
     </div>
     <div class="left-footer">© 2026 CZR Soluções · Desenvolvido por Gilson Sales</div>

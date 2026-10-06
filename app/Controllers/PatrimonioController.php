@@ -1,6 +1,7 @@
 <?php
 /**
- * Controller do hub de patrimônio (categorias de bens do cliente).
+ * Controller do hub de patrimônio (categorias de bens do cliente — ou de
+ * todos os clientes, no modo gestor).
  */
 class PatrimonioController extends Controller
 {
@@ -9,29 +10,24 @@ class PatrimonioController extends Controller
         exige_login();
         $usuario = usuario_logado();
 
-        $cli = ($usuario['nivel'] === 'admin') ? cliente_selecionado() : null;
-        if ($usuario['nivel'] === 'cliente') {
-            $stmt = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
-            $stmt->execute([$usuario['id']]);
-            $cli = $stmt->fetch();
-            if ($cli) {
-                selecionar_cliente($cli['id']);
-                $cli = cliente_selecionado();
-            }
-        }
-        if (!$cli) $this->redirect('dashboard');
+        $cli = $this->escopoCliente($usuario);   // null = todos os clientes
 
-        $qtd_imoveis  = $this->contar('imoveis', $cli['id']);
-        $qtd_veiculos = $this->contar('veiculos', $cli['id']);
-        $qtd_outros   = $this->contar('outros_bens', $cli['id']);
+        $qtd_imoveis  = $this->contar('imoveis', $cli['id'] ?? null);
+        $qtd_veiculos = $this->contar('veiculos', $cli['id'] ?? null);
+        $qtd_outros   = $this->contar('outros_bens', $cli['id'] ?? null);
 
         $this->view('patrimonio/index', compact('cli', 'qtd_imoveis', 'qtd_veiculos', 'qtd_outros'));
     }
 
-    private function contar(string $tabela, int $clienteId): int
+    /** Conta os bens ativos de um cliente (ou de todos os clientes ativos, se null). */
+    private function contar(string $tabela, ?int $clienteId): int
     {
-        $stmt = db()->prepare("SELECT COUNT(*) FROM {$tabela} WHERE cliente_id = ? AND ativo = 1");
-        $stmt->execute([$clienteId]);
+        $sql = "SELECT COUNT(*) FROM {$tabela} t JOIN clientes c ON c.id = t.cliente_id
+                 WHERE t.ativo = 1 AND c.ativo = 1";
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        $stmt = db()->prepare($sql);
+        $stmt->execute($params);
         return (int) $stmt->fetchColumn();
     }
 }

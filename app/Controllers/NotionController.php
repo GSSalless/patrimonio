@@ -11,7 +11,7 @@ class NotionController extends Controller
     {
         exige_admin();
         if (!NotionClient::configurado()) {
-            $this->redirect('agenda?notion=sem_config');
+            $this->redirect('tarefas?notion=sem_config');
         }
         $state = bin2hex(random_bytes(16));
         $_SESSION['notion_state'] = $state;
@@ -26,17 +26,17 @@ class NotionController extends Controller
         $u = usuario_logado();
 
         // Erro/negação do usuário no Notion.
-        if (!empty($_GET['error'])) $this->redirect('agenda?notion=negado');
+        if (!empty($_GET['error'])) $this->redirect('tarefas?notion=negado');
 
         // CSRF: o state tem que bater com o guardado na sessão.
         $state = $_GET['state'] ?? '';
         if (!$state || ($_SESSION['notion_state'] ?? '') !== $state) {
-            $this->redirect('agenda?notion=state');
+            $this->redirect('tarefas?notion=state');
         }
         unset($_SESSION['notion_state']);
 
         $code = $_GET['code'] ?? '';
-        if (!$code) $this->redirect('agenda?notion=sem_code');
+        if (!$code) $this->redirect('tarefas?notion=sem_code');
 
         try {
             $tok = NotionClient::exchangeCode($code);
@@ -50,11 +50,11 @@ class NotionController extends Controller
 
             // Cria o board padrão (na 1ª página compartilhada) e sobe as pendências.
             $r = NotionIntegracao::sincronizar((int) $u['id']);
-            if (!empty($r['sem_pagina'])) $this->redirect('agenda?notion=sem_pagina');
-            $this->redirect('agenda?notion=conectado');
+            if (!empty($r['sem_pagina'])) $this->redirect('tarefas?notion=sem_pagina');
+            $this->redirect('tarefas?notion=conectado');
         } catch (\Throwable $e) {
             error_log('[NOTION] callback: ' . $e->getMessage());
-            $this->redirect('agenda?notion=erro');
+            $this->redirect('tarefas?notion=erro');
         }
     }
 
@@ -65,11 +65,11 @@ class NotionController extends Controller
         $u = usuario_logado();
         try {
             $r = NotionIntegracao::sincronizar((int) $u['id']);
-            if (!empty($r['sem_pagina'])) $this->redirect('agenda?notion=sem_pagina');
-            $this->redirect('agenda?notion=sync&c=' . $r['criadas'] . '&a=' . $r['atualizadas'] . '&e=' . $r['erros']);
+            if (!empty($r['sem_pagina'])) $this->redirect('tarefas?notion=sem_pagina');
+            $this->redirect('tarefas?notion=sync&c=' . $r['criadas'] . '&a=' . $r['atualizadas'] . '&e=' . $r['erros']);
         } catch (\Throwable $e) {
             error_log('[NOTION] sync: ' . $e->getMessage());
-            $this->redirect('agenda?notion=erro');
+            $this->redirect('tarefas?notion=erro');
         }
     }
 
@@ -79,6 +79,6 @@ class NotionController extends Controller
         exige_admin();
         $u = usuario_logado();
         NotionIntegracao::remover((int) $u['id']);
-        $this->redirect('agenda?notion=desvinculado');
+        $this->redirect('tarefas?notion=desvinculado');
     }
 }

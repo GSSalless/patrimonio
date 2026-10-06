@@ -5,16 +5,20 @@
  */
 class Fornecedor
 {
-    public static function listar(int $clienteId, string $categoria = '', string $busca = ''): array
+    public static function listar(?int $clienteId, string $categoria = '', string $busca = ''): array
     {
-        $sql    = 'SELECT * FROM fornecedores WHERE cliente_id = ? AND ativo = 1';
-        $params = [$clienteId];
-        if ($categoria !== '') { $sql .= ' AND categoria = ?'; $params[] = $categoria; }
+        // $clienteId null = todos os clientes (modo gestor, reunião 01/10/2026).
+        $sql    = 'SELECT t.*, c.nome AS cliente_nome FROM fornecedores t
+                     JOIN clientes c ON c.id = t.cliente_id
+                    WHERE t.ativo = 1 AND c.ativo = 1';
+        $params = [];
+        if ($clienteId !== null) { $sql .= ' AND t.cliente_id = ?'; $params[] = $clienteId; }
+        if ($categoria !== '') { $sql .= ' AND t.categoria = ?'; $params[] = $categoria; }
         if ($busca !== '') {
-            $sql .= ' AND (nome LIKE ? OR nome_fantasia LIKE ? OR cpf_cnpj LIKE ? OR contato_nome LIKE ?)';
+            $sql .= ' AND (t.nome LIKE ? OR t.nome_fantasia LIKE ? OR t.cpf_cnpj LIKE ? OR t.contato_nome LIKE ?)';
             $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%"; $params[] = "%$busca%";
         }
-        $sql .= ' ORDER BY categoria, nome';
+        $sql .= ' ORDER BY ' . ($clienteId === null ? 'c.nome, ' : '') . 't.categoria, t.nome';
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();

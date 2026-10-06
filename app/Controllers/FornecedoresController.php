@@ -31,7 +31,7 @@ class FornecedoresController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('fornecedores');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -91,11 +91,11 @@ class FornecedoresController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_categoria = $_GET['categoria'] ?? '';
         $filtro_busca     = trim($_GET['busca'] ?? '');
-        $fornecedores = Fornecedor::listar($cli['id'], $filtro_categoria, $filtro_busca);
+        $fornecedores = Fornecedor::listar($cli['id'] ?? null, $filtro_categoria, $filtro_busca);
 
         $this->view('fornecedores/lista', compact('cli', 'fornecedores', 'filtro_categoria', 'filtro_busca'));
     }
@@ -105,7 +105,7 @@ class FornecedoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('fornecedores');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -135,7 +135,7 @@ class FornecedoresController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('fornecedores');
 
         $id = (int) ($_GET['id'] ?? 0);
         $fornecedor = Fornecedor::buscarDoCliente($id, $cli['id']);

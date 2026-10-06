@@ -28,7 +28,7 @@ if (!function_exists('linha')) {
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.5rem">
     <a href="<?= base_url('imoveis') ?>" class="btn btn-secundario btn-sm">← Voltar</a>
     <?php if ($is_admin): ?>
-    <a href="<?= base_url('imoveis/editar?id='.$id) ?>" class="btn btn-secundario btn-sm">✏️ Editar</a>
+    <a href="<?= base_url('imoveis/editar?id='.$id) ?>" class="btn btn-secundario btn-sm"><i class="bi bi-pencil"></i> Editar</a>
     <?php endif; ?>
   </div>
 
@@ -42,13 +42,13 @@ if (!function_exists('linha')) {
       'valor' => $im['valor_mercado'] ? moeda((float) $im['valor_mercado']) : '—',
     ];
     $hub_nos = [
-      ['id' => 'resumo',      'label' => 'Cadastro',    'emoji' => '📋', 'modal' => 'm-resumo'],
-      ['id' => 'financeiro',  'label' => 'Financeiro',  'emoji' => '💰', 'modal' => 'm-financeiro'],
-      ['id' => 'reformas',    'label' => 'Reformas',    'emoji' => '🔨', 'modal' => 'm-reformas'],
-      ['id' => 'manutencoes', 'label' => 'Manutenções', 'emoji' => '🛠️', 'modal' => 'm-manutencoes'],
-      ['id' => 'condominio',  'label' => 'Condomínio',  'emoji' => '🏢', 'modal' => 'm-condominio'],
-      ['id' => 'aluguel',     'label' => 'Aluguel',     'emoji' => '🔑', 'modal' => 'm-aluguel'],
-      ['id' => 'documentos',  'label' => 'Documentos',  'emoji' => '📁', 'modal' => 'm-documentos'],
+      ['id' => 'resumo',      'label' => 'Cadastro',    'icone' => 'bi-card-list', 'modal' => 'm-resumo'],
+      ['id' => 'financeiro',  'label' => 'Financeiro',  'icone' => icone_modulo('financeiro'), 'modal' => 'm-financeiro'],
+      ['id' => 'reformas',    'label' => 'Reformas',    'icone' => icone_modulo('reformas'), 'modal' => 'm-reformas'],
+      ['id' => 'manutencoes', 'label' => 'Manutenções', 'icone' => icone_modulo('manutencoes'), 'modal' => 'm-manutencoes'],
+      ['id' => 'condominio',  'label' => 'Condomínio',  'icone' => icone_modulo('condominio'), 'modal' => 'm-condominio'],
+      ['id' => 'aluguel',     'label' => 'Aluguel',     'icone' => icone_modulo('aluguel'), 'modal' => 'm-aluguel'],
+      ['id' => 'documentos',  'label' => 'Documentos',  'icone' => icone_modulo('documentos'), 'modal' => 'm-documentos'],
     ];
   ?>
   <script>
@@ -60,7 +60,7 @@ if (!function_exists('linha')) {
   <div class="modal-overlay" id="m-resumo" style="display:none">
     <div class="modal-box modal-lg">
       <div class="modal-head">
-        <h3 style="font-size:1.15rem;color:var(--cor-primaria)">📋 Cadastro — <?= h($im['nome_referencia']) ?></h3>
+        <h3 style="font-size:1.15rem;color:var(--cor-primaria)"><i class="bi bi-card-list"></i> Cadastro — <?= h($im['nome_referencia']) ?></h3>
         <button type="button" class="modal-fechar" onclick="fecharModal('m-resumo')">&times;</button>
       </div>
       <div class="modal-body">
@@ -68,7 +68,7 @@ if (!function_exists('linha')) {
           <?= h($im['codigo']) ?> · <?= tipo_imovel_label($im['tipo']) ?> · <?= finalidade_label($im['finalidade']) ?>
           &nbsp;<span class="tag <?= $im['situacao']==='pronto'?'tag-verde':'tag-laranja' ?>"><?= situacao_label($im['situacao']) ?></span>
           <?php if ($im['logradouro']): ?>
-          <div style="margin-top:.4rem">📍 <?= h(trim($im['logradouro'].' '.$im['numero'].($im['complemento']?', '.$im['complemento']:''))) ?>, <?= h($im['bairro'].' — '.$im['cidade'].'/'.$im['estado']) ?></div>
+          <div style="margin-top:.4rem"><i class="bi bi-geo-alt"></i> <?= h(trim($im['logradouro'].' '.$im['numero'].($im['complemento']?', '.$im['complemento']:''))) ?>, <?= h($im['bairro'].' — '.$im['cidade'].'/'.$im['estado']) ?></div>
           <?php endif; ?>
         </div>
         <div class="form-grid form-grid-2" style="gap:1.5rem">
@@ -116,9 +116,9 @@ if (!function_exists('linha')) {
           $end_share = implode(', ', array_filter([$im['logradouro'].' '.($im['numero']??''), $im['bairro']??'', ($im['cidade']??'').'/'.($im['estado']??'')]));
         ?>
         <div style="margin-top:1.25rem;display:flex;gap:.6rem;flex-wrap:wrap">
-          <?php if ($link_maps): ?><a href="<?= h($link_maps) ?>" target="_blank" class="btn btn-secundario btn-sm">📍 Google Maps</a><?php endif; ?>
-          <?php if ($link_sv): ?><a href="<?= h($link_sv) ?>" target="_blank" class="btn btn-secundario btn-sm">🏙️ Street View</a><?php endif; ?>
-          <a href="https://api.whatsapp.com/send?text=<?= urlencode('📍 ' . $end_share . "\n" . $link_maps) ?>" target="_blank" class="btn btn-secundario btn-sm">📲 Compartilhar</a>
+          <?php if ($link_maps): ?><a href="<?= h($link_maps) ?>" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-geo-alt"></i> Google Maps</a><?php endif; ?>
+          <?php if ($link_sv): ?><a href="<?= h($link_sv) ?>" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-binoculars"></i> Street View</a><?php endif; ?>
+          <a href="https://api.whatsapp.com/send?text=<?= urlencode('📍 ' . $end_share . "\n" . $link_maps) ?>" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-whatsapp"></i> Compartilhar</a>
         </div>
         <?php endif; ?>
       </div>
@@ -129,7 +129,7 @@ if (!function_exists('linha')) {
   <div class="modal-overlay" id="m-financeiro" style="display:none">
     <div class="modal-box modal-lg">
       <div class="modal-head">
-        <h3 style="font-size:1.15rem;color:var(--cor-primaria)">💰 Financeiro</h3>
+        <h3 style="font-size:1.15rem;color:var(--cor-primaria)"><?= icone('financeiro') ?> Financeiro</h3>
         <button type="button" class="modal-fechar" onclick="fecharModal('m-financeiro')">&times;</button>
       </div>
       <div class="modal-body">
@@ -171,7 +171,7 @@ if (!function_exists('linha')) {
               <td><?= moeda((float)$f['valor']) ?></td>
               <td><?= h($f['descricao_extra'] ?? '—') ?></td>
               <td><span class="tag <?= $f['pago'] ? 'tag-verde' : 'tag-laranja' ?>"><?= $f['pago'] ? 'Pago' : 'Em aberto' ?></span></td>
-              <td><?php if ($f['arquivo_boleto']): ?><a href="<?= url_arquivo($f['arquivo_boleto']) ?>" target="_blank" class="btn btn-secundario btn-sm">📄</a><?php else: ?>—<?php endif; ?></td>
+              <td><?php if ($f['arquivo_boleto']): ?><a href="<?= url_arquivo($f['arquivo_boleto']) ?>" target="_blank" class="btn btn-secundario btn-sm" title="Boleto"><i class="bi bi-file-earmark-pdf"></i></a><?php else: ?>—<?php endif; ?></td>
             </tr>
             <?php endforeach; ?>
           </tbody>
@@ -204,7 +204,7 @@ if (!function_exists('linha')) {
   <div class="modal-overlay" id="m-reformas" style="display:none">
     <div class="modal-box modal-lg">
       <div class="modal-head">
-        <h3 style="font-size:1.15rem;color:var(--cor-primaria)">🔨 Reformas</h3>
+        <h3 style="font-size:1.15rem;color:var(--cor-primaria)"><?= icone('reformas') ?> Reformas</h3>
         <button type="button" class="modal-fechar" onclick="fecharModal('m-reformas')">&times;</button>
       </div>
       <div class="modal-body">
@@ -252,7 +252,7 @@ if (!function_exists('linha')) {
           if ($docs_ref): ?>
           <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
             <?php foreach ($docs_ref as $dref): ?>
-            <a href="<?= url_documento($dref) ?>" target="_blank" class="btn btn-secundario btn-sm">📎 <?= h($dref['nome_arquivo']) ?></a>
+            <a href="<?= url_documento($dref) ?>" target="_blank" class="btn btn-secundario btn-sm"><i class="bi bi-paperclip"></i> <?= h($dref['nome_arquivo']) ?></a>
             <?php endforeach; ?>
           </div>
           <?php endif; ?>
@@ -269,7 +269,7 @@ if (!function_exists('linha')) {
   <div class="modal-overlay" id="m-manutencoes" style="display:none">
     <div class="modal-box modal-lg">
       <div class="modal-head">
-        <h3 style="font-size:1.15rem;color:var(--cor-primaria)">🛠️ Manutenções</h3>
+        <h3 style="font-size:1.15rem;color:var(--cor-primaria)"><?= icone('manutencoes') ?> Manutenções</h3>
         <button type="button" class="modal-fechar" onclick="fecharModal('m-manutencoes')">&times;</button>
       </div>
       <div class="modal-body">
@@ -292,7 +292,7 @@ if (!function_exists('linha')) {
                 $docs_mt = db()->prepare('SELECT * FROM documentos WHERE tipo_referencia = "manutencao" AND referencia_id = ?');
                 $docs_mt->execute([$mt['id']]); $docs_mt = $docs_mt->fetchAll();
                 foreach ($docs_mt as $dmt): ?>
-                <a href="<?= url_documento($dmt) ?>" target="_blank" title="<?= h($dmt['nome_arquivo']) ?>" style="margin-left:.35rem">📎</a>
+                <a href="<?= url_documento($dmt) ?>" target="_blank" title="<?= h($dmt['nome_arquivo']) ?>" style="margin-left:.35rem"><i class="bi bi-paperclip"></i></a>
                 <?php endforeach; ?>
               </td>
               <td><?= h($mt['fornecedor'] ?? '—') ?></td>
@@ -314,7 +314,7 @@ if (!function_exists('linha')) {
   <div class="modal-overlay" id="m-aluguel" style="display:none">
     <div class="modal-box">
       <div class="modal-head">
-        <h3 style="font-size:1.15rem;color:var(--cor-primaria)">🔑 Aluguel</h3>
+        <h3 style="font-size:1.15rem;color:var(--cor-primaria)"><?= icone('aluguel') ?> Aluguel</h3>
         <button type="button" class="modal-fechar" onclick="fecharModal('m-aluguel')">&times;</button>
       </div>
       <div class="modal-body">
@@ -352,7 +352,7 @@ if (!function_exists('linha')) {
   <div class="modal-overlay" id="m-documentos" style="display:none">
     <div class="modal-box modal-lg">
       <div class="modal-head">
-        <h3 style="font-size:1.15rem;color:var(--cor-primaria)">📁 Documentos</h3>
+        <h3 style="font-size:1.15rem;color:var(--cor-primaria)"><?= icone('documentos') ?> Documentos</h3>
         <button type="button" class="modal-fechar" onclick="fecharModal('m-documentos')">&times;</button>
       </div>
       <div class="modal-body">
@@ -416,7 +416,7 @@ if (!function_exists('linha')) {
   <div class="modal-overlay" id="m-condominio" style="display:none">
     <div class="modal-box modal-lg">
       <div class="modal-head">
-        <h3 style="font-size:1.15rem;color:var(--cor-primaria)">🏢 Condomínio</h3>
+        <h3 style="font-size:1.15rem;color:var(--cor-primaria)"><?= icone('condominio') ?> Condomínio</h3>
         <button type="button" class="modal-fechar" onclick="fecharModal('m-condominio')">&times;</button>
       </div>
       <div class="modal-body">
@@ -431,7 +431,7 @@ if (!function_exists('linha')) {
           </div>
           <?php if ($is_admin): ?>
           <div style="display:flex;gap:.5rem">
-            <a href="<?= base_url('condominios/editar?id='.$condominio['id'].'&imovel_id='.$id) ?>" class="btn btn-secundario btn-sm">✏️ Editar</a>
+            <a href="<?= base_url('condominios/editar?id='.$condominio['id'].'&imovel_id='.$id) ?>" class="btn btn-secundario btn-sm"><i class="bi bi-pencil"></i> Editar</a>
             <a href="<?= base_url('condominios/vincular?imovel_id='.$id.'&condominio_id=0') ?>" class="btn btn-secundario btn-sm" onclick="return confirm('Desvincular este condomínio do imóvel?')">Desvincular</a>
           </div>
           <?php endif; ?>
@@ -495,7 +495,7 @@ if (!function_exists('linha')) {
 
         <?php else: ?>
         <div style="text-align:center;padding:1.5rem 0">
-          <div style="font-size:2.5rem">🏢</div>
+          <div style="font-size:2.5rem;color:var(--secondary)"><?= icone('condominio') ?></div>
           <p style="color:var(--cor-secundario);margin:.5rem 0 1.25rem">Nenhum condomínio vinculado a este imóvel.</p>
           <?php if ($is_admin): ?>
           <a href="<?= base_url('condominios/novo?imovel_id='.$id) ?>" class="btn btn-primario">+ Criar e vincular condomínio</a>

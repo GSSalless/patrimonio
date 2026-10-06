@@ -33,7 +33,7 @@ class SegurosController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('seguros');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -87,12 +87,12 @@ class SegurosController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_tipo   = $_GET['tipo'] ?? '';
         $filtro_status = $_GET['status'] ?? '';
         $filtro_busca  = trim($_GET['busca'] ?? '');
-        $seguros = Seguro::listar($cli['id'], $filtro_tipo, $filtro_status, $filtro_busca);
+        $seguros = Seguro::listar($cli['id'] ?? null, $filtro_tipo, $filtro_status, $filtro_busca);
 
         $this->view('seguros/lista', compact('cli', 'seguros', 'filtro_tipo', 'filtro_status', 'filtro_busca'));
     }
@@ -102,7 +102,7 @@ class SegurosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('seguros');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -133,7 +133,7 @@ class SegurosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('seguros');
 
         $id = (int) ($_GET['id'] ?? 0);
         $seguro = Seguro::buscarDoCliente($id, $cli['id']);

@@ -20,12 +20,12 @@ $total_ativos = count(array_filter($contratos, fn($c) => $c['status'] === 'ativo
     <div style="display:flex;align-items:center;gap:1rem">
       <a href="<?= base_url('dashboard') ?>" class="btn btn-secundario">← Voltar</a>
       <div>
-        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi bi-file-earmark-text" style="color:var(--secondary)"></i> Contratos — <?= h($cli['nome']) ?></h2>
+        <h2 style="font-size:1.2rem;color:var(--cor-primaria)"><i class="bi <?= icone_modulo('contratos') ?>" style="color:var(--secondary)"></i> Contratos — <?= h(escopo_nome($cli)) ?></h2>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($contratos) ?> contrato(s) · <?= $total_ativos ?> ativo(s)</div>
       </div>
     </div>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('contratos/novo') ?>" class="btn btn-primario">+ Cadastrar contrato</a>
+    <a href="<?= base_url('contratos/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="contratos/novo">+ Cadastrar contrato</a>
     <?php endif; ?>
   </div>
 
@@ -59,15 +59,17 @@ $total_ativos = count(array_filter($contratos, fn($c) => $c['status'] === 'ativo
   </div>
 
   <?php if ($contratos): ?>
+  <?php foreach (agrupar_por_cliente($contratos, $cli) as $grp): ?>
+  <?= cabecalho_grupo($grp) ?>
   <div class="imoveis-grid">
-    <?php foreach ($contratos as $c):
+    <?php foreach ($grp['itens'] as $c):
       $vinc = Contrato::descreverVinculo($c['vinculo_tipo'], $c['vinculo_id'] ? (int)$c['vinculo_id'] : null);
       $rel = '';
       if ($c['status'] === 'ativo' && $c['data_fim']) {
         [$cl, $cor, $rel] = alerta_status(dias_ate($c['data_fim']));
       }
     ?>
-    <a href="<?= base_url('contratos/editar?id=' . $c['id']) ?>" class="imovel-card">
+    <a href="<?= link_item('contratos/editar?id=' . $c['id'], $c, $cli) ?>" class="imovel-card">
       <div class="imovel-card-body">
         <div class="imovel-card-codigo" style="display:flex;align-items:center;gap:.4rem">
           <i class="bi <?= $tipo_icone[$c['tipo']] ?? 'bi-file-earmark-text' ?>" style="font-size:1.05rem;color:var(--secondary)"></i>
@@ -97,12 +99,13 @@ $total_ativos = count(array_filter($contratos, fn($c) => $c['status'] === 'ativo
     </a>
     <?php endforeach; ?>
   </div>
+  <?php endforeach; ?>
   <?php else: ?>
   <div class="card" style="text-align:center;padding:3rem">
     <div style="font-size:3rem;margin-bottom:1rem;color:var(--cor-secundario)"><i class="bi bi-file-earmark-text"></i></div>
     <p style="color:var(--cor-secundario)">Nenhum contrato cadastrado.</p>
     <?php if ($usuario['nivel'] === 'admin'): ?>
-    <a href="<?= base_url('contratos/novo') ?>" class="btn btn-primario" style="margin-top:1rem">+ Cadastrar primeiro contrato</a>
+    <a href="<?= base_url('contratos/novo') ?>" class="btn btn-primario<?= $cli ? '' : ' js-abre-clientes' ?>" data-next="contratos/novo" style="margin-top:1rem">+ Cadastrar primeiro contrato</a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

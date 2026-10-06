@@ -39,16 +39,16 @@ $hist_cor = ['salario'=>'#1a7a45','promocao'=>'#0891b2','avaliacao'=>'#6366f1','
       <!-- DOCUMENTOS -->
       <div class="form-secao"><div class="form-secao-titulo">6. Documentos</div></div>
       <div class="form-grid form-grid-3">
-        <div class="form-grupo"><label>📄 Contrato de trabalho</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>🪪 Documento de identidade</label><input type="file" name="doc_identidade" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>📎 Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-file-earmark"></i> Contrato de trabalho</label><input type="file" name="doc_contrato" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-card-text"></i> Documento de identidade</label><input type="file" name="doc_identidade" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-paperclip"></i> Outros documentos</label><input type="file" name="doc_outros" accept=".pdf,.jpg,.jpeg,.png"></div>
       </div>
       <?php if ($docs_list): ?>
       <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
         <?php foreach ($docs_list as $doc): ?>
         <a href="<?= url_documento($doc) ?>" target="_blank"
            style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:var(--surface);font-size:.85rem;text-decoration:none;color:inherit">
-          <span><?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? '🖼️' : '📄' ?></span>
+          <span><i class="bi <?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? 'bi-file-earmark-image' : 'bi-file-earmark' ?>"></i></span>
           <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= h($doc['nome_arquivo']) ?></span>
           <span class="tag"><?= h($doc['categoria']) ?></span>
           <span style="color:var(--cor-secundario)"><?= data_br($doc['criado_em']) ?></span>
@@ -70,7 +70,7 @@ $hist_cor = ['salario'=>'#1a7a45','promocao'=>'#0891b2','avaliacao'=>'#6366f1','
   <!-- DEPENDENTES -->
   <div class="card" id="dependentes" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
-      <div><h3 class="card-titulo">👨‍👩‍👧 Dependentes</h3><div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($dependentes) ?> registro(s)</div></div>
+      <div><h3 class="card-titulo"><?= icone('dependentes') ?> Dependentes</h3><div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($dependentes) ?> registro(s)</div></div>
     </div>
     <?php if ($dependentes): ?>
     <div style="overflow-x:auto">
@@ -109,7 +109,7 @@ $hist_cor = ['salario'=>'#1a7a45','promocao'=>'#0891b2','avaliacao'=>'#6366f1','
   <!-- HISTÓRICO -->
   <div class="card" id="historico" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
-      <div><h3 class="card-titulo">📋 Histórico</h3><div style="font-size:.85rem;color:var(--cor-secundario)">Salários, promoções, férias, advertências, atestados, treinamentos…</div></div>
+      <div><h3 class="card-titulo"><?= icone('historico') ?> Histórico</h3><div style="font-size:.85rem;color:var(--cor-secundario)">Salários, promoções, férias, advertências, atestados, treinamentos…</div></div>
     </div>
     <?php if ($historico): ?>
     <div style="overflow-x:auto">

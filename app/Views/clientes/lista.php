@@ -41,7 +41,11 @@ $abas = [
         $ativo  = (int) $c['ativo'] === 1;
       ?>
       <div class="pessoa-card<?= $ativo ? '' : ' inativo' ?>">
-        <a class="pessoa-card-corpo" href="<?= base_url('clientes/editar?id=' . $c['id']) ?>">
+        <?php // Clicar no cliente ENTRA na gestão dele (reunião 01/10/2026); o cadastro
+              // fica no lápis e no item "Cadastro do cliente" do menu. Inativo não tem
+              // gestão, então abre o cadastro. ?>
+        <a class="pessoa-card-corpo" href="<?= $ativo ? base_url('dashboard?cliente_id=' . $c['id']) : base_url('clientes/editar?id=' . $c['id']) ?>"
+           title="<?= $ativo ? 'Entrar na gestão deste cliente' : 'Abrir cadastro' ?>">
           <div class="pessoa-avatar"><?= h($ini) ?></div>
           <div class="pessoa-card-info">
             <div class="pessoa-nome-linha">
@@ -74,9 +78,8 @@ $abas = [
                 <?= $ativo ? 'Desativar' : 'Ativar' ?>
               </button>
             </form>
-            <?php if ($ativo): ?>
-              <a href="<?= base_url('dashboard?cliente_id=' . $c['id']) ?>" class="btn btn-secundario btn-sm">Patrimônio →</a>
-            <?php endif; ?>
+            <a href="<?= base_url('clientes/editar?id=' . $c['id']) ?>" class="btn btn-secundario btn-sm pessoa-btn-cad"
+               title="Editar cadastro" aria-label="Editar cadastro"><i class="bi bi-pencil"></i></a>
           </div>
         </div>
       </div>

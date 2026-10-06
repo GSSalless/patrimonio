@@ -28,7 +28,7 @@ class VeiculosController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('veiculos');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -106,14 +106,14 @@ class VeiculosController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_busca = trim($_GET['busca'] ?? '');
-        $veiculos     = Veiculo::listar($cli['id'], $filtro_busca);
+        $veiculos     = Veiculo::listar($cli['id'] ?? null, $filtro_busca);
 
         $novo_ve = null; $novo_pend = []; $novo_pend_total = 0;
         $novo_id = (int) ($_GET['novo'] ?? 0);
-        if ($novo_id) {
+        if ($novo_id && $cli) {
             $novo_ve = Veiculo::buscarDoCliente($novo_id, $cli['id']);
             if ($novo_ve) {
                 $novo_pend       = pendencias_veiculo($novo_ve);
@@ -131,7 +131,7 @@ class VeiculosController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('veiculos');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

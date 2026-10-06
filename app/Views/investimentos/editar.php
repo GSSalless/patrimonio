@@ -61,16 +61,16 @@ $ganho_pct = ($ganho !== null && $aplicado > 0) ? ($ganho / $aplicado * 100) : n
       <!-- DOCUMENTOS -->
       <div class="form-secao"><div class="form-secao-titulo">5. Documentos</div></div>
       <div class="form-grid form-grid-3">
-        <div class="form-grupo"><label>📄 Proposta / boletim</label><input type="file" name="doc_proposta" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>📘 Regulamento</label><input type="file" name="doc_regulamento" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div class="form-grupo"><label>🧾 Extrato</label><input type="file" name="doc_extrato" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-file-earmark"></i> Proposta / boletim</label><input type="file" name="doc_proposta" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-journal-text"></i> Regulamento</label><input type="file" name="doc_regulamento" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div class="form-grupo"><label><i class="bi bi-receipt-cutoff"></i> Extrato</label><input type="file" name="doc_extrato" accept=".pdf,.jpg,.jpeg,.png"></div>
       </div>
       <?php if ($docs_list): ?>
       <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
         <?php foreach ($docs_list as $doc): ?>
         <a href="<?= url_documento($doc) ?>" target="_blank"
            style="display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;border:1px solid var(--cor-borda);border-radius:8px;background:var(--surface);font-size:.85rem;text-decoration:none;color:inherit">
-          <span><?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? '🖼️' : '📄' ?></span>
+          <span><i class="bi <?= str_starts_with($doc['mime_type'] ?? '', 'image/') ? 'bi-file-earmark-image' : 'bi-file-earmark' ?>"></i></span>
           <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= h($doc['nome_arquivo']) ?></span>
           <span class="tag"><?= h($doc['categoria']) ?></span>
           <span style="color:var(--cor-secundario)"><?= data_br($doc['criado_em']) ?></span>
@@ -95,7 +95,7 @@ $ganho_pct = ($ganho !== null && $aplicado > 0) ? ($ganho / $aplicado * 100) : n
   <div class="card" id="movimentos" style="margin-top:1.5rem">
     <div class="card-header" style="margin-bottom:1rem">
       <div>
-        <h3 class="card-titulo">💸 Movimentos</h3>
+        <h3 class="card-titulo"><?= icone('movimentos') ?> Movimentos</h3>
         <div style="font-size:.85rem;color:var(--cor-secundario)"><?= count($movimentos) ?> registro(s) — aplicações, resgates e rendimentos</div>
       </div>
     </div>

@@ -67,10 +67,10 @@ require APP_ROOT . '/includes/header.php';
       <div style="display:flex;flex-direction:column;gap:.6rem">
         <?php
         $upload_items = [
-          ['field'=>'foto_principal','label'=>'Foto principal',    'icon'=>'📷','accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>false],
-          ['field'=>'doc_laudo',     'label'=>'Laudo / Avaliação', 'icon'=>'📄','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'doc_apolice',   'label'=>'Apólice de seguro', 'icon'=>'🛡️','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
-          ['field'=>'doc_outros',    'label'=>'Outros documentos', 'icon'=>'📎','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
+          ['field'=>'foto_principal','label'=>'Foto principal',    'icon'=>'bi-camera','accept'=>'.jpg,.jpeg,.png,.webp','multiple'=>false],
+          ['field'=>'doc_laudo',     'label'=>'Laudo / Avaliação', 'icon'=>'bi-clipboard-data','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'doc_apolice',   'label'=>'Apólice de seguro', 'icon'=>'bi-shield-check','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>false],
+          ['field'=>'doc_outros',    'label'=>'Outros documentos', 'icon'=>'bi-paperclip','accept'=>'.pdf,.jpg,.jpeg,.png', 'multiple'=>true ],
         ];
         foreach ($upload_items as $item): ?>
         <div class="upload-row" id="row-<?= $item['field'] ?>"
@@ -78,7 +78,7 @@ require APP_ROOT . '/includes/header.php';
           <div class="upload-check" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s">
             <svg class="check-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;transition:opacity .2s"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <span style="font-size:1.15rem"><?= $item['icon'] ?></span>
+          <span style="font-size:1.15rem"><i class="bi <?= $item['icon'] ?>"></i></span>
           <div style="flex:1;min-width:0">
             <div style="font-size:.9rem;font-weight:600;color:#1e2530"><?= $item['label'] ?></div>
             <div class="upload-filename" style="font-size:.78rem;color:var(--cor-secundario);margin-top:.1rem">Nenhum arquivo selecionado</div>
@@ -114,7 +114,7 @@ require APP_ROOT . '/includes/header.php';
     <div class="modal-head"><h3 style="font-size:1.15rem;color:var(--cor-primaria)">Campos em aberto</h3></div>
     <div class="modal-body">
       <div class="alerta-pendencias" style="margin-bottom:0">
-        ⚠️ Há <strong id="conf-num">0</strong> campo(s) sem preencher. Deseja salvar assim mesmo?
+        <i class="bi bi-exclamation-triangle"></i> Há <strong id="conf-num">0</strong> campo(s) sem preencher. Deseja salvar assim mesmo?
       </div>
     </div>
     <div class="modal-rodape">

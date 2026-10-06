@@ -28,7 +28,7 @@ class ContasController extends Controller
     {
         if ($usuario['nivel'] === 'admin') {
             $cli = cliente_selecionado();
-            if (!$cli) $this->redirect('dashboard');
+            if (!$cli) $this->redirect('contas');
             return $cli;
         }
         $s = db()->prepare('SELECT * FROM clientes WHERE usuario_id = ? AND ativo = 1');
@@ -88,11 +88,11 @@ class ContasController extends Controller
     {
         exige_login();
         $usuario = usuario_logado();
-        $cli     = $this->clienteEmContexto($usuario);
+        $cli     = $this->escopoCliente($usuario);   // null = todos os clientes
 
         $filtro_tipo  = $_GET['tipo'] ?? '';
         $filtro_busca = trim($_GET['busca'] ?? '');
-        $contas = ContaFinanceira::listar($cli['id'], $filtro_tipo, $filtro_busca);
+        $contas = ContaFinanceira::listar($cli['id'] ?? null, $filtro_tipo, $filtro_busca);
 
         $this->view('contas/lista', compact('cli', 'contas', 'filtro_tipo', 'filtro_busca'));
     }
@@ -102,7 +102,7 @@ class ContasController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('contas');
 
         $erro = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -141,7 +141,7 @@ class ContasController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('contas');
 
         $id = (int) ($_GET['id'] ?? 0);
         $conta = ContaFinanceira::buscarDoCliente($id, $cli['id']);
@@ -178,7 +178,7 @@ class ContasController extends Controller
     {
         exige_admin();
         $cli = cliente_selecionado();
-        if (!$cli) $this->redirect('dashboard');
+        if (!$cli) $this->redirect('contas');
 
         $conta_id = (int) ($_GET['conta_id'] ?? 0);
         $conta = ContaFinanceira::buscarDoCliente($conta_id, $cli['id']);
